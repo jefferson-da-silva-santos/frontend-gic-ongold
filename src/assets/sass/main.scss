@@ -36,7 +36,6 @@ $color-primary: #f2f2f2;
 .container {
   background-color: $color-primary;
   min-height: 100vh;
-  width: 100vw;
   display: grid;
   grid-template-columns: 16em 1fr;
   padding-right: 1rem;
@@ -45,6 +44,8 @@ $color-primary: #f2f2f2;
 }
 // Componente de menu lateral
 .menu {
+  position: sticky;
+  top: 0;
   background-color: white;
   width: 16em;
   height: 100vh;
@@ -138,6 +139,7 @@ $color-primary: #f2f2f2;
   margin: auto;
   height: 100%;
   max-width: 85em;
+  margin-bottom: 3rem;
 
   &__text {
     text-align: start;
@@ -184,7 +186,7 @@ $color-primary: #f2f2f2;
 
         .item-title {
           color: #66788b;
-          font-size: 1.5rem;
+          font-size: 1.2rem;
           margin-bottom: 1rem;
         }
 
@@ -288,6 +290,8 @@ $color-primary: #f2f2f2;
       display: grid;
       grid-template-columns: 1fr 2em;
       gap: .5rem;
+      width: 100%;
+      max-width: 40em;
 
       button,
       .btn-del {

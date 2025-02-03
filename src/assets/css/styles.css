@@ -10,7 +10,6 @@
 .container {
   background-color: #f2f2f2;
   min-height: 100vh;
-  width: 100vw;
   display: grid;
   grid-template-columns: 16em 1fr;
   padding-right: 1rem;
@@ -19,6 +18,8 @@
 }
 
 .menu {
+  position: sticky;
+  top: 0;
   background-color: white;
   width: 16em;
   height: 100vh;
@@ -112,6 +113,7 @@
   margin: auto;
   height: 100%;
   max-width: 85em;
+  margin-bottom: 3rem;
 }
 .card-items__text {
   text-align: start;
@@ -164,7 +166,7 @@
 }
 .card-items__group-items__item__g2 .item-title {
   color: #66788b;
-  font-size: 1.5rem;
+  font-size: 1.2rem;
   margin-bottom: 1rem;
 }
 .card-items__group-items__item__g2 .item-ean {
@@ -255,6 +257,8 @@
   display: grid;
   grid-template-columns: 1fr 2em;
   gap: 0.5rem;
+  width: 100%;
+  max-width: 40em;
 }
 .form-register__group-inputs__g0 button,
 .form-register__group-inputs__g0 .btn-del {
