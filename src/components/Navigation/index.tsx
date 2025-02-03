@@ -5,9 +5,6 @@ export const Navigation = () => {
     <nav className="navigation">
       <img src="/public/logo_gic.png" alt="" className="navigation__logo" />
       <ul className="navigation__list">
-        <li className="navigation__list__item-hr">
-          <hr />
-        </li>
         <li className="navigation__list__item">
           <a href="" className="navigation__list__item__btn">
             <i className="bi bi-card-checklist"></i> Lista de Itens
@@ -43,9 +40,7 @@ export const Navigation = () => {
             <i className="bi bi-pen"></i> Editar Item
           </a>
         </li>
-        <li className="navigation__list__item-hr">
-          <hr />
-        </li>
+        
       </ul>
     </nav>
   );
