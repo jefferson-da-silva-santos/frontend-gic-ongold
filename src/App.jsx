@@ -35,6 +35,23 @@ function App() {
     }
     fetchData();
   }, []);
+
+  const [description, setDescription] = useState('');
+  const [ean, setEan] = useState('');
+  const [nsm, setNcm] = useState('');
+  const [icmsIn, setIcmsIn] = useState('');
+  const [icmsOut, setIcmsOut] = useState('');
+  const [cst, setCst] = useState('');
+  const [cfop, setCfop] = useState('');
+  const [velueUnit, setVelueUnit] = useState('');
+  const [comission, setComission] = useState('');
+
+  const handleSubmitRegister = async (e) => {
+    e.preventDefault();
+
+    
+  }
+
   return (
     <div className="container">
       <Menu
