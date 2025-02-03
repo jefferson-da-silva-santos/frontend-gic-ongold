@@ -2,7 +2,7 @@ import Menu from "./components/Menu";
 import Navgation from "./components/Navgation";
 import CardItems from "./components/CardItems/CardItems";
 import React, { useState } from "react";
-import FormRegister from "./components/FormRegister";
+import ModelForm from "./components/ModelForm";
 
 const stages = [
   {id: 1, name: "list"},
@@ -11,25 +11,27 @@ const stages = [
 ]
 
 function App() {
-  const [stage, setStage] = useState(stages[1].name);
+  const [stage, setStage] = useState(stages[0].name);
 
   // Função para ir para para lista
   const openList = () => {
-    setStage("list");
+    setStage(stages[0].name);
   }
   const openRegister = () => {
-    setStage("insert");
+    setStage(stages[1].name);
   }
   const openEdit = () => {
-    setStage("edit");
+    setStage(stages[2].name);
   }
   
   return (
     <div className="container">
-      <Menu />
+      <Menu openList={openList} openRegister={openRegister} openEdit={openEdit} stage={stage}/>
       <Navgation />
       {stage === stages[0].name && <CardItems />}
-      {stage === stages[1].name && <FormRegister />}
+      {stage === stages[1].name && <ModelForm edit={false} />}
+      {stage === stages[2].name && <ModelForm edit={true} />}
+      
     </div>
   );
 }

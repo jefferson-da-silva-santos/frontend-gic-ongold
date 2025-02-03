@@ -3,7 +3,7 @@ import React from "react";
 const CardItems = () => {
   return (
     <section className="card-items">
-      <p className="card-items__text">Produtos</p>
+      <p className="card-items__text">Lista de Itens</p>
       <div className="card-items__group-items">
 
         <div className="card-items__group-items__item">
@@ -146,7 +146,7 @@ const CardItems = () => {
             <p className="discr">Custos</p>
           </div>
         </div>
-        
+
         <div className="card-items__group-items__item">
           <div className="card-items__group-items__item__g1">
             <img src="/public/box.png" alt="" className="img-produto" />

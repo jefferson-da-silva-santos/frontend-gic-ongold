@@ -232,6 +232,9 @@
   margin: 2em auto 1em auto;
   height: fit-content;
 }
+.form-register .btn-del {
+  background-color: #66788b;
+}
 .form-register input[type=submit] {
   padding: 1rem;
 }
@@ -245,7 +248,7 @@
   flex-direction: column;
   justify-content: start;
   align-items: baseline;
-  gap: 2rem;
+  gap: 3rem;
   width: 100%;
 }
 .form-register__group-inputs__g0 {
@@ -253,12 +256,14 @@
   grid-template-columns: 1fr 2em;
   gap: 0.5rem;
 }
-.form-register__group-inputs__g0 button {
+.form-register__group-inputs__g0 button,
+.form-register__group-inputs__g0 .btn-del {
   border: none;
   cursor: pointer;
   background-color: transparent;
 }
-.form-register__group-inputs__g0 button i {
+.form-register__group-inputs__g0 button i,
+.form-register__group-inputs__g0 .btn-del i {
   font-size: 1.4rem;
   color: #66788b;
 }
@@ -270,7 +275,7 @@
 }
 .form-register__group-inputs__g3 {
   display: grid;
-  grid-template-columns: 1fr 1fr 1fr 1fr;
+  grid-template-columns: 1fr 1fr 1fr 10em 10em;
   width: 100%;
   column-gap: 1rem;
 }
@@ -290,10 +295,10 @@
 }
 .form-register__group-inputs input, .form-register__group-inputs select {
   width: 100%;
-  padding: 0.5rem 1rem;
+  padding: 0.8rem 1rem;
   box-shadow: 4px 4px 12px 0 rgba(134, 146, 160, 0.27);
   font-size: 1rem;
-  border-radius: 8px;
+  border-radius: 10px;
   border: none;
   outline: none;
   transition: all 0.3s ease;
