@@ -233,11 +233,6 @@ function App() {
     }
   };
 
-  const handleSearchItem = async () => {
-    const result = await baseRequestFilter(`GET /api/gic/items/id/${id}`);
-    console.log(result);
-  }
-
   return (
     <div className="container">
       <div
@@ -261,7 +256,6 @@ function App() {
       {stage === stages[0].name && <CardItems items={items} />}
       {stage === stages[1].name && (
         <ModelForm
-          handleSearchItem={handleSearchItem}
           handleSubmitRegister={handleSubmitRegister}
           description={description}
           setDescription={setDescription}
@@ -286,7 +280,26 @@ function App() {
           edit={false}
         />
       )}
-      {stage === stages[2].name && <ModelForm edit={true} />}
+      {stage === stages[2].name && <ModelForm edit={true} description={description}
+          setDescription={setDescription}
+          ean={ean}
+          setEan={setEan}
+          icmsIn={icmsIn}
+          setIcmsIn={setIcmsIn}
+          icmsOut={icmsOut}
+          setIcmsOut={setIcmsOut}
+          valueUnit={valueUnit}
+          setValueUnit={setValueUnit}
+          comission={comission}
+          setComission={setComission}
+          ncm={ncm}
+          setNcm={setNcm}
+          cst={cst}
+          setCst={setCst}
+          cfop={cfop}
+          setCfop={setCfop}
+          totalCusto={totalCusto}
+          setTotalCusto={setTotalCusto}/>}
     </div>
   );
 }
