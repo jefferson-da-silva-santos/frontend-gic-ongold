@@ -20,6 +20,15 @@ export function baseRequest(url, functionSet) {
   fetchData();
 }
 
+export function baseRequestFilter(url) {
+  async function fetchData() {
+    const response = await fetch(url);
+    const data = await response.json();
+    return data;
+  }
+  return fetchData();
+}
+
 function baseRequestPOST(url, data) {
   async function fetchData() {
     try {
@@ -217,9 +226,17 @@ function App() {
         setNcm(0);
         setCst(0);
         openList();
+        setTotalCusto('');
+      } else {
+        changeMessage("Erro na inserção!", "rgb(255, 95, 95)");
       }
     }
   };
+
+  const handleSearchItem = async () => {
+    const result = await baseRequestFilter(`GET /api/gic/items/id/${id}`);
+    console.log(result);
+  }
 
   return (
     <div className="container">
@@ -244,6 +261,7 @@ function App() {
       {stage === stages[0].name && <CardItems items={items} />}
       {stage === stages[1].name && (
         <ModelForm
+          handleSearchItem={handleSearchItem}
           handleSubmitRegister={handleSubmitRegister}
           description={description}
           setDescription={setDescription}
@@ -263,6 +281,8 @@ function App() {
           setCst={setCst}
           cfop={cfop}
           setCfop={setCfop}
+          totalCusto={totalCusto}
+          setTotalCusto={setTotalCusto}
           edit={false}
         />
       )}

@@ -318,7 +318,8 @@
   gap: 5px;
   color: #66788b;
 }
-.form-register__group-inputs input, .form-register__group-inputs select {
+.form-register__group-inputs input,
+.form-register__group-inputs select {
   width: 100%;
   padding: 0.8rem 1rem;
   box-shadow: 4px 4px 12px 0 rgba(134, 146, 160, 0.27);
@@ -328,10 +329,12 @@
   outline: none;
   transition: all 0.3s ease;
 }
-.form-register__group-inputs input:focus, .form-register__group-inputs select:focus {
+.form-register__group-inputs input:focus,
+.form-register__group-inputs select:focus {
   padding-left: 1.5em;
 }
-.form-register__group-inputs input::placeholder, .form-register__group-inputs select::placeholder {
+.form-register__group-inputs input::placeholder,
+.form-register__group-inputs select::placeholder {
   color: rgb(183.3405172414, 194.1163793103, 201.6594827586);
 }
 .form-register__group-inputs select {
@@ -344,7 +347,7 @@
   font-weight: 700;
   color: #242930;
   cursor: pointer;
-  background-color: #E9D17B;
+  background-color: #e9d17b;
 }
 
 /*# sourceMappingURL=styles.css.map */

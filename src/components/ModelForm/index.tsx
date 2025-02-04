@@ -1,17 +1,11 @@
 import React, { useEffect, useState } from "react";
 import { baseRequest } from "../../App";
 
-function addPercentage(input) {
-  if (!isNaN(input)) {
-    return input + "%";
-  }
-  return "";
-}
-
-const ModelForm = ({ handleSubmitRegister, ncm, setNcm, cst, setCst, cfop, setCfop, description, setDescription, ean, setEan, icmsIn, setIcmsIn, icmsOut, setIcmsOut, valueUnit, setValueUnit, comission, setComission, edit }) => {
+const ModelForm = ({ handleSearchItem, handleSubmitRegister, ncm, setNcm, cst, setCst, cfop, setCfop, description, setDescription, ean, setEan, icmsIn, setIcmsIn, icmsOut, setIcmsOut, valueUnit, setValueUnit, comission, setComission, totalCusto, setTotalCusto, edit }) => {
   const [arrCst, setArrCst] = useState<{ codcst: string; descricao: string }[]>([]);
   const [arrCfop, setArrCfop] = useState<{ codcfop: string; descricaocfop: string }[]>([]);
   const [arrNcm, setArrNcm] = useState<{ codncm: string; nomencm: string }[]>([]);
+  
   useEffect(() => {
     baseRequest("http://localhost:3000/api/gic/csts", setArrCst);
   }, []);
@@ -23,17 +17,36 @@ const ModelForm = ({ handleSubmitRegister, ncm, setNcm, cst, setCst, cfop, setCf
   useEffect(() => {
     baseRequest("http://localhost:3000/api/gic/ncms", setArrNcm);
   }, []);
+  
+
+  if (!edit) {
+    useEffect(() => {
+      calculateTotCust();
+    }, [valueUnit, icmsIn, icmsOut, comission])
+  }
+
+  // Função que calcula o total de custo
+  const calculateTotCust = () => {
+    const value = parseFloat(valueUnit) || 0;
+    const entryIcms = parseFloat(icmsIn) || 0;
+    const exitIcms = parseFloat(icmsOut) || 0;
+    const commissionRate = parseFloat(comission) || 0;
+
+    const totalCost = ((entryIcms / 100) + (exitIcms / 100) + (commissionRate / 100)) * value;
+    setTotalCusto(parseFloat(totalCost.toFixed(2)))
+  }
+  
 
   return (
-    <form className="form-register" onSubmit={handleSubmitRegister}>
+    <form className="form-register" onSubmit={!edit && handleSubmitRegister}>
       <h2 className="form-register__title">
         {edit ? "Edição de Itens" : "Cadastro de Itens"}
       </h2>
       <div className="form-register__group-inputs">
         {edit && (
           <div className="form-register__group-inputs__g0">
-            <input type="number" min={0} name="" id="" placeholder="* Ex: 89" />
-            <button>
+            <input type="number" min={0} name="" id="id" placeholder="* Ex: 89" />
+            <button onClick={handleSearchItem}>
               <i className="bi bi-search"></i>
             </button>
           </div>
@@ -86,6 +99,7 @@ const ModelForm = ({ handleSubmitRegister, ncm, setNcm, cst, setCst, cfop, setCf
                 type="text"
                 name="ncm"
                 id="ncm"
+                value={ncm}
                 disabled
               />
             </label>
@@ -137,6 +151,7 @@ const ModelForm = ({ handleSubmitRegister, ncm, setNcm, cst, setCst, cfop, setCf
                 type="text"
                 name="cst"
                 id="cst"
+                value={cst}
                 disabled
               />
             </label>
@@ -161,6 +176,7 @@ const ModelForm = ({ handleSubmitRegister, ncm, setNcm, cst, setCst, cfop, setCf
                 type="text"
                 name="cfop"
                 id="cfop"
+                value={cfop}
                 disabled
               />
             </label>
@@ -206,6 +222,7 @@ const ModelForm = ({ handleSubmitRegister, ncm, setNcm, cst, setCst, cfop, setCf
               name=""
               id=""
               placeholder="Calculado automáticmanete"
+              value={totalCusto}
               disabled
             />
           </label>
