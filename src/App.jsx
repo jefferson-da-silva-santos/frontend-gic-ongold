@@ -1,7 +1,7 @@
 import Menu from "./components/Menu";
 import Navgation from "./components/Navgation";
 import CardItems from "./components/CardItems/CardItems";
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import ModelForm from "./components/ModelForm";
 
 const stages = [
@@ -9,6 +9,15 @@ const stages = [
   { id: 2, name: "register" },
   { id: 3, name: "edit" },
 ];
+
+export function baseRequest(url, functionSet) {
+  async function fetchData() {
+    const response = await fetch(url);
+    const data = await response.json();
+    functionSet(data);
+  }
+  fetchData();
+}
 
 function App() {
   const [stage, setStage] = useState(stages[0].name);
@@ -26,31 +35,27 @@ function App() {
 
   // Função para buscar
   const url = "http://localhost:3000/api/gic/items";
+
   const [items, setItems] = useState([]);
+  // const [description, setDescription] = useState('');
+  // const [ean, setEan] = useState(0);
+  const [ncm, setNcm] = useState([]);
+  // const [icmsIn, setIcmsIn] = useState('');
+  // const [icmsOut, setIcmsOut] = useState('');
+  const [cst, setCst] = useState([]);
+  const [cfop, setCfop] = useState([]);
+  // const [velueUnit, setVelueUnit] = useState(0);
+  // const [comission, setComission] = useState(0);
+  // const [totalCusto, setTotalCusto] = useState(0);
+
   useEffect(() => {
-    async function fetchData() {
-      const response = await fetch(url);
-      const data = await response.json(); // Adicionei await aqui
-      setItems(data);
-    }
-    fetchData();
+    baseRequest(url, setItems);
   }, []);
+  
 
-  const [description, setDescription] = useState('');
-  const [ean, setEan] = useState('');
-  const [nsm, setNcm] = useState('');
-  const [icmsIn, setIcmsIn] = useState('');
-  const [icmsOut, setIcmsOut] = useState('');
-  const [cst, setCst] = useState('');
-  const [cfop, setCfop] = useState('');
-  const [velueUnit, setVelueUnit] = useState('');
-  const [comission, setComission] = useState('');
-
-  const handleSubmitRegister = async (e) => {
-    e.preventDefault();
-
-    
-  }
+  // const handleSubmitRegister = async (e) => {
+  //   e.preventDefault();
+  // }
 
   return (
     <div className="container">
@@ -62,7 +67,7 @@ function App() {
       />
       <Navgation />
       {stage === stages[0].name && <CardItems items={items} />}
-      {stage === stages[1].name && <ModelForm edit={false} />}
+      {stage === stages[1].name && <ModelForm ncm={ncm} setNcm={setNcm} cst={cst} setCst={setCst} cfop={cfop} setCfop={setCfop}  edit={false} />}
       {stage === stages[2].name && <ModelForm edit={true} />}
     </div>
   );

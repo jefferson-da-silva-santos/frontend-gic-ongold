@@ -18,10 +18,10 @@ const Item = ({description, ean, imc_in, imc_out, ncm, cst, cfop, v_unit, cms, v
 
           <div className="card-items__group-items__item__g3">
             <p className="item-text">
-              Taxa IMC de Entrada: <span>{imc_in}%</span>
+              Taxa ICMS de Entrada: <span>{imc_in}%</span>
             </p>
             <p className="item-text">
-              taxa IMC de Saída: <span>{imc_out}%</span>
+              taxa ICMS de Saída: <span>{imc_out}%</span>
             </p>
             <p className="item-text">
               NCM: <span>{ncm}</span>

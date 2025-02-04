@@ -128,7 +128,7 @@
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  gap: 1em;
+  gap: 1.5em;
   overflow: hidden;
   margin: 0;
   width: 100%;
@@ -250,7 +250,7 @@
   flex-direction: column;
   justify-content: start;
   align-items: baseline;
-  gap: 3rem;
+  gap: 2rem;
   width: 100%;
 }
 .form-register__group-inputs__g0 {
@@ -264,7 +264,15 @@
 .form-register__group-inputs__g0 .btn-del {
   border: none;
   cursor: pointer;
-  background-color: transparent;
+  background-color: white;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  gap: 0;
+  width: 50px;
+  border-radius: 10px;
+  box-shadow: 4px 4px 12px 0 rgba(134, 146, 160, 0.27);
 }
 .form-register__group-inputs__g0 button i,
 .form-register__group-inputs__g0 .btn-del i {
