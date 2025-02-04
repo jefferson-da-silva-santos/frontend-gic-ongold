@@ -2,7 +2,6 @@ import React from "react";
 import Item from "../Item";
 
 const CardItems = ({items}) => {
-  console.log(items);
   
   return (
     <section className="card-items">

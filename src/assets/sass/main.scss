@@ -38,9 +38,23 @@ $color-primary: #f2f2f2;
   min-height: 100vh;
   display: grid;
   grid-template-columns: 16em 1fr;
+  position: relative;
   padding-right: 1rem;
   column-gap: 1rem;
   grid-template-rows: 5.5em 1fr;
+
+  .message {
+    position: fixed;
+    top: 0;
+    border-radius: 50px;
+    right: 0;
+    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.137);
+    margin: 1rem;
+    color: white;
+    padding: 0.5em 2rem;
+    font-size: 1rem;
+    z-index: 99999;
+  }
 }
 // Componente de menu lateral
 .menu {
@@ -309,6 +323,7 @@ $color-primary: #f2f2f2;
       }
     }
 
+
     &__g1 {
       display: grid;
       grid-template-columns: 1fr 1fr 1fr;
@@ -350,6 +365,9 @@ $color-primary: #f2f2f2;
         color: lighten(rgb(99, 119, 133), 30%);
       }
       
+    }
+    select {
+      cursor: pointer;
     }
     input[type="submit"] {
       max-width: 40em;

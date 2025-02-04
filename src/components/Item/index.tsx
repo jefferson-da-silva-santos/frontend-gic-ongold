@@ -37,13 +37,13 @@ const Item = ({description, ean, imc_in, imc_out, ncm, cst, cfop, v_unit, cms, v
 
           <div className="card-items__group-items__item__g4">
             <p className="item-text">
-              Valor unitário: <span>{v_unit}%</span>
+              Valor unitário: <span>{v_unit}</span>
             </p>
             <p className="item-text">
               Comissão para o Vendedor: <span>{cms}%</span>
             </p>
             <p className="item-text">
-              Valor Total de Custo: <span>R$ ${vtc}</span>
+              Valor Total de Custo: <span>{vtc} R$</span>
             </p>
             <p className="discr">Custos</p>
           </div>
