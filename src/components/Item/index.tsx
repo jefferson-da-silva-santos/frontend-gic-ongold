@@ -59,7 +59,7 @@ const Item = ({
           Taxa ICMS de Entrada: <span>{imc_in}%</span>
         </p>
         <p className="item-text">
-          taxa ICMS de Saída: <span>{imc_out}%</span>
+          Taxa ICMS de Saída: <span>{imc_out}%</span>
         </p>
         <p className="item-text">
           NCM: <span>{ncm}</span>

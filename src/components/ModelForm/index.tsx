@@ -71,10 +71,12 @@ const ModelForm = ({
 
   const handleSearchItem = async (e) => {
     e.preventDefault();
-    const result = await apiRequest(`http://localhost:3000/api/gic/items/id/${identify}`);
+    const result = await apiRequest(
+      `http://localhost:3000/api/gic/items/id/${identify}`
+    );
 
     if (result.error) {
-      changeMessage("Nenhum item encontrado com este id!", "rgb(255, 95, 95");
+      changeMessage("Nenhum item encontrado com este id!", 'rgb(255, 95, 95');
       return;
     }
 
