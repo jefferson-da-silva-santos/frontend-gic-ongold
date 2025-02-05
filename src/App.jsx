@@ -215,8 +215,8 @@ function App() {
 
   const limitarPalavras = (texto) => {
     const palavras = texto.split(/\s+/);
-    if (palavras.length > 3) {
-      return palavras.slice(0, 3).join(" ") + "...";
+    if (palavras.length > 5) {
+      return palavras.slice(0, 5).join(" ") + "...";
     }
     return texto;
   }
