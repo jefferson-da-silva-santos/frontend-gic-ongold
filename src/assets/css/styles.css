@@ -350,4 +350,101 @@
   background-color: #e9d17b;
 }
 
+.container-dialog {
+  position: fixed;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(255, 255, 255, 0.4117647059);
+  z-index: 9999;
+  display: flex;
+  flex-direction: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 0;
+}
+.container-dialog .dialog {
+  background-color: white;
+  box-shadow: 6px 4px 14px rgba(128, 128, 128, 0.55);
+  border-radius: 5px;
+  overflow: hidden;
+  transform: translateY(-300%);
+  width: 100%;
+  animation: showDialog 0.5s ease 0s 1 normal forwards;
+  max-width: 35em;
+}
+.container-dialog .dialog__header {
+  background-color: #e6c241;
+  height: 10px;
+}
+.container-dialog .dialog__header p {
+  font-size: 0.7em;
+  color: #212529;
+  padding: 3px 0.8rem;
+}
+.container-dialog .dialog__main {
+  padding: 1.5rem 1rem 1rem 1rem;
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-start;
+  align-items: center;
+  gap: 1.5rem;
+}
+.container-dialog .dialog__main i {
+  color: #e6c241;
+  font-size: 4rem;
+}
+.container-dialog .dialog__main div {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: baseline;
+  gap: 0.5rem;
+}
+.container-dialog .dialog__main div h1 {
+  font-size: 1.4em;
+  font-weight: 500;
+}
+.container-dialog .dialog__footer {
+  border-top: 1px solid rgb(229.5, 229.5, 229.5);
+  padding: 1rem;
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-end;
+  align-items: center;
+  gap: 1rem;
+}
+.container-dialog .dialog__footer button {
+  background-color: #006fe6;
+  border: none;
+  padding: 0.5em 0rem;
+  width: 10em;
+  border-radius: 5px;
+  font-size: 1rem;
+  color: white;
+  cursor: pointer;
+  transition: all 0.4s ease;
+}
+.container-dialog .dialog__footer button:hover {
+  background-color: white;
+  border: 2px solid #006fe6;
+  color: #006fe6;
+}
+.container-dialog .dialog__footer :nth-child(1) {
+  background-color: white;
+  border: 2px solid #006fe6;
+  color: #006fe6;
+}
+.container-dialog .dialog__footer :nth-child(1):hover {
+  background-color: #006fe6;
+  color: white;
+}
+@keyframes showDialog {
+  0% {
+    transform: translateY(-300%);
+  }
+  100% {
+    transform: translateY(0);
+  }
+}
+
 /*# sourceMappingURL=styles.css.map */

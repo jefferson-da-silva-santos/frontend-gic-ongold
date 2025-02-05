@@ -379,3 +379,94 @@ $color-primary: #f2f2f2;
     }
   }
 }
+
+.container-dialog {
+  position: fixed;
+  width: 100%;
+  height: 100%;
+  background-color: #ffffff69;
+  z-index: 9999;
+  @include flex-box(flex, center, center, 0);
+
+  .dialog {
+    background-color: white;
+    box-shadow: 6px 4px 14px rgb(128 128 128 / 55%);
+    border-radius: 5px;
+    overflow: hidden;
+    transform: translateY(-300%);
+    width: 100%;
+    animation: showDialog .5s ease 0s 1 normal forwards;
+    max-width: 35em;
+
+    &__header {
+      background-color: #e6c241;
+      height: 10px;
+      p {
+        font-size: 0.7em;
+        color: #212529;
+        padding: 3px 0.8rem;
+      }
+    }
+
+    &__main {
+      padding: 1.5rem 1rem 1rem 1rem;
+      @include flex-box(row, flex-start, center, 1.5rem);
+      i {
+        color: #e6c241;
+        font-size: 4rem;
+      }
+      div {
+        @include flex-box(column, center, baseline, 0.5rem);
+
+        h1 {
+          font-size: 1.4em;
+          font-weight: 500;
+        }
+      }
+    }
+
+    &__footer {
+      border-top: 1px solid darken(white, 10%);
+      padding: 1rem;
+      @include flex-box(row, flex-end, center, 1rem);
+
+      button {
+        background-color: #006fe6;
+        border: none;
+        padding: 0.5em 0rem;
+        width: 10em;
+        border-radius: 5px;
+        font-size: 1rem;
+        color: white;
+        cursor: pointer;
+        transition: all .4s ease;
+
+        &:hover {
+          background-color: white;
+          border: 2px solid #006fe6;
+          color: #006fe6;
+        }
+      }
+
+      & :nth-child(1) {
+        background-color: white;
+        border: 2px solid #006fe6;
+        color: #006fe6;
+
+        &:hover {
+          background-color: #006fe6;
+          color: white;
+        }
+      }
+    }
+  }
+
+  @keyframes showDialog {
+    0% {
+      transform: translateY(-300%);
+    }
+    100% {
+      transform: translateY(0);
+    }
+  }
+}

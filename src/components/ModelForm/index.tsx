@@ -1,5 +1,6 @@
-import React, { useEffect, useState } from "react";
-import { baseRequest, baseRequestFilter } from "../../App";
+import apiRequest from "../../utils/api/baseRequest";
+import { useState, useEffect } from "react";
+import React from "react";
 
 const ModelForm = ({
   handleSubmitEdit,
@@ -31,7 +32,8 @@ const ModelForm = ({
   edit,
   cleanState,
   limitarPalavras,
-  setCriado_em
+  setCriado_em,
+  calculateTotCust,
 }) => {
   const [arrCst, setArrCst] = useState<{ codcst: string; descricao: string }[]>(
     []
@@ -44,30 +46,38 @@ const ModelForm = ({
   );
 
   useEffect(() => {
-    baseRequest("http://localhost:3000/api/gic/csts", setArrCst);
+    const fetchData = async () => {
+      const data = await apiRequest("http://localhost:3000/api/gic/csts");
+      if (data) setArrCst(data);
+    };
+    fetchData();
   }, []);
 
   useEffect(() => {
-    baseRequest("http://localhost:3000/api/gic/cfops", setArrCfop);
+    const fetchData = async () => {
+      const data = await apiRequest("http://localhost:3000/api/gic/cfops");
+      if (data) setArrCfop(data);
+    };
+    fetchData();
   }, []);
 
   useEffect(() => {
-    baseRequest("http://localhost:3000/api/gic/ncms", setArrNcm);
+    const fetchData = async () => {
+      const data = await apiRequest("http://localhost:3000/api/gic/ncms");
+      if (data) setArrNcm(data);
+    };
+    fetchData();
   }, []);
 
   const handleSearchItem = async (e) => {
     e.preventDefault();
-    const result = await baseRequestFilter(
-      `http://localhost:3000/api/gic/items/id/${identify}`
-    );
-    console.log(result);
+    const result = await apiRequest(`http://localhost:3000/api/gic/items/id/${identify}`);
 
     if (result.error) {
       changeMessage("Nenhum item encontrado com este id!", "rgb(255, 95, 95");
       return;
     }
 
-    console.log(result[0]);
     const data = result[0];
     setDescription(data.descricao);
     setValueUnit(data.valor_unitario);
@@ -87,18 +97,6 @@ const ModelForm = ({
       calculateTotCust();
     }, [valueUnit, icmsIn, icmsOut, comission]);
   }
-
-  // Função que calcula o total de custo
-  const calculateTotCust = () => {
-    const value = parseFloat(valueUnit) || 0;
-    const entryIcms = parseFloat(icmsIn) || 0;
-    const exitIcms = parseFloat(icmsOut) || 0;
-    const commissionRate = parseFloat(comission) || 0;
-
-    const totalCost =
-      (entryIcms / 100 + exitIcms / 100 + commissionRate / 100) * value;
-    setTotalCusto(parseFloat(totalCost.toFixed(2)));
-  };
 
   return (
     <form
@@ -293,7 +291,7 @@ const ModelForm = ({
             <span>Valor unitário</span>
             <input
               required
-              type="number"
+              type="text"
               min={0}
               name="value_unit"
               id="value_unit"
@@ -306,7 +304,7 @@ const ModelForm = ({
             <span>Comissão para o vendedor (%):</span>
             <input
               required
-              type="number"
+              type="text"
               name="comissao"
               id="comissao"
               value={comission}
@@ -321,7 +319,7 @@ const ModelForm = ({
               name=""
               id=""
               placeholder="Calculado automáticmanete"
-              value={totalCusto === 0 ? "" : totalCusto}
+              value={totalCusto === "R$ 0" ? "" : totalCusto}
               disabled
             />
           </label>

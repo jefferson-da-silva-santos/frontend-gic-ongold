@@ -40,7 +40,7 @@ export const Menu = ({openList, openRegister, openEdit, stage}) => {
         </li>
         <li className="menu__list__item">
           <a onClick={handleSubmitLinks} href="" className="menu__list__item__btn">
-            <i className="bi bi-pen"></i> Editar Item
+          <i className="bi bi-trash-fill"></i> Lixeira
           </a>
         </li>
         
