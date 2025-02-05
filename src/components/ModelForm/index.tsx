@@ -2,6 +2,11 @@ import React, { useEffect, useState } from "react";
 import { baseRequest, baseRequestFilter } from "../../App";
 
 const ModelForm = ({
+  handleSubmitEdit,
+  handleSubmitDelete,
+  changeMessage,
+  identify,
+  setIdentify,
   handleSubmitRegister,
   ncm,
   setNcm,
@@ -24,6 +29,9 @@ const ModelForm = ({
   totalCusto,
   setTotalCusto,
   edit,
+  cleanState,
+  limitarPalavras,
+  setCriado_em
 }) => {
   const [arrCst, setArrCst] = useState<{ codcst: string; descricao: string }[]>(
     []
@@ -34,7 +42,6 @@ const ModelForm = ({
   const [arrNcm, setArrNcm] = useState<{ codncm: string; nomencm: string }[]>(
     []
   );
-  const [identify, setIdentify] = useState("");
 
   useEffect(() => {
     baseRequest("http://localhost:3000/api/gic/csts", setArrCst);
@@ -53,20 +60,26 @@ const ModelForm = ({
     const result = await baseRequestFilter(
       `http://localhost:3000/api/gic/items/id/${identify}`
     );
-    if (result) {
-      console.log(result[0]);
-      const data = result[0];
-      setDescription(data.descricao);
-      setValueUnit(data.valor_unitario);
-      setIcmsIn(data.taxa_icms_entrada);
-      setIcmsOut(data.taxa_icms_saida);
-      setComission(data.comissao);
-      setNcm(data.ncm);
-      setCfop(data.cfop);
-      setCst(data.cst);
-      setEan(data.ean);
-      setTotalCusto(data.totalCusto);
+    console.log(result);
+
+    if (result.error) {
+      changeMessage("Nenhum item encontrado com este id!", "rgb(255, 95, 95");
+      return;
     }
+
+    console.log(result[0]);
+    const data = result[0];
+    setDescription(data.descricao);
+    setValueUnit(data.valor_unitario);
+    setIcmsIn(data.taxa_icms_entrada);
+    setIcmsOut(data.taxa_icms_saida);
+    setComission(data.comissao);
+    setNcm(data.ncm);
+    setCfop(data.cfop);
+    setCst(data.cst);
+    setEan(data.ean);
+    setTotalCusto(data.totalCusto);
+    setCriado_em(data.criado_em);
   };
 
   if (!edit) {
@@ -88,7 +101,10 @@ const ModelForm = ({
   };
 
   return (
-    <form className="form-register" onSubmit={!edit && handleSubmitRegister}>
+    <form
+      className="form-register"
+      onSubmit={!edit ? handleSubmitRegister : handleSubmitEdit}
+    >
       <h2 className="form-register__title">
         {edit ? "Edição de Itens" : "Cadastro de Itens"}
       </h2>
@@ -100,11 +116,11 @@ const ModelForm = ({
               min={0}
               value={identify}
               onChange={(e) => {
-                if (e.target.value === "0") {
+                if (e.target.value === "0" || e.target.value === "") {
                   setIdentify("");
+                  cleanState();
                 }
                 setIdentify(e.target.value.toString());
-                console.log(e.target.value);
               }}
               name=""
               id="id"
@@ -157,7 +173,7 @@ const ModelForm = ({
                 <option value="0">Selecione</option>
                 {arrNcm.map((value, i) => (
                   <option key={i} value={value.codncm}>
-                    {value.codncm} - {value.nomencm}
+                    {value.codncm} - {limitarPalavras(value.nomencm)}
                   </option>
                 ))}
               </select>
@@ -166,7 +182,13 @@ const ModelForm = ({
           {edit && (
             <label>
               <span>NCM:</span>
-              <input type="text" name="ncm" id="ncm" value={ncm} disabled />
+              <input
+                type="text"
+                name="ncm"
+                id="ncm"
+                value={ncm === 0 ? "" : ncm}
+                disabled
+              />
             </label>
           )}
         </div>
@@ -209,7 +231,7 @@ const ModelForm = ({
                 <option value="0">Selecione</option>
                 {arrCst.map((value, i) => (
                   <option key={i} value={value.codcst}>
-                    {value.codcst} - {value.descricao}
+                    {value.codcst} - {limitarPalavras(value.descricao)}
                   </option>
                 ))}
               </select>
@@ -218,7 +240,13 @@ const ModelForm = ({
           {edit && (
             <label>
               <span>CST:</span>
-              <input type="text" name="cst" id="cst" value={cst} disabled />
+              <input
+                type="text"
+                name="cst"
+                id="cst"
+                value={cst === 0 ? "" : cst}
+                disabled
+              />
             </label>
           )}
           {!edit && (
@@ -234,7 +262,7 @@ const ModelForm = ({
                 <option value="0">Selecione</option>
                 {arrCfop.map((value, i) => (
                   <option key={i} value={value.codcfop}>
-                    {value.codcfop} - {value.descricaocfop}
+                    {value.codcfop} - {limitarPalavras(value.descricaocfop)}
                   </option>
                 ))}
               </select>
@@ -243,7 +271,13 @@ const ModelForm = ({
           {edit && (
             <label>
               <span>CFOP:</span>
-              <input type="text" name="cfop" id="cfop" value={cfop} disabled />
+              <input
+                type="text"
+                name="cfop"
+                id="cfop"
+                value={cfop === 0 ? "" : cfop}
+                disabled
+              />
             </label>
           )}
         </div>
@@ -287,7 +321,7 @@ const ModelForm = ({
               name=""
               id=""
               placeholder="Calculado automáticmanete"
-              value={totalCusto}
+              value={totalCusto === 0 ? "" : totalCusto}
               disabled
             />
           </label>
@@ -300,6 +334,7 @@ const ModelForm = ({
               style={{ backgroundColor: "rgb(255, 109, 109)", color: "white" }}
               type="submit"
               value="Deletar item"
+              onClick={handleSubmitDelete}
             />
           )}
         </div>

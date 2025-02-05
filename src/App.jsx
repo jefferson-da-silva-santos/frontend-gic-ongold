@@ -43,6 +43,43 @@ function baseRequestPOST(url, data) {
       }
       return false;
     } catch (error) {
+      console.error(error);
+      return false;
+    }
+  }
+  return fetchData();
+}
+
+function baseRequestPUT(url, data) {
+  async function fetchData() {
+    try {
+      const response = await fetch(url, {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(data),
+      });
+
+      if (response.ok) {
+        return true;
+      }
+      return false;
+    } catch (error) {
+      console.error(error);
+      return false;
+    }
+  }
+  return fetchData();
+}
+
+function baseRequestDELETE(url) {
+  async function fetchData() {
+    try {
+      const response = await fetch(url, {
+        method: 'DELETE'
+      })
+      return response;
+    } catch (error) {
+      console.error(error);
       return false;
     }
   }
@@ -59,12 +96,17 @@ function App() {
 
   // Função para ir para para lista
   const openList = () => {
+    cleanState();
     setStage(stages[0].name);
   };
+
   const openRegister = () => {
+   cleanState();
     setStage(stages[1].name);
   };
+
   const openEdit = () => {
+    cleanState();
     setStage(stages[2].name);
   };
 
@@ -94,7 +136,7 @@ function App() {
     cfop,
     ncm
   ) => {
-    const regexDesc = /^[a-zA-Z0-9\s\-]+$/;
+    const regexDesc = /^[a-zA-Z0-9\s-]+$/;
     const regexEan = /^\d{13}$/;
 
     if (!regexDesc.test(desc)) {
@@ -171,7 +213,16 @@ function App() {
     };
   };
 
+  const limitarPalavras = (texto) => {
+    const palavras = texto.split(/\s+/);
+    if (palavras.length > 3) {
+      return palavras.slice(0, 3).join(" ") + "...";
+    }
+    return texto;
+  }
+
   const [items, setItems] = useState([]);
+  const [identify, setIdentify] = useState("");
   const [description, setDescription] = useState("");
   const [ean, setEan] = useState("");
   const [ncm, setNcm] = useState(0);
@@ -182,6 +233,32 @@ function App() {
   const [valueUnit, setValueUnit] = useState("");
   const [comission, setComission] = useState("");
   const [totalCusto, setTotalCusto] = useState("");
+  const [criado_em, setCriado_em] = useState("");
+
+  function cleanState() {
+    setCfop(0);
+    setIdentify('');
+    setComission("");
+    setCfop(0);
+    setComission("");
+    setDescription("");
+    setEan("");
+    setIcmsIn("");
+    setIcmsOut("");
+    setValueUnit("");
+    setNcm(0);
+    setCst(0);
+    setTotalCusto("");
+    setCriado_em("");
+  }
+
+  function hasPassed36Hours(creationDate) {
+    const itemDate = new Date(creationDate);
+    const now = new Date();
+    const differenceMs = now.getTime() - itemDate.getTime();
+    const limitMs = 36 * 60 * 60 * 1000;
+    return differenceMs > limitMs;
+  }
 
   // Função para buscar
   const url = "http://localhost:3000/api/gic/items";
@@ -214,24 +291,89 @@ function App() {
 
       if (result) {
         changeMessage("Novo dado inserido com sucesso!", "rgb(40, 146, 26)");
-        setCfop(0);
-        setComission("");
-        setCfop(0);
-        setComission("");
-        setDescription("");
-        setEan("");
-        setIcmsIn("");
-        setIcmsOut("");
-        setValueUnit("");
-        setNcm(0);
-        setCst(0);
         openList();
-        setTotalCusto('');
       } else {
         changeMessage("Erro na inserção!", "rgb(255, 95, 95)");
       }
     }
   };
+
+  const handleSubmitEdit = async (e) => {
+    e.preventDefault();
+    
+    if (!identify) {
+      changeMessage("Passe um id e faça uma busca!", "rgb(255, 95, 95)");
+      getElement("id").focus();
+      return false;
+    }
+
+    if (!hasPassed36Hours(criado_em)) {
+      changeMessage("Não é permitido Deletar itens antes das 36h de sua criação!", "rgb(255, 95, 95)");
+      getElement("id").focus();
+      return false;
+    }
+    
+    const data = validateData(
+      description,
+      ean,
+      icmsIn,
+      icmsOut,
+      valueUnit,
+      comission,
+      cst,
+      cfop,
+      ncm
+    );
+
+    if (data) {
+      const result = await baseRequestPUT(`http://localhost:3000/api/gic/items/${identify}`, data);
+
+      if (result) {
+        changeMessage("Item atualizado com sucesso!", "rgb(40, 146, 26)");
+        openList();
+      } else {
+        changeMessage("Não foi possível editar o tem!", "rgb(255, 95, 95)");
+      }
+    } else {
+      changeMessage("Erro na edição!", "rgb(255, 95, 95)");
+    }
+  }
+
+  const handleSubmitDelete = async (e) => {
+    e.preventDefault();
+
+    if (!identify) {
+      changeMessage("Passe um id e faça uma busca!", "rgb(255, 95, 95)");
+      getElement("id").focus();
+      return false;
+    }
+
+    const data = validateData(
+      description,
+      ean,
+      icmsIn,
+      icmsOut,
+      valueUnit,
+      comission,
+      cst,
+      cfop,
+      ncm
+    );
+
+    if (data) {
+      const result = await baseRequestDELETE(`http://localhost:3000/api/gic/items/${identify}`);
+
+      if (result) {
+        changeMessage("Item deletado com sucesso!", "rgb(40, 146, 26)");
+        openList();
+      } else {
+        changeMessage("Não foi possível deletar o tem!", "rgb(255, 95, 95)");
+      }
+    } else {
+      changeMessage("Erro na exclusão!", "rgb(255, 95, 95)");
+    }
+
+  }
 
   return (
     <div className="container">
@@ -278,9 +420,18 @@ function App() {
           totalCusto={totalCusto}
           setTotalCusto={setTotalCusto}
           edit={false}
+          limitarPalavras={limitarPalavras}
         />
       )}
-      {stage === stages[2].name && <ModelForm edit={true} description={description}
+      {stage === stages[2].name && (
+        <ModelForm
+          edit={true}
+          handleSubmitDelete={handleSubmitDelete}
+          handleSubmitEdit={handleSubmitEdit}
+          changeMessage={changeMessage}
+          identify={identify}
+          setIdentify={setIdentify}
+          description={description}
           setDescription={setDescription}
           ean={ean}
           setEan={setEan}
@@ -299,7 +450,11 @@ function App() {
           cfop={cfop}
           setCfop={setCfop}
           totalCusto={totalCusto}
-          setTotalCusto={setTotalCusto}/>}
+          setTotalCusto={setTotalCusto}
+          cleanState={cleanState}
+          setCriado_em={setCriado_em}
+        />
+      )}
     </div>
   );
 }
