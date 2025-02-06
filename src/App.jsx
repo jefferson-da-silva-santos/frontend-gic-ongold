@@ -1,8 +1,8 @@
 import Menu from "./components/Menu";
 import Navgation from "./components/Navgation";
 import CardItems from "./components/CardItems/CardItems";
-import { useEffect, useRef, useState } from "react";
-import ModelForm from "./components/ModelForm";
+import { useEffect, useState } from "react";
+import ModelForm from "./components/ModalForm";
 import Dialog from "./components/Dialog";
 import { parseISO, addHours, isAfter } from "date-fns";
 import apiRequest from "./utils/api/baseRequest";
@@ -19,16 +19,6 @@ function getElement(id) {
 }
 
 function App() {
-  // Referências de inputs
-  const idRef = useRef(null);
-  const descRef = useRef(null);
-  const eanRef = useRef(null);
-  const ncmRef = useRef(null);
-  const icms_inRef = useRef(null);
-  const icms_outRef = useRef(null);
-  const cstRef = useRef(null);
-  const cfopRef = useRef(null);
-  const comissaoRef = useRef(null);
   // Estado
   const [stage, setStage] = useState(stages[0].name);
   // Mensagem
@@ -230,116 +220,61 @@ function App() {
   // Função para submeter o formulário de Cadastro
   const handleSubmitRegister = async (e) => {
     e.preventDefault();
-    const data = validateData(
-      description,
-      ean,
-      icmsIn,
-      icmsOut,
-      valueUnit,
-      comission,
-      cst,
-      cfop,
-      ncm
+    resultSubmits(
+      false,
+      "http://localhost:3000/api/gic/items",
+      "POST",
+      "Novo dado inserido com sucesso!",
+      "Erro na inserção!"
     );
-
-    if (data) {
-      const result = await apiRequest(
-        "http://localhost:3000/api/gic/items",
-        "POST",
-        data
-      );
-
-      if (result) {
-        changeMessage("Novo dado inserido com sucesso!", "rgb(40, 146, 26)");
-        openList();
-      } else {
-        changeMessage("Erro na inserção!", "rgb(255, 95, 95)");
-      }
-    }
   };
 
   // Função para submeter o formulário de Edição
   const handleSubmitEdit = async (e) => {
     e.preventDefault();
-    if (!identify) {
-      changeMessage("Passe um id e faça uma busca!", "rgb(255, 95, 95)");
-      getElement("id").focus();
-      return false;
-    }
+    validateIdentify(identify);
 
     if (!hasPassed36Hours(criado_em)) {
       changeMessage(
         "Não é permitido Deletar itens antes das 36h de sua criação!",
         "rgb(255, 95, 95)"
       );
-      getElement("id").focus();
       return false;
     }
 
-    const data = validateData(
-      description,
-      ean,
-      icmsIn,
-      icmsOut,
-      valueUnit,
-      comission,
-      cst,
-      cfop,
-      ncm
+    resultSubmits(
+      false,
+      `http://localhost:3000/api/gic/items/${identify}`,
+      "PUT",
+      "Item atualizado com sucesso!",
+      "Erro na edição!"
     );
-
-    if (data) {
-      const result = await apiRequest(
-        `http://localhost:3000/api/gic/items/${identify}`,
-        "PUT",
-        data
-      );
-
-      if (result) {
-        changeMessage("Item atualizado com sucesso!", "rgb(40, 146, 26)");
-        openList();
-      } else {
-        changeMessage("Não foi possível editar o tem!", "rgb(255, 95, 95)");
-      }
-    } else {
-      changeMessage("Erro na edição!", "rgb(255, 95, 95)");
-    }
   };
 
   // Função para submeter a exclusão de um item
   const handleSubmitDelete = async (e) => {
     e.preventDefault();
-
-    if (!identify) {
-      changeMessage("Passe um id e faça uma busca!", "rgb(255, 95, 95)");
-      getElement("id").focus();
-      return false;
-    }
-
-    if (resuDialog === 0) {
-      setDialogVisible(true);
-      setTitleDialog("Tem certeza que deseja excluir?");
-      setTextDialog("O item excluído será encaminhado para lixeira.");
-      setClassIconDialog("bi-info-circle-fill");
-      setTextBtn1Dialog("Mover para Lixeira");
-      setTextBtn2Dialog("Cancelar");
-    }
+    validateIdentify(identify);
+    createDialog("Tem certeza que deseja excluir?", "O item excluído será encaminhado para lixeira.", "bi-info-circle-fill", "Mover para Lixeira", "Cancelar");
   };
 
   const hendleDelete = async () => {
     setResuDialog(1);
-    const result = await apiRequest(`http://localhost:3000/api/gic/items/${identify}`, 'DELETE');
-    if (result) {
-      changeMessage("Item adicionado à lixeira", "rgb(40, 146, 26)");
-      openList();
-    } else {
-      changeMessage(
-        "Não foi possível adicionar o tem a lixeira!",
-        "rgb(255, 95, 95)"
-      );
-    }
+    resultSubmits(true, `http://localhost:3000/api/gic/items/${identify}`, 'DELETE', "Item adicionado à lixeira", "Não foi possível adicionar o tem a lixeira!");
     setResuDialog(0);
     setDialogVisible(false);
+  };
+
+  // Função que cria uma caixa de diálogo
+  const createDialog = (title, text, icon, textButton1, textButton2) => {
+    if (resuDialog === 0) {
+      setDialogVisible(true);
+      setTitleDialog(title);
+      setTextDialog(text);
+      setClassIconDialog(icon);
+      setTextBtn1Dialog(textButton1);
+      setTextBtn2Dialog(textButton2);
+    }
   };
 
   // Função que calcula o total de custo
@@ -353,6 +288,54 @@ function App() {
       (entryIcms / 100 + exitIcms / 100 + commissionRate / 100) * value;
     setTotalCusto(`R$ ${parseFloat(totalCost.toFixed(2))}`);
   };
+
+  // Função que valida o id dentro dos submits
+  const validateIdentify = (id) => {
+    if (!id) {
+      changeMessage("Passe um id e faça uma busca!", "rgb(255, 95, 95)");
+      getElement("id").focus();
+      return false;
+    }
+  };
+
+  // Função que faz os request para api dentro dos submits
+  const resultSubmits = async (
+    deleted = false,
+    url,
+    method,
+    textRequestSuccess,
+    textRequestError
+  ) => {
+    if (!deleted) {
+      const data = validateData(
+        description,
+        ean,
+        icmsIn,
+        icmsOut,
+        valueUnit,
+        comission,
+        cst,
+        cfop,
+        ncm
+      );
+      if (data) {
+        requestSubmit(url, method, data, textRequestSuccess, textRequestError);
+      }
+    } else {
+      requestSubmit(url, method, null, textRequestSuccess, textRequestError);
+    }
+  };
+
+  const requestSubmit = async (url, method, data, textRequestSuccess, textRequestError) => {
+    const result = await apiRequest(url, method, data);
+
+      if (result) {
+        changeMessage(textRequestSuccess, "rgb(40, 146, 26)");
+        openList();
+      } else {
+        changeMessage(textRequestError, "rgb(255, 95, 95)");
+      }
+  }
 
   return (
     <div className="container">

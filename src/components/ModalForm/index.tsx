@@ -38,33 +38,21 @@ const ModelForm = ({
   const [arrCst, setArrCst] = useState<{ codcst: string; descricao: string }[]>(
     []
   );
-  const [arrCfop, setArrCfop] = useState<
-    { codcfop: string; descricaocfop: string }[]
-  >([]);
+  const [arrCfop, setArrCfop] = useState<{ codcfop: string; descricaocfop: string }[]>([]);
   const [arrNcm, setArrNcm] = useState<{ codncm: string; nomencm: string }[]>(
     []
   );
 
   useEffect(() => {
     const fetchData = async () => {
-      const data = await apiRequest("http://localhost:3000/api/gic/csts");
-      if (data) setArrCst(data);
-    };
-    fetchData();
-  }, []);
-
-  useEffect(() => {
-    const fetchData = async () => {
-      const data = await apiRequest("http://localhost:3000/api/gic/cfops");
-      if (data) setArrCfop(data);
-    };
-    fetchData();
-  }, []);
-
-  useEffect(() => {
-    const fetchData = async () => {
-      const data = await apiRequest("http://localhost:3000/api/gic/ncms");
-      if (data) setArrNcm(data);
+      const dataCsts = await apiRequest("http://localhost:3000/api/gic/csts");
+      const dataCfops = await apiRequest("http://localhost:3000/api/gic/cfops");
+      const dataNcms = await apiRequest("http://localhost:3000/api/gic/ncms");
+      if (dataCsts && dataCfops && dataNcms) {
+        setArrCst(dataCsts);
+        setArrCfop(dataCfops);
+        setArrNcm(dataNcms);
+      }
     };
     fetchData();
   }, []);
@@ -76,7 +64,7 @@ const ModelForm = ({
     );
 
     if (result.error) {
-      changeMessage("Nenhum item encontrado com este id!", 'rgb(255, 95, 95');
+      changeMessage("Nenhum item encontrado com este id!", "rgb(255, 95, 95");
       return;
     }
 
@@ -198,7 +186,7 @@ const ModelForm = ({
             <span>Taxa ICMS de entrada (%):</span>
             <input
               required
-              type="number"
+              type="text"
               name="icms-in"
               id="icms-in"
               value={icmsIn}
@@ -210,7 +198,7 @@ const ModelForm = ({
             <span>Taxa ICMS de saída (%):</span>
             <input
               required
-              type="number"
+              type="text"
               name="icms-out"
               id="icms-out"
               value={icmsOut}
