@@ -4,7 +4,7 @@ import CardItems from "./components/CardItems/CardItems";
 import { useEffect, useState } from "react";
 import ModelForm from "./components/ModalForm";
 import Dialog from "./components/Dialog";
-import { parseISO, addHours, isAfter } from "date-fns";
+import { hasPassed36Hours, validateIdentify } from "./utils/validation/validations";
 import apiRequest from "./utils/api/baseRequest";
 
 const stages = [
@@ -198,14 +198,7 @@ function App() {
     setTotalCusto("");
     setCriado_em("");
   }
-
-  // Função que calcula compara um datatime com o datatime atual e valida se já se passaram 36h da sua criação
-  function hasPassed36Hours(creationDate) {
-    const date = parseISO(creationDate); // Converte a string para um objeto Date
-    const datePlus36Hours = addHours(date, 36); // Soma 36 horas à data original
-    return isAfter(new Date(), datePlus36Hours); // Compara se a data atual já passou da data + 36h
-  }
-
+  
   // Função para buscar
   useEffect(() => {
     const fetchData = async () => {
@@ -232,7 +225,7 @@ function App() {
   // Função para submeter o formulário de Edição
   const handleSubmitEdit = async (e) => {
     e.preventDefault();
-    validateIdentify(identify);
+    validateIdentify(identify, changeMessage, getElement);
 
     if (!hasPassed36Hours(criado_em)) {
       changeMessage(
@@ -247,14 +240,14 @@ function App() {
       `http://localhost:3000/api/gic/items/${identify}`,
       "PUT",
       "Item atualizado com sucesso!",
-      "Erro na edição!"
+      "Erro na edição, faça a alteração!"
     );
   };
 
   // Função para submeter a exclusão de um item
   const handleSubmitDelete = async (e) => {
     e.preventDefault();
-    validateIdentify(identify);
+    validateIdentify(identify, changeMessage, getElement);
     createDialog("Tem certeza que deseja excluir?", "O item excluído será encaminhado para lixeira.", "bi-info-circle-fill", "Mover para Lixeira", "Cancelar");
   };
 
@@ -287,15 +280,6 @@ function App() {
     const totalCost =
       (entryIcms / 100 + exitIcms / 100 + commissionRate / 100) * value;
     setTotalCusto(`R$ ${parseFloat(totalCost.toFixed(2))}`);
-  };
-
-  // Função que valida o id dentro dos submits
-  const validateIdentify = (id) => {
-    if (!id) {
-      changeMessage("Passe um id e faça uma busca!", "rgb(255, 95, 95)");
-      getElement("id").focus();
-      return false;
-    }
   };
 
   // Função que faz os request para api dentro dos submits
