@@ -3,9 +3,14 @@ import Navgation from "./components/Navgation";
 import CardItems from "./components/CardItems/CardItems";
 import { useEffect, useState } from "react";
 import ModelForm from "./components/ModalForm";
+import FormRegister from "./components/FormRegister";
 import Dialog from "./components/Dialog";
-import { hasPassed36Hours, validateIdentify } from "./utils/validation/validations";
+import {
+  hasPassed36Hours,
+  validateIdentify,
+} from "./utils/validation/validations";
 import apiRequest from "./utils/api/baseRequest";
+import FormEdition from "./components/FormEdition";
 
 const stages = [
   { id: 1, name: "list" },
@@ -172,15 +177,6 @@ function App() {
     };
   };
 
-  // Função responsável por limitar o tamanho do texto dos options do SELECT
-  const limitarPalavras = (texto) => {
-    const palavras = texto.split(/\s+/);
-    if (palavras.length > 5) {
-      return palavras.slice(0, 5).join(" ") + "...";
-    }
-    return texto;
-  };
-
   // Função para limpar os estados
   function cleanState() {
     setCfop(0);
@@ -198,7 +194,7 @@ function App() {
     setTotalCusto("");
     setCriado_em("");
   }
-  
+
   // Função para buscar
   useEffect(() => {
     const fetchData = async () => {
@@ -248,12 +244,24 @@ function App() {
   const handleSubmitDelete = async (e) => {
     e.preventDefault();
     validateIdentify(identify, changeMessage, getElement);
-    createDialog("Tem certeza que deseja excluir?", "O item excluído será encaminhado para lixeira.", "bi-info-circle-fill", "Mover para Lixeira", "Cancelar");
+    createDialog(
+      "Tem certeza que deseja excluir?",
+      "O item excluído será encaminhado para lixeira.",
+      "bi-info-circle-fill",
+      "Mover para Lixeira",
+      "Cancelar"
+    );
   };
 
   const hendleDelete = async () => {
     setResuDialog(1);
-    resultSubmits(true, `http://localhost:3000/api/gic/items/${identify}`, 'DELETE', "Item adicionado à lixeira", "Não foi possível adicionar o tem a lixeira!");
+    resultSubmits(
+      true,
+      `http://localhost:3000/api/gic/items/${identify}`,
+      "DELETE",
+      "Item adicionado à lixeira",
+      "Não foi possível adicionar o tem a lixeira!"
+    );
     setResuDialog(0);
     setDialogVisible(false);
   };
@@ -310,16 +318,22 @@ function App() {
     }
   };
 
-  const requestSubmit = async (url, method, data, textRequestSuccess, textRequestError) => {
+  const requestSubmit = async (
+    url,
+    method,
+    data,
+    textRequestSuccess,
+    textRequestError
+  ) => {
     const result = await apiRequest(url, method, data);
 
-      if (result) {
-        changeMessage(textRequestSuccess, "rgb(40, 146, 26)");
-        openList();
-      } else {
-        changeMessage(textRequestError, "rgb(255, 95, 95)");
-      }
-  }
+    if (result) {
+      changeMessage(textRequestSuccess, "rgb(40, 146, 26)");
+      openList();
+    } else {
+      changeMessage(textRequestError, "rgb(255, 95, 95)");
+    }
+  };
 
   return (
     <div className="container">
@@ -357,66 +371,8 @@ function App() {
       />
       <Navgation />
       {stage === stages[0].name && <CardItems items={items} />}
-      {stage === stages[1].name && (
-        <ModelForm
-          handleSubmitRegister={handleSubmitRegister}
-          description={description}
-          setDescription={setDescription}
-          ean={ean}
-          setEan={setEan}
-          icmsIn={icmsIn}
-          setIcmsIn={setIcmsIn}
-          icmsOut={icmsOut}
-          setIcmsOut={setIcmsOut}
-          valueUnit={valueUnit}
-          setValueUnit={setValueUnit}
-          comission={comission}
-          setComission={setComission}
-          ncm={ncm}
-          setNcm={setNcm}
-          cst={cst}
-          setCst={setCst}
-          cfop={cfop}
-          setCfop={setCfop}
-          totalCusto={totalCusto}
-          setTotalCusto={setTotalCusto}
-          edit={false}
-          limitarPalavras={limitarPalavras}
-          calculateTotCust={calculateTotCust}
-        />
-      )}
-      {stage === stages[2].name && (
-        <ModelForm
-          edit={true}
-          handleSubmitDelete={handleSubmitDelete}
-          handleSubmitEdit={handleSubmitEdit}
-          changeMessage={changeMessage}
-          identify={identify}
-          setIdentify={setIdentify}
-          description={description}
-          setDescription={setDescription}
-          ean={ean}
-          setEan={setEan}
-          icmsIn={icmsIn}
-          setIcmsIn={setIcmsIn}
-          icmsOut={icmsOut}
-          setIcmsOut={setIcmsOut}
-          valueUnit={valueUnit}
-          setValueUnit={setValueUnit}
-          comission={comission}
-          setComission={setComission}
-          ncm={ncm}
-          setNcm={setNcm}
-          cst={cst}
-          setCst={setCst}
-          cfop={cfop}
-          setCfop={setCfop}
-          totalCusto={totalCusto}
-          setTotalCusto={setTotalCusto}
-          cleanState={cleanState}
-          setCriado_em={setCriado_em}
-        />
-      )}
+      {stage === stages[1].name && <FormRegister totalCusto={totalCusto} />}
+      {stage === stages[2].name && <FormEdition />}
     </div>
   );
 }
