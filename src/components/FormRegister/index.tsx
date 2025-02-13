@@ -2,9 +2,23 @@ import React, { useEffect, useState } from "react";
 import { useFormik } from "formik";
 import useApi from "../../hooks/useApi";
 import { Dropdown } from "primereact/dropdown";
-import { limitWord, calculateTotCust, formatCurrency, validate, FormValues } from "../../utils/validation/validations";
+import {
+  limitWord,
+  calculateTotCust,
+  formatCurrency,
+  validate,
+  FormValues,
+} from "../../utils/validation/validations";
 
 const FormRegister: React.FC<{ totalCusto: string }> = ({ totalCusto }) => {
+  
+  const {
+    data: dataInsertItem,
+    error: errorInsertItem,
+    loading: loadingInsertItem,
+    requestAPI: requestAPIInsertItem, 
+  } = useApi("/items", "POST");
+  
 
   const formik = useFormik<FormValues>({
     initialValues: {
@@ -20,9 +34,38 @@ const FormRegister: React.FC<{ totalCusto: string }> = ({ totalCusto }) => {
     },
     validate,
     onSubmit: async (values, { setSubmitting, resetForm }) => {
-      console.log(values);
-      alert(JSON.stringify(values));
-    },
+      // Formata os dados de acordo com o formato esperado pela API
+      const formattedValues = {
+        valor_unitario: Number(values.valorUnit) || 0,
+        descricao: values.description.trim(),
+        taxa_icms_entrada: Number(values.icmsIn) || 0,
+        taxa_icms_saida: Number(values.icmsOut) || 0,
+        comissao: Number(values.comission) || 0,
+        ncm: values.ncm.trim(),
+        cst: values.cst.trim(),
+        cfop: Number(values.cfop) || 0,
+        ean: values.ean.trim(),
+        excluido: 0,
+      };
+    
+      try {
+        const result = await requestAPIInsertItem(formattedValues);
+        console.log("Resposta da API:", result);
+        if (result) {
+          console.log("Item cadastrado com sucesso!");
+          resetForm();
+        } else {
+          console.error("Erro ao inserir item!");
+        }
+      } catch (error) {
+        console.error("Erro na requisição:", error);
+        if (error.response) {
+          console.log("Resposta da API:", error.response.data); // Log do erro
+        }
+      } finally {
+        setSubmitting(false);
+      }
+    }
   });
 
   // Requisição para a API
@@ -73,7 +116,7 @@ const FormRegister: React.FC<{ totalCusto: string }> = ({ totalCusto }) => {
     loading: loadingNcms,
     requestAPI: requestApiNcms,
   } = useApi(`/ncms/${selectNCN}`, "GET");
-  
+
   // Adicione um estado para armazenar o erro de NCM
   const [errorNcmRequest, setErrorNcmRequest] = useState(null);
 
@@ -85,7 +128,7 @@ const FormRegister: React.FC<{ totalCusto: string }> = ({ totalCusto }) => {
 
   useEffect(() => {
     if (selectNCN) {
-      requestApiNcms().catch((error) => setErrorNcmRequest(error)); // Captura erro e armazena
+      requestApiNcms().catch((error) => setErrorNcmRequest(error));
     }
   }, [selectNCN]);
 
@@ -310,7 +353,7 @@ const FormRegister: React.FC<{ totalCusto: string }> = ({ totalCusto }) => {
               value={formatCurrency(totalCust)}
             />
           </label>
-          <input type="submit" value="Cadastrar Novo Item" />
+          <input disabled={loadingInsertItem ? true : false} type="submit" value={loadingInsertItem ? "Inserindo..." : "Cadastrar Novo Item"} />
         </div>
       </div>
     </form>
