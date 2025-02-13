@@ -1,76 +1,10 @@
 import React, { useEffect, useState } from "react";
-import { isNaN, useFormik } from "formik";
+import { useFormik } from "formik";
 import useApi from "../../hooks/useApi";
 import { Dropdown } from "primereact/dropdown";
-import { ProgressSpinner } from "primereact/progressspinner";
-
-interface FormValues {
-  description: string;
-  ean: string;
-  ncm: string;
-  icmsIn: string;
-  icmsOut: string;
-  cst: string;
-  cfop: string;
-  valorUnit: string;
-  comission: string;
-}
+import { limitWord, calculateTotCust, formatCurrency, validate, FormValues } from "../../utils/validation/validations";
 
 const FormRegister: React.FC<{ totalCusto: string }> = ({ totalCusto }) => {
-  const validate = (values: FormValues) => {
-    const errors: Partial<FormValues> = {};
-
-    if (!values.description) {
-      errors.description = "Campo obrigatório";
-    } else if (!/^[a-zA-Z0-9\s]+$/.test(values.description)) {
-      errors.description =
-        "O nome do produto não pode conter caracteres especiais";
-    }
-
-    if (!values.ean) {
-      errors.ean = "Campo obrigatório";
-    } else if (!/^\d{13,}$/.test(values.ean)) {
-      errors.ean = "O código de barras deve conter no mínimo 13 dígitos";
-    }
-
-    if (!values.ncm) {
-      errors.ncm = "Selecione um NCM para continuar";
-    }
-
-    if (!values.icmsIn) {
-      errors.icmsIn = "Campo obrigatório";
-    } else if (isNaN(values.icmsIn)) {
-      errors.icmsIn = "A taxa ICMS de entrada deve conter apenas números";
-    }
-
-    if (!values.icmsOut) {
-      errors.icmsOut = "Campo obrigatório";
-    } else if (isNaN(values.icmsOut)) {
-      errors.icmsOut = "A taxa ICMS de saída deve conter apenas números";
-    }
-
-    if (!values.cst) {
-      errors.cst = "Selecione um CST para continuar";
-    }
-
-    if (!values.cfop) {
-      errors.cfop = "Selecione um CFOP para continuar";
-    }
-
-    if (!values.valorUnit) {
-      errors.valorUnit = "Campo obrigatório";
-    } else if (!/^\d+([.,]\d+)?$/.test(values.valorUnit)) {
-      errors.valorUnit = "O valor unitário deve conter apenas números";
-    }
-
-    if (!values.comission) {
-      errors.comission = "Campo obrigatório";
-    } else if (!/^\d+([.,]\d+)?$/.test(values.comission)) {
-      errors.comission = "A comissão deve conter apenas números";
-    }
-
-    return errors;
-  };
 
   const formik = useFormik<FormValues>({
     initialValues: {
@@ -86,32 +20,10 @@ const FormRegister: React.FC<{ totalCusto: string }> = ({ totalCusto }) => {
     },
     validate,
     onSubmit: async (values, { setSubmitting, resetForm }) => {
+      console.log(values);
       alert(JSON.stringify(values));
     },
   });
-
-  // Função que calcula o total de custo
-  const calculateTotCust = (
-    value = 0,
-    entryIcms = 0,
-    exitIcms = 0,
-    commissionRate = 0
-  ) => {
-    return parseFloat(
-      (
-        (entryIcms / 100 + exitIcms / 100 + commissionRate / 100) *
-        value
-      ).toFixed(2)
-    );
-  };
-
-  // Função que formata o valor total de custo para o padrão BR
-  const formatCurrency = (value: number): string => {
-    return value.toLocaleString("pt-BR", {
-      style: "currency",
-      currency: "BRL",
-    });
-  };
 
   // Requisição para a API
   const {
@@ -121,12 +33,6 @@ const FormRegister: React.FC<{ totalCusto: string }> = ({ totalCusto }) => {
     requestAPI: requestApiCsts,
   } = useApi("/csts", "GET");
   const {
-    data: dataNcms,
-    error: errorNcms,
-    loading: loadingNcms,
-    requestAPI: requestApiNcms,
-  } = useApi("/ncms", "GET");
-  const {
     data: dataCfops,
     error: errorCfops,
     loading: loadingCfops,
@@ -135,7 +41,6 @@ const FormRegister: React.FC<{ totalCusto: string }> = ({ totalCusto }) => {
 
   useEffect(() => {
     requestApiCsts();
-    requestApiNcms();
     requestApiCfops();
   }, []);
 
@@ -159,23 +64,39 @@ const FormRegister: React.FC<{ totalCusto: string }> = ({ totalCusto }) => {
     formik.values.comission,
   ]);
 
-  // Função responsável por limitar as descrições dos itens nos selects
-  const limitWord = (texto) => {
-    const palavras = texto.split(/\s+/);
-    if (palavras.length > 5) {
-      return palavras.slice(0, 5).join(" ") + "...";
-    }
-    return texto;
+  // Requizição par aos NCMs
+  const [selectNCN, setSelectNCM] = useState(null);
+
+  const {
+    data: dataNcms,
+    error: errorNcms,
+    loading: loadingNcms,
+    requestAPI: requestApiNcms,
+  } = useApi(`/ncms/${selectNCN}`, "GET");
+  
+  // Adicione um estado para armazenar o erro de NCM
+  const [errorNcmRequest, setErrorNcmRequest] = useState(null);
+
+  // Função para resetar erro quando um novo NCM for selecionado
+  const handleSelectNCM = (value) => {
+    setSelectNCM(value);
+    setErrorNcmRequest(null); // Limpa o erro para permitir novas tentativas
   };
 
-  const [selectedCity, setSelectedCity] = useState(null);
-  const cities = [
-    { name: "New York", code: "NY" },
-    { name: "Rome", code: "RM" },
-    { name: "London", code: "LDN" },
-    { name: "Istanbul", code: "IST" },
-    { name: "Paris", code: "PRS" },
-  ];
+  useEffect(() => {
+    if (selectNCN) {
+      requestApiNcms().catch((error) => setErrorNcmRequest(error)); // Captura erro e armazena
+    }
+  }, [selectNCN]);
+
+  const ncms = selectNCN
+    ? Array.isArray(dataNcms)
+      ? dataNcms.map((item) => ({
+          name: item.codncm + " - " + limitWord(item.nomencm),
+          code: item.codncm,
+        }))
+      : []
+    : null;
 
   return (
     <form className="form-register" onSubmit={formik.handleSubmit}>
@@ -218,13 +139,27 @@ const FormRegister: React.FC<{ totalCusto: string }> = ({ totalCusto }) => {
           <label>
             <span>NCM:</span>
             <Dropdown
-              value={selectedCity}
-              onChange={(e) => setSelectedCity(e.value)}
-              options={cities}
+              value={selectNCN}
+              onChange={(e) => {
+                handleSelectNCM(e.value);
+                formik.setFieldValue("ncm", e.value.code);
+                setErrorNcmRequest(null);
+              }}
+              onBlur={() => formik.setFieldTouched("ncm", true)}
+              options={ncms}
               optionLabel="name"
               editable
               placeholder="Busque um NCM"
               className="input-drop"
+              emptyMessage={
+                loadingNcms ? (
+                  <p className="message-empty-loading">Carregando...</p>
+                ) : errorNcmRequest ? (
+                  <p className="message-empty-error">Erro ao buscar NCMs</p>
+                ) : (
+                  <p className="message-empty">Nenhum NCM encontrado</p>
+                )
+              }
             />
             {formik.touched.ncm && formik.errors.ncm ? (
               <span className="text-error">{formik.errors.ncm}</span>
@@ -280,6 +215,8 @@ const FormRegister: React.FC<{ totalCusto: string }> = ({ totalCusto }) => {
               <option value="">
                 {loadingCsts ? (
                   <span className="loading-text">Carregando...</span>
+                ) : errorCsts ? (
+                  <span className="loading-text">Erro na busca de CSTs</span>
                 ) : (
                   "Selecione"
                 )}
@@ -310,6 +247,8 @@ const FormRegister: React.FC<{ totalCusto: string }> = ({ totalCusto }) => {
               <option value="">
                 {loadingCfops ? (
                   <span className="loading-text">Carregando...</span>
+                ) : errorCfops ? (
+                  <span className="loading-text">Erro na busca de CFOPs</span>
                 ) : (
                   "Selecione"
                 )}
