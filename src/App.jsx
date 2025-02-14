@@ -371,8 +371,8 @@ function App() {
       />
       <Navgation />
       {stage === stages[0].name && <CardItems items={items} />}
-      {stage === stages[1].name && <FormRegister totalCusto={totalCusto} />}
-      {stage === stages[2].name && <FormEdition />}
+      {stage === stages[1].name && <FormRegister changeMessage={changeMessage}/>}
+      {stage === stages[2].name && <FormEdition changeMessage={changeMessage}/>}
     </div>
   );
 }
