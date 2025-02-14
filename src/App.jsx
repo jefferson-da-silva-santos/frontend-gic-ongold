@@ -1,7 +1,7 @@
 import Menu from "./components/Menu";
 import Navgation from "./components/Navgation";
 import CardItems from "./components/CardItems/CardItems";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import ModelForm from "./components/ModelForm";
 import Dialog from "./components/Dialog";
 import { parseISO, addHours, isAfter } from "date-fns";
@@ -20,15 +20,15 @@ function getElement(id) {
 
 function App() {
   // Referências de inputs
-  const idRef = useRef(null);
-  const descRef = useRef(null);
-  const eanRef = useRef(null);
-  const ncmRef = useRef(null);
-  const icms_inRef = useRef(null);
-  const icms_outRef = useRef(null);
-  const cstRef = useRef(null);
-  const cfopRef = useRef(null);
-  const comissaoRef = useRef(null);
+  // const idRef = useRef(null);
+  // const descRef = useRef(null);
+  // const eanRef = useRef(null);
+  // const ncmRef = useRef(null);
+  // const icms_inRef = useRef(null);
+  // const icms_outRef = useRef(null);
+  // const cstRef = useRef(null);
+  // const cfopRef = useRef(null);
+  // const comissaoRef = useRef(null);
   // Estado
   const [stage, setStage] = useState(stages[0].name);
   // Mensagem
