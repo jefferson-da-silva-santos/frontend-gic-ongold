@@ -2,10 +2,19 @@ import Menu from "./components/Menu";
 import Navgation from "./components/Navgation";
 import CardItems from "./components/CardItems/CardItems";
 import { useEffect, useState } from "react";
+<<<<<<< HEAD
 import ModelForm from "./components/ModelForm";
+=======
+import ModelForm from "./components/ModalForm";
+import FormRegister from "./components/FormRegister";
+>>>>>>> 64cb1033e4b4777444f8548ab0eeb3f197aa6a7a
 import Dialog from "./components/Dialog";
-import { parseISO, addHours, isAfter } from "date-fns";
+import {
+  hasPassed36Hours,
+  validateIdentify,
+} from "./utils/validation/validations";
 import apiRequest from "./utils/api/baseRequest";
+import FormEdition from "./components/FormEdition";
 
 const stages = [
   { id: 1, name: "list" },
@@ -19,6 +28,7 @@ function getElement(id) {
 }
 
 function App() {
+<<<<<<< HEAD
   // Referências de inputs
   // const idRef = useRef(null);
   // const descRef = useRef(null);
@@ -29,6 +39,8 @@ function App() {
   // const cstRef = useRef(null);
   // const cfopRef = useRef(null);
   // const comissaoRef = useRef(null);
+=======
+>>>>>>> 64cb1033e4b4777444f8548ab0eeb3f197aa6a7a
   // Estado
   const [stage, setStage] = useState(stages[0].name);
   // Mensagem
@@ -182,15 +194,6 @@ function App() {
     };
   };
 
-  // Função responsável por limitar o tamanho do texto dos options do SELECT
-  const limitarPalavras = (texto) => {
-    const palavras = texto.split(/\s+/);
-    if (palavras.length > 5) {
-      return palavras.slice(0, 5).join(" ") + "...";
-    }
-    return texto;
-  };
-
   // Função para limpar os estados
   function cleanState() {
     setCfop(0);
@@ -209,13 +212,6 @@ function App() {
     setCriado_em("");
   }
 
-  // Função que calcula compara um datatime com o datatime atual e valida se já se passaram 36h da sua criação
-  function hasPassed36Hours(creationDate) {
-    const date = parseISO(creationDate); // Converte a string para um objeto Date
-    const datePlus36Hours = addHours(date, 36); // Soma 36 horas à data original
-    return isAfter(new Date(), datePlus36Hours); // Compara se a data atual já passou da data + 36h
-  }
-
   // Função para buscar
   useEffect(() => {
     const fetchData = async () => {
@@ -230,116 +226,73 @@ function App() {
   // Função para submeter o formulário de Cadastro
   const handleSubmitRegister = async (e) => {
     e.preventDefault();
-    const data = validateData(
-      description,
-      ean,
-      icmsIn,
-      icmsOut,
-      valueUnit,
-      comission,
-      cst,
-      cfop,
-      ncm
+    resultSubmits(
+      false,
+      "http://localhost:3000/api/gic/items",
+      "POST",
+      "Novo dado inserido com sucesso!",
+      "Erro na inserção!"
     );
-
-    if (data) {
-      const result = await apiRequest(
-        "http://localhost:3000/api/gic/items",
-        "POST",
-        data
-      );
-
-      if (result) {
-        changeMessage("Novo dado inserido com sucesso!", "rgb(40, 146, 26)");
-        openList();
-      } else {
-        changeMessage("Erro na inserção!", "rgb(255, 95, 95)");
-      }
-    }
   };
 
   // Função para submeter o formulário de Edição
   const handleSubmitEdit = async (e) => {
     e.preventDefault();
-    if (!identify) {
-      changeMessage("Passe um id e faça uma busca!", "rgb(255, 95, 95)");
-      getElement("id").focus();
-      return false;
-    }
+    validateIdentify(identify, changeMessage, getElement);
 
     if (!hasPassed36Hours(criado_em)) {
       changeMessage(
         "Não é permitido Deletar itens antes das 36h de sua criação!",
         "rgb(255, 95, 95)"
       );
-      getElement("id").focus();
       return false;
     }
 
-    const data = validateData(
-      description,
-      ean,
-      icmsIn,
-      icmsOut,
-      valueUnit,
-      comission,
-      cst,
-      cfop,
-      ncm
+    resultSubmits(
+      false,
+      `http://localhost:3000/api/gic/items/${identify}`,
+      "PUT",
+      "Item atualizado com sucesso!",
+      "Erro na edição, faça a alteração!"
     );
-
-    if (data) {
-      const result = await apiRequest(
-        `http://localhost:3000/api/gic/items/${identify}`,
-        "PUT",
-        data
-      );
-
-      if (result) {
-        changeMessage("Item atualizado com sucesso!", "rgb(40, 146, 26)");
-        openList();
-      } else {
-        changeMessage("Não foi possível editar o tem!", "rgb(255, 95, 95)");
-      }
-    } else {
-      changeMessage("Erro na edição!", "rgb(255, 95, 95)");
-    }
   };
 
   // Função para submeter a exclusão de um item
   const handleSubmitDelete = async (e) => {
     e.preventDefault();
-
-    if (!identify) {
-      changeMessage("Passe um id e faça uma busca!", "rgb(255, 95, 95)");
-      getElement("id").focus();
-      return false;
-    }
-
-    if (resuDialog === 0) {
-      setDialogVisible(true);
-      setTitleDialog("Tem certeza que deseja excluir?");
-      setTextDialog("O item excluído será encaminhado para lixeira.");
-      setClassIconDialog("bi-info-circle-fill");
-      setTextBtn1Dialog("Mover para Lixeira");
-      setTextBtn2Dialog("Cancelar");
-    }
+    validateIdentify(identify, changeMessage, getElement);
+    createDialog(
+      "Tem certeza que deseja excluir?",
+      "O item excluído será encaminhado para lixeira.",
+      "bi-info-circle-fill",
+      "Mover para Lixeira",
+      "Cancelar"
+    );
   };
 
   const hendleDelete = async () => {
     setResuDialog(1);
-    const result = await apiRequest(`http://localhost:3000/api/gic/items/${identify}`, 'DELETE');
-    if (result) {
-      changeMessage("Item adicionado à lixeira", "rgb(40, 146, 26)");
-      openList();
-    } else {
-      changeMessage(
-        "Não foi possível adicionar o tem a lixeira!",
-        "rgb(255, 95, 95)"
-      );
-    }
+    resultSubmits(
+      true,
+      `http://localhost:3000/api/gic/items/${identify}`,
+      "DELETE",
+      "Item adicionado à lixeira",
+      "Não foi possível adicionar o tem a lixeira!"
+    );
     setResuDialog(0);
     setDialogVisible(false);
+  };
+
+  // Função que cria uma caixa de diálogo
+  const createDialog = (title, text, icon, textButton1, textButton2) => {
+    if (resuDialog === 0) {
+      setDialogVisible(true);
+      setTitleDialog(title);
+      setTextDialog(text);
+      setClassIconDialog(icon);
+      setTextBtn1Dialog(textButton1);
+      setTextBtn2Dialog(textButton2);
+    }
   };
 
   // Função que calcula o total de custo
@@ -352,6 +305,51 @@ function App() {
     const totalCost =
       (entryIcms / 100 + exitIcms / 100 + commissionRate / 100) * value;
     setTotalCusto(`R$ ${parseFloat(totalCost.toFixed(2))}`);
+  };
+
+  // Função que faz os request para api dentro dos submits
+  const resultSubmits = async (
+    deleted = false,
+    url,
+    method,
+    textRequestSuccess,
+    textRequestError
+  ) => {
+    if (!deleted) {
+      const data = validateData(
+        description,
+        ean,
+        icmsIn,
+        icmsOut,
+        valueUnit,
+        comission,
+        cst,
+        cfop,
+        ncm
+      );
+      if (data) {
+        requestSubmit(url, method, data, textRequestSuccess, textRequestError);
+      }
+    } else {
+      requestSubmit(url, method, null, textRequestSuccess, textRequestError);
+    }
+  };
+
+  const requestSubmit = async (
+    url,
+    method,
+    data,
+    textRequestSuccess,
+    textRequestError
+  ) => {
+    const result = await apiRequest(url, method, data);
+
+    if (result) {
+      changeMessage(textRequestSuccess, "rgb(40, 146, 26)");
+      openList();
+    } else {
+      changeMessage(textRequestError, "rgb(255, 95, 95)");
+    }
   };
 
   return (
@@ -390,66 +388,8 @@ function App() {
       />
       <Navgation />
       {stage === stages[0].name && <CardItems items={items} />}
-      {stage === stages[1].name && (
-        <ModelForm
-          handleSubmitRegister={handleSubmitRegister}
-          description={description}
-          setDescription={setDescription}
-          ean={ean}
-          setEan={setEan}
-          icmsIn={icmsIn}
-          setIcmsIn={setIcmsIn}
-          icmsOut={icmsOut}
-          setIcmsOut={setIcmsOut}
-          valueUnit={valueUnit}
-          setValueUnit={setValueUnit}
-          comission={comission}
-          setComission={setComission}
-          ncm={ncm}
-          setNcm={setNcm}
-          cst={cst}
-          setCst={setCst}
-          cfop={cfop}
-          setCfop={setCfop}
-          totalCusto={totalCusto}
-          setTotalCusto={setTotalCusto}
-          edit={false}
-          limitarPalavras={limitarPalavras}
-          calculateTotCust={calculateTotCust}
-        />
-      )}
-      {stage === stages[2].name && (
-        <ModelForm
-          edit={true}
-          handleSubmitDelete={handleSubmitDelete}
-          handleSubmitEdit={handleSubmitEdit}
-          changeMessage={changeMessage}
-          identify={identify}
-          setIdentify={setIdentify}
-          description={description}
-          setDescription={setDescription}
-          ean={ean}
-          setEan={setEan}
-          icmsIn={icmsIn}
-          setIcmsIn={setIcmsIn}
-          icmsOut={icmsOut}
-          setIcmsOut={setIcmsOut}
-          valueUnit={valueUnit}
-          setValueUnit={setValueUnit}
-          comission={comission}
-          setComission={setComission}
-          ncm={ncm}
-          setNcm={setNcm}
-          cst={cst}
-          setCst={setCst}
-          cfop={cfop}
-          setCfop={setCfop}
-          totalCusto={totalCusto}
-          setTotalCusto={setTotalCusto}
-          cleanState={cleanState}
-          setCriado_em={setCriado_em}
-        />
-      )}
+      {stage === stages[1].name && <FormRegister totalCusto={totalCusto} />}
+      {stage === stages[2].name && <FormEdition />}
     </div>
   );
 }

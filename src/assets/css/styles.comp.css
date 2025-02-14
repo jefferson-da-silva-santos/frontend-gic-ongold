@@ -1,3 +1,4 @@
+@charset "UTF-8";
 @import "bootstrap-icons/font/bootstrap-icons.css";
 @import url("https://fonts.googleapis.com/css2?family=Nunito:ital,wght@0,200..1000;1,200..1000&display=swap");
 * {
@@ -247,6 +248,9 @@
   margin: 2em auto 1em auto;
   height: fit-content;
 }
+.form-register .p-progress-spinner {
+  width: 20px;
+}
 .form-register .btn-del {
   background-color: #66788b;
 }
@@ -300,7 +304,7 @@
 }
 .form-register__group-inputs__g3 {
   display: grid;
-  grid-template-columns: 1fr 1fr 1fr 10em 10em;
+  grid-template-columns: 1fr 1fr 1fr 1fr;
   width: 100%;
   column-gap: 1rem;
 }
@@ -317,9 +321,15 @@
   align-items: baseline;
   gap: 5px;
   color: #66788b;
+  position: relative;
 }
-.form-register__group-inputs input,
-.form-register__group-inputs select {
+.form-register__group-inputs label .text-error {
+  position: absolute;
+  color: rgb(255, 91, 91);
+  bottom: -19px;
+  font-size: 0.8rem;
+}
+.form-register__group-inputs .input {
   width: 100%;
   padding: 0.8rem 1rem;
   box-shadow: 4px 4px 12px 0 rgba(134, 146, 160, 0.27);
@@ -329,25 +339,193 @@
   outline: none;
   transition: all 0.3s ease;
 }
-.form-register__group-inputs input:focus,
-.form-register__group-inputs select:focus {
+.form-register__group-inputs .input:focus {
   padding-left: 1.5em;
 }
-.form-register__group-inputs input::placeholder,
-.form-register__group-inputs select::placeholder {
+.form-register__group-inputs .input::placeholder {
   color: rgb(183.3405172414, 194.1163793103, 201.6594827586);
+}
+.form-register__group-inputs .p-dropdown-trigger {
+  background-color: #fffefa;
+  padding: 1rem;
 }
 .form-register__group-inputs select {
   cursor: pointer;
+}
+.form-register__group-inputs .input-drop {
+  background-color: white;
+  border-radius: 10px;
+  box-shadow: 4px 4px 12px 0 rgba(134, 146, 160, 0.27);
+  width: 100%;
+}
+.form-register__group-inputs input {
+  width: 100%;
+  padding: 0.8rem 1rem;
+  font-size: 1rem;
+  border: none;
+  outline: none;
+  transition: all 0.3s ease;
+}
+.form-register__group-inputs input:focus {
+  padding-left: 1.5em;
+}
+.form-register__group-inputs input::placeholder {
+  color: rgb(183.3405172414, 194.1163793103, 201.6594827586);
 }
 .form-register__group-inputs input[type=submit] {
   max-width: 40em;
   padding: 0.7em 1em;
   margin-top: 1rem;
   font-weight: 700;
+  box-shadow: 4px 4px 12px 0 rgba(134, 146, 160, 0.27);
   color: #242930;
   cursor: pointer;
+  border-radius: 10px;
   background-color: #e9d17b;
+}
+
+.container-dialog {
+  position: fixed;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(255, 255, 255, 0.4117647059);
+  z-index: 9999;
+  display: flex;
+  flex-direction: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 0;
+}
+.container-dialog .dialog {
+  background-color: white;
+  box-shadow: 6px 4px 14px rgba(128, 128, 128, 0.55);
+  border-radius: 5px;
+  overflow: hidden;
+  transform: translateY(-300%);
+  width: 100%;
+  animation: showDialog 0.5s ease 0s 1 normal forwards;
+  max-width: 35em;
+}
+.container-dialog .dialog__header {
+  background-color: #e6c241;
+  height: 10px;
+}
+.container-dialog .dialog__header p {
+  font-size: 0.7em;
+  color: #212529;
+  padding: 3px 0.8rem;
+}
+.container-dialog .dialog__main {
+  padding: 1.5rem 1rem 1rem 1rem;
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-start;
+  align-items: center;
+  gap: 1.5rem;
+}
+.container-dialog .dialog__main i {
+  color: #e6c241;
+  font-size: 4rem;
+}
+.container-dialog .dialog__main div {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: baseline;
+  gap: 0.5rem;
+}
+.container-dialog .dialog__main div h1 {
+  font-size: 1.4em;
+  font-weight: 500;
+}
+.container-dialog .dialog__footer {
+  border-top: 1px solid rgb(229.5, 229.5, 229.5);
+  padding: 1rem;
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-end;
+  align-items: center;
+  gap: 1rem;
+}
+.container-dialog .dialog__footer button {
+  background-color: #006fe6;
+  border: none;
+  padding: 0.5em 0rem;
+  width: 10em;
+  border-radius: 5px;
+  font-size: 1rem;
+  color: white;
+  cursor: pointer;
+  transition: all 0.4s ease;
+}
+.container-dialog .dialog__footer button:hover {
+  background-color: white;
+  border: 2px solid #006fe6;
+  color: #006fe6;
+}
+.container-dialog .dialog__footer :nth-child(1) {
+  background-color: white;
+  border: 2px solid #006fe6;
+  color: #006fe6;
+}
+.container-dialog .dialog__footer :nth-child(1):hover {
+  background-color: #006fe6;
+  color: white;
+}
+@keyframes showDialog {
+  0% {
+    transform: translateY(-300%);
+  }
+  100% {
+    transform: translateY(0);
+  }
+}
+
+.p-dropdown-panel {
+  border-radius: 8px;
+  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
+  overflow: hidden;
+  width: 100%;
+  max-width: 420px;
+}
+
+/* Estilizando as opções do dropdown */
+.p-dropdown-item {
+  font-size: 16px;
+  background-color: white;
+  padding: 10px;
+  width: 100%;
+}
+
+/* Estilizando as opções do dropdown */
+.p-dropdown-item {
+  font-size: 16px;
+  padding: 10px;
+}
+
+/* Opção ao passar o mouse */
+.p-dropdown-item:hover {
+  background-color: #ffefb7;
+  color: rgb(0, 0, 0);
+  outline: none;
+  border: none;
+}
+
+.message-empty,
+.message-empty-loading,
+.message-empty-error {
+  background-color: white;
+  width: 100%;
+  max-width: 420px;
+  padding: 10px;
+}
+
+.message-empty-loading {
+  background-color: #E8F0FE;
+}
+
+.message-empty-error {
+  background-color: rgb(255, 210, 210);
 }
 
 /*# sourceMappingURL=styles.comp.css.map */
