@@ -2,8 +2,12 @@ import Menu from "./components/Menu";
 import Navgation from "./components/Navgation";
 import CardItems from "./components/CardItems/CardItems";
 import { useEffect, useState } from "react";
+<<<<<<< HEAD
+import ModelForm from "./components/ModelForm";
+=======
 import ModelForm from "./components/ModalForm";
 import FormRegister from "./components/FormRegister";
+>>>>>>> 64cb1033e4b4777444f8548ab0eeb3f197aa6a7a
 import Dialog from "./components/Dialog";
 import {
   hasPassed36Hours,
@@ -24,6 +28,19 @@ function getElement(id) {
 }
 
 function App() {
+<<<<<<< HEAD
+  // Referências de inputs
+  // const idRef = useRef(null);
+  // const descRef = useRef(null);
+  // const eanRef = useRef(null);
+  // const ncmRef = useRef(null);
+  // const icms_inRef = useRef(null);
+  // const icms_outRef = useRef(null);
+  // const cstRef = useRef(null);
+  // const cfopRef = useRef(null);
+  // const comissaoRef = useRef(null);
+=======
+>>>>>>> 64cb1033e4b4777444f8548ab0eeb3f197aa6a7a
   // Estado
   const [stage, setStage] = useState(stages[0].name);
   // Mensagem
