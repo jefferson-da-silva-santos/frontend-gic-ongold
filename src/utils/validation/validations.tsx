@@ -34,10 +34,9 @@ export const calculateTotCust = (
   commissionRate = 0
 ) => {
   return parseFloat(
-    (
-      (entryIcms / 100 + exitIcms / 100 + commissionRate / 100) *
-      value
-    ).toFixed(2)
+    ((entryIcms / 100 + exitIcms / 100 + commissionRate / 100) * value).toFixed(
+      2
+    )
   );
 };
 
@@ -61,57 +60,100 @@ export interface FormValues {
   comission: string;
 }
 
-export const validate = (values: FormValues) => {
+export const validate = (values: FormValues, edit = false) => {
   const errors: Partial<FormValues> = {};
 
   if (!values.description) {
-    errors.description = "Campo obrigatório";
+    errors.description = !edit
+      ? "Campo obrigatório"
+      : "Campo obrigatório (Faça uma busca)";
   } else if (!/^[a-zA-Z0-9\s]+$/.test(values.description)) {
     errors.description =
       "O nome do produto não pode conter caracteres especiais";
   }
 
   if (!values.ean) {
-    errors.ean = "Campo obrigatório";
+    errors.ean = !edit
+      ? "Campo obrigatório"
+      : "Campo obrigatório (Faça uma busca)";
   } else if (!/^\d{13,}$/.test(values.ean)) {
-    errors.ean = "O código de barras deve conter no mínimo 13 dígitos";
+    errors.ean =
+      "O código de barras deve conter no mínimo 13 dígitos (apenas números)";
   }
 
   if (!values.ncm) {
-    errors.ncm = "Selecione um NCM para continuar";
+    errors.ncm = !edit
+      ? "Selecione um NCM para continuar"
+      : "Faça uma busca para carregar o NCM";
   }
 
   if (!values.icmsIn) {
-    errors.icmsIn = "Campo obrigatório";
+    errors.icmsIn = !edit
+      ? "Campo obrigatório"
+      : "Campo obrigatório (Faça uma busca)";
   } else if (isNaN(values.icmsIn)) {
-    errors.icmsIn = "A taxa ICMS de entrada deve conter apenas números";
+    errors.icmsIn = !edit
+      ? "A taxa ICMS de entrada deve conter apenas números"
+      : "A taxa ICMS de entrada deve conter apenas números (Faça uma busca)";
   }
 
   if (!values.icmsOut) {
-    errors.icmsOut = "Campo obrigatório";
+    errors.icmsOut = !edit
+      ? "Campo obrigatório"
+      : "Campo obrigatório (Faça uma busca)";
   } else if (isNaN(values.icmsOut)) {
-    errors.icmsOut = "A taxa ICMS de saída deve conter apenas números";
+    errors.icmsOut = !edit
+      ? "A taxa ICMS de saída deve conter apenas números"
+      : "A taxa ICMS de saída deve conter apenas números (Faça uma busca)";
   }
 
   if (!values.cst) {
-    errors.cst = "Selecione um CST para continuar";
+    errors.cst = !edit
+      ? "Selecione um CST para continuar"
+      : "Faça uma busca para carregar o CST";
   }
 
   if (!values.cfop) {
-    errors.cfop = "Selecione um CFOP para continuar";
+    errors.cfop = !edit
+      ? "Selecione um CFOP para continuar"
+      : "Faça uma busca para carregar o CFOP";
   }
 
   if (!values.valorUnit) {
-    errors.valorUnit = "Campo obrigatório";
+    errors.valorUnit = !edit
+      ? "Campo obrigatório"
+      : "Campo obrigatório (Faça uma busca)";
   } else if (!/^\d+([.,]\d+)?$/.test(values.valorUnit)) {
-    errors.valorUnit = "O valor unitário deve conter apenas números";
+    errors.valorUnit = !edit
+      ? "O valor unitário deve conter apenas números"
+      : "O valor unitário deve conter apenas números (Faça uma busca)";
   }
 
   if (!values.comission) {
-    errors.comission = "Campo obrigatório";
+    errors.comission = !edit
+      ? "Campo obrigatório"
+      : "Campo obrigatório (Faça uma busca)";
   } else if (!/^\d+([.,]\d+)?$/.test(values.comission)) {
-    errors.comission = "A comissão deve conter apenas números";
+    errors.comission = !edit
+      ? "A comissão deve conter apenas números"
+      : "A comissão deve conter apenas números (Faça uma busca)";
   }
 
   return errors;
+};
+
+// Função responsável por formatar os dados de envio da requisição (body)
+export const formattedValues = (values) => {
+  return {
+    valor_unitario: Number(values.valorUnit) || 0,
+    descricao: values.description.trim(),
+    taxa_icms_entrada: Number(values.icmsIn) || 0,
+    taxa_icms_saida: Number(values.icmsOut) || 0,
+    comissao: Number(values.comission) || 0,
+    ncm: values.ncm.trim(),
+    cst: values.cst.trim(),
+    cfop: Number(values.cfop) || 0,
+    ean: values.ean.trim(),
+    excluido: 0,
+  };
 };

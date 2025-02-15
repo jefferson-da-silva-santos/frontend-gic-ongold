@@ -134,6 +134,7 @@ $color-primary: #f2f2f2;
     padding: 0.8rem;
     font-size: 1.2rem;
     border: none;
+    
     outline: none;
 
     &::placeholder {
@@ -263,7 +264,7 @@ $color-primary: #f2f2f2;
 
 // Formulário de Cadastro
 
-.form-register {
+.form {
   grid-column: 2 / -1;
   display: flex;
   flex-direction: column;
@@ -356,6 +357,13 @@ $color-primary: #f2f2f2;
         bottom: -19px;
         font-size: .8rem;
       }
+
+      .text-alert {
+        position: absolute;
+        color: rgb(57, 93, 255);
+        bottom: -19px;
+        font-size: .8rem;
+      }
       
     }
     .input {
@@ -391,6 +399,7 @@ $color-primary: #f2f2f2;
       border-radius: 10px;
       box-shadow: 4px 4px 12px 0 rgb(134 146 160 / 27%);
       width: 100%;
+      overflow: hidden;
     }
 
     input {
@@ -400,6 +409,8 @@ $color-primary: #f2f2f2;
       border: none;
       outline: none;
       transition: all 0.3s ease;
+      box-shadow: 4px 4px 12px 0 rgb(134 146 160 / 27%);
+      border-radius: 10px;
 
       &:focus {
         padding-left: 1.5em;
@@ -412,7 +423,8 @@ $color-primary: #f2f2f2;
      
     }
 
-    input[type="submit"] {
+    input[type="submit"],
+    .button-delete {
       max-width: 40em;
       padding: 0.7em 1em;
       margin-top: 1rem;
@@ -420,7 +432,9 @@ $color-primary: #f2f2f2;
       box-shadow: 4px 4px 12px 0 rgb(134 146 160 / 27%);
       color: #242930;
       cursor: pointer;
+      border: none;
       border-radius: 10px;
+      font-size: 1em;
       background-color: #e9d17b;
     }
   }

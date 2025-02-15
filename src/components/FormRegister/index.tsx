@@ -2,6 +2,8 @@ import React, { useEffect, useState } from "react";
 import { useFormik } from "formik";
 import useApi from "../../hooks/useApi";
 import { Dropdown } from "primereact/dropdown";
+import { formattedValues } from "../../utils/validation/validations";
+
 import {
   limitWord,
   calculateTotCust,
@@ -10,7 +12,7 @@ import {
   FormValues,
 } from "../../utils/validation/validations";
 
-const FormRegister: React.FC<{ totalCusto: string }> = ({ totalCusto }) => {
+const FormRegister = ({changeMessage}) => {
   
   const {
     data: dataInsertItem,
@@ -18,7 +20,6 @@ const FormRegister: React.FC<{ totalCusto: string }> = ({ totalCusto }) => {
     loading: loadingInsertItem,
     requestAPI: requestAPIInsertItem, 
   } = useApi("/items", "POST");
-  
 
   const formik = useFormik<FormValues>({
     initialValues: {
@@ -35,30 +36,18 @@ const FormRegister: React.FC<{ totalCusto: string }> = ({ totalCusto }) => {
     validate,
     onSubmit: async (values, { setSubmitting, resetForm }) => {
       // Formata os dados de acordo com o formato esperado pela API
-      const formattedValues = {
-        valor_unitario: Number(values.valorUnit) || 0,
-        descricao: values.description.trim(),
-        taxa_icms_entrada: Number(values.icmsIn) || 0,
-        taxa_icms_saida: Number(values.icmsOut) || 0,
-        comissao: Number(values.comission) || 0,
-        ncm: values.ncm.trim(),
-        cst: values.cst.trim(),
-        cfop: Number(values.cfop) || 0,
-        ean: values.ean.trim(),
-        excluido: 0,
-      };
+      const formattedData = formattedValues(values);
     
       try {
-        const result = await requestAPIInsertItem(formattedValues);
-        console.log("Resposta da API:", result);
+        const result = await requestAPIInsertItem(formattedData);
         if (result) {
-          console.log("Item cadastrado com sucesso!");
+          changeMessage('Item cadastrado com sucesso!', 'rgb(51, 187, 85)');
           resetForm();
         } else {
-          console.error("Erro ao inserir item!");
+          changeMessage('Erro ao inserir item!', 'rgb(255, 114, 114)');
         }
       } catch (error) {
-        console.error("Erro na requisição:", error);
+        changeMessage(`Erro na requisição: ${error.message}`, 'rgb(255, 114, 114)');
         if (error.response) {
           console.log("Resposta da API:", error.response.data); // Log do erro
         }
@@ -68,7 +57,6 @@ const FormRegister: React.FC<{ totalCusto: string }> = ({ totalCusto }) => {
     }
   });
 
-  // Requisição para a API
   const {
     data: dataCsts,
     error: errorCsts,
@@ -90,7 +78,7 @@ const FormRegister: React.FC<{ totalCusto: string }> = ({ totalCusto }) => {
   // Estado para o total de custo
   const [totalCust, setTotalCust] = useState(0);
 
-  // Hook que calcula e atualiza o total de custo.
+  // useEffect que calcula e atualiza o total de custo.
   useEffect(() => {
     setTotalCust(
       calculateTotCust(
@@ -140,12 +128,13 @@ const FormRegister: React.FC<{ totalCusto: string }> = ({ totalCusto }) => {
         }))
       : []
     : null;
+    
 
   return (
-    <form className="form-register" onSubmit={formik.handleSubmit}>
-      <h2 className="form-register__title">Cadastro de Itens</h2>
-      <div className="form-register__group-inputs">
-        <div className="form-register__group-inputs__g1">
+    <form className="form" onSubmit={formik.handleSubmit}>
+      <h2 className="form__title">Cadastro de Itens</h2>
+      <div className="form__group-inputs">
+        <div className="form__group-inputs__g1">
           <label>
             <span>Descrição:</span>
             <input
@@ -210,7 +199,7 @@ const FormRegister: React.FC<{ totalCusto: string }> = ({ totalCusto }) => {
           </label>
         </div>
 
-        <div className="form-register__group-inputs__g2">
+        <div className="form__group-inputs__g2">
           <label>
             <span>Taxa ICMS de entrada (%):</span>
             <input
@@ -308,7 +297,7 @@ const FormRegister: React.FC<{ totalCusto: string }> = ({ totalCusto }) => {
             ) : null}
           </label>
         </div>
-        <div className="form-register__group-inputs__g3">
+        <div className="form__group-inputs__g3">
           <label>
             <span>Valor unitário</span>
             <input
