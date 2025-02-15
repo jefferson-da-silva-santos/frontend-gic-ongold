@@ -1,10 +1,18 @@
 import React, { useEffect, useState } from "react";
 import { useFormik } from "formik";
-import { validate } from "../../utils/validation/validations";
+import { formattedValues, validate } from "../../utils/validation/validations";
 import useApi from "../../hooks/useApi";
+import { confirm, alert } from "notie";
 
-const FormEdition = ({ changeMessage }) => {
+const FormEdition = () => {
   const [id, setId] = useState("");
+
+  const {
+    data: dataUpdateItem,
+    error: errorUpdateItem,
+    loading: loadingUpdateItem,
+    requestAPI: requestApiUpdateItem,
+  } = useApi(`/items/${id}`, "PUT");
 
   const formik = useFormik({
     initialValues: {
@@ -21,12 +29,42 @@ const FormEdition = ({ changeMessage }) => {
     },
     validate: (values) => validate(values, true),
     onSubmit: async (values, { setSubmitting, resetForm }) => {
-      alert(JSON.stringify(values));
+      const formattedData = formattedValues(values);
+      try {
+        const result = await requestApiUpdateItem(formattedData);
+        if (result) {
+          alert({
+            type: 1, // optional, default = 4, enum: [1, 2, 3, 4, 5, 'success', 'warning', 'error', 'info', 'neutral']
+            text: "Item atualizado com sucesso!",
+            stay: false, // optional, default = false
+            time: 2, // optional, default = 3, minimum = 1,
+            position: 'top' // optional, default = 'top', enum: ['top', 'bottom']
+          })
+          
+          setId("");
+          resetForm();
+        } else {
+          alert({
+            type: 3, // optional, default = 4, enum: [1, 2, 3, 4, 5, 'success', 'warning', 'error', 'info', 'neutral']
+            text: "Erro ao tantar atualizar item!",
+            stay: false, // optional, default = false
+            time: 2, // optional, default = 3, minimum = 1,
+            position: 'top' // optional, default = 'top', enum: ['top', 'bottom']
+          })
+        }
+      } catch (error) {
+        alert({
+          type: 3, // optional, default = 4, enum: [1, 2, 3, 4, 5, 'success', 'warning', 'error', 'info', 'neutral']
+          text: "Erro ao tantar atualizar item! (Altere algo antes de editar)",
+          stay: false, // optional, default = false
+          time: 2, // optional, default = 3, minimum = 1,
+          position: 'top' // optional, default = 'top', enum: ['top', 'bottom']
+        })
+      }
     },
   });
 
   // Busca de itens
-
   const {
     data: dataSearchItem,
     error: errorSearchItem,
@@ -36,24 +74,49 @@ const FormEdition = ({ changeMessage }) => {
 
   const handleSearchItem = async () => {
     if (!id || isNaN(Number(id))) {
-      changeMessage("Passe um id válido para a busca!", "rgb(255, 114, 114)");
+      alert({
+        type: 2, // optional, default = 4, enum: [1, 2, 3, 4, 5, 'success', 'warning', 'error', 'info', 'neutral']
+        text: "Passe um id válido para a busca!",
+        stay: false, // optional, default = false
+        time: 2, // optional, default = 3, minimum = 1,
+        position: 'top' // optional, default = 'top', enum: ['top', 'bottom']
+      })
       setId("");
       return;
     }
 
-    const result = await requestApiSearchItem();
-    if (result) {
-      const data = result[0];
-      formik.values.description = data.descricao;
-      formik.values.ean = data.ean;
-      formik.values.ncm = data.ncm;
-      formik.values.icmsIn = data.taxa_icms_entrada;
-      formik.values.icmsOut = data.taxa_icms_saida;
-      formik.values.cst = data.cst;
-      formik.values.cfop = data.cfop;
-      formik.values.comission = data.comissao;
-      formik.values.valorUnit = data.valor_unitario;
-      formik.values.totCust = data.totalCusto
+    try {
+      const result = await requestApiSearchItem();
+      if (result) {
+        alert({
+          type: 1, // optional, default = 4, enum: [1, 2, 3, 4, 5, 'success', 'warning', 'error', 'info', 'neutral']
+          text: "Item encontrado!",
+          stay: false, // optional, default = false
+          time: 2, // optional, default = 3, minimum = 1,
+          position: 'top' // optional, default = 'top', enum: ['top', 'bottom']
+        })
+        const data = result[0];
+        formik.setValues({
+          description: data.descricao,
+          ean: data.ean,
+          ncm: data.ncm,
+          icmsIn: data.taxa_icms_entrada,
+          icmsOut: data.taxa_icms_saida,
+          cst: data.cst,
+          cfop: data.cfop,
+          comission: data.comissao,
+          valorUnit: data.valor_unitario,
+          totCust: data.totalCusto,
+        });
+      }
+    } catch (error) {
+      alert({
+        type: 3, // optional, default = 4, enum: [1, 2, 3, 4, 5, 'success', 'warning', 'error', 'info', 'neutral']
+        text: "Não existe nenhum item com este id!",
+        stay: false, // optional, default = false
+        time: 2, // optional, default = 3, minimum = 1,
+        position: 'top' // optional, default = 'top', enum: ['top', 'bottom']
+      })
     }
   };
   return (
@@ -89,7 +152,10 @@ const FormEdition = ({ changeMessage }) => {
               id="description"
               onChange={formik.handleChange}
               onBlur={formik.handleBlur}
-              value={formik.values.description}
+              value={
+                loadingSearchItem ? "Carregando..." : formik.values.description
+              }
+              disabled={loadingSearchItem}
             />
             {formik.touched.description && formik.errors.description ? (
               <span className="text-alert">{formik.errors.description}</span>
@@ -104,7 +170,8 @@ const FormEdition = ({ changeMessage }) => {
               placeholder=""
               onChange={formik.handleChange}
               onBlur={formik.handleBlur}
-              value={formik.values.ean}
+              value={loadingSearchItem ? "Carregando..." : formik.values.ean}
+              disabled={loadingSearchItem}
             />
             {formik.touched.ean && formik.errors.ean ? (
               <span className="text-alert">{formik.errors.ean}</span>
@@ -119,7 +186,7 @@ const FormEdition = ({ changeMessage }) => {
               disabled
               onChange={formik.handleChange}
               onBlur={formik.handleBlur}
-              value={formik.values.ncm}
+              value={loadingSearchItem ? "Carregando..." : formik.values.ncm}
             />
             {formik.touched.ncm && formik.errors.ncm ? (
               <span className="text-alert">{formik.errors.ncm}</span>
@@ -137,7 +204,8 @@ const FormEdition = ({ changeMessage }) => {
               placeholder=""
               onChange={formik.handleChange}
               onBlur={formik.handleBlur}
-              value={formik.values.icmsIn}
+              value={loadingSearchItem ? "Carregando..." : formik.values.icmsIn}
+              disabled={loadingSearchItem}
             />
             {formik.touched.icmsIn && formik.errors.icmsIn ? (
               <span className="text-alert">{formik.errors.icmsIn}</span>
@@ -151,7 +219,10 @@ const FormEdition = ({ changeMessage }) => {
               id="icmsOut"
               onChange={formik.handleChange}
               onBlur={formik.handleBlur}
-              value={formik.values.icmsOut}
+              value={
+                loadingSearchItem ? "Carregando..." : formik.values.icmsOut
+              }
+              disabled={loadingSearchItem}
             />
             {formik.touched.icmsOut && formik.errors.icmsOut ? (
               <span className="text-alert">{formik.errors.icmsOut}</span>
@@ -166,7 +237,7 @@ const FormEdition = ({ changeMessage }) => {
               disabled
               onChange={formik.handleChange}
               onBlur={formik.handleBlur}
-              value={formik.values.cst}
+              value={loadingSearchItem ? "Carregando..." : formik.values.cst}
             />
             {formik.touched.cst && formik.errors.cst ? (
               <span className="text-alert">{formik.errors.cst}</span>
@@ -179,7 +250,7 @@ const FormEdition = ({ changeMessage }) => {
               name="cfop"
               id="cfop"
               disabled
-              value={formik.values.cfop}
+              value={loadingSearchItem ? "Carregando..." : formik.values.cfop}
             />
             {formik.touched.cfop && formik.errors.cfop ? (
               <span className="text-alert">{formik.errors.cfop}</span>
@@ -199,7 +270,10 @@ const FormEdition = ({ changeMessage }) => {
               placeholder=""
               onChange={formik.handleChange}
               onBlur={formik.handleBlur}
-              value={formik.values.valorUnit}
+              value={
+                loadingSearchItem ? "Carregando..." : formik.values.valorUnit
+              }
+              disabled={loadingSearchItem}
             />
             {formik.touched.valorUnit && formik.errors.valorUnit ? (
               <span className="text-alert">{formik.errors.valorUnit}</span>
@@ -214,7 +288,10 @@ const FormEdition = ({ changeMessage }) => {
               placeholder=""
               onChange={formik.handleChange}
               onBlur={formik.handleBlur}
-              value={formik.values.comission}
+              value={
+                loadingSearchItem ? "Carregando..." : formik.values.comission
+              }
+              disabled={loadingSearchItem}
             />
             {formik.touched.comission && formik.errors.comission ? (
               <span className="text-alert">{formik.errors.comission}</span>
@@ -228,16 +305,33 @@ const FormEdition = ({ changeMessage }) => {
               id=""
               onChange={formik.handleChange}
               onBlur={formik.handleBlur}
-              value={formik.values.totCust}
+              value={
+                loadingSearchItem ? "Carregando..." : formik.values.totCust
+              }
               placeholder="Calculado automáticmanete"
               disabled
             />
           </label>
-          <input type="submit" value="Atualizar Item" />
+          <input
+            type="submit"
+            disabled={loadingUpdateItem || loadingSearchItem}
+            value={loadingUpdateItem ? "Atualizando..." : "Atualizar Item"}
+          />
           <button
             onClick={(event) => {
               event.preventDefault();
-              console.log("Esse botão não submete o formulário");
+              confirm({
+                text: "Tem cereza que deseja deletar este item?",
+                submitText: "Sim", // optional, default = 'Yes'
+                cancelText: "Não", // optional, default = 'Cancel'
+                position: 'top', // optional, default = 'top', enum: ['top', 'bottom']
+                submitCallback: null, // optional
+                cancelCallback: null // optional
+              }, function() {
+                console.log('Yes clicked');
+              }, function() {
+                console.log('No clicked');
+              })
             }}
             style={{ backgroundColor: "rgb(255, 109, 109)", color: "white" }}
             className="button-delete"

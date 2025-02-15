@@ -1,5 +1,6 @@
 import { addHours, isAfter, parseISO } from "date-fns";
 import { isNaN } from "formik";
+import { alert } from "notie";
 
 // Função que calcula compara um datatime com o datatime atual e valida se já se passaram 36h da sua criação
 export function hasPassed36Hours(creationDate: string) {
@@ -11,7 +12,13 @@ export function hasPassed36Hours(creationDate: string) {
 // Função que valida o id dentro dos submits
 export const validateIdentify = (id, changeMessage, getElement) => {
   if (!id) {
-    changeMessage("Passe um id e faça uma busca!", "rgb(255, 95, 95)");
+    alert({
+      type: 2, // optional, default = 4, enum: [1, 2, 3, 4, 5, 'success', 'warning', 'error', 'info', 'neutral']
+      text: "Passe um id e faça uma busca!", // required
+      stay: false, // optional, default = false
+      time: 2, // optional, default = 3, minimum = 1,
+      position: 'top' // optional, default = 'top', enum: ['top', 'bottom']
+    })
     getElement("id").focus();
     return false;
   }
@@ -67,7 +74,7 @@ export const validate = (values: FormValues, edit = false) => {
     errors.description = !edit
       ? "Campo obrigatório"
       : "Campo obrigatório (Faça uma busca)";
-  } else if (!/^[a-zA-Z0-9\s]+$/.test(values.description)) {
+    } else if (!/^[a-zA-Z0-9\s\u00C0-\u00FF]+$/.test(values.description)) {
     errors.description =
       "O nome do produto não pode conter caracteres especiais";
   }

@@ -3,6 +3,7 @@ import { useFormik } from "formik";
 import useApi from "../../hooks/useApi";
 import { Dropdown } from "primereact/dropdown";
 import { formattedValues } from "../../utils/validation/validations";
+import { alert } from "notie";
 
 import {
   limitWord,
@@ -12,13 +13,12 @@ import {
   FormValues,
 } from "../../utils/validation/validations";
 
-const FormRegister = ({changeMessage}) => {
-  
+const FormRegister = () => {
   const {
-    data: dataInsertItem,
-    error: errorInsertItem,
+    data,
+    error,
     loading: loadingInsertItem,
-    requestAPI: requestAPIInsertItem, 
+    requestAPI: requestAPIInsertItem,
   } = useApi("/items", "POST");
 
   const formik = useFormik<FormValues>({
@@ -37,24 +37,42 @@ const FormRegister = ({changeMessage}) => {
     onSubmit: async (values, { setSubmitting, resetForm }) => {
       // Formata os dados de acordo com o formato esperado pela API
       const formattedData = formattedValues(values);
-    
+
       try {
         const result = await requestAPIInsertItem(formattedData);
         if (result) {
-          changeMessage('Item cadastrado com sucesso!', 'rgb(51, 187, 85)');
+          alert({
+            type: 1, 
+            text: "Item cadastrado com sucesso!",
+            stay: false, 
+            time: 2, 
+            position: "top",
+          });
           resetForm();
         } else {
-          changeMessage('Erro ao inserir item!', 'rgb(255, 114, 114)');
+          alert({
+            type: 3, 
+            text: "Erro ao tentar inserir item!",
+            stay: false, 
+            time: 2, 
+            position: "top",
+          });
         }
       } catch (error) {
-        changeMessage(`Erro na requisição: ${error.message}`, 'rgb(255, 114, 114)');
+        alert({
+          type: 3, 
+          text: "Erro ao tantar inserir o item!",
+          stay: false, 
+          time: 2, 
+          position: 'top'
+        })
         if (error.response) {
           console.log("Resposta da API:", error.response.data); // Log do erro
         }
       } finally {
         setSubmitting(false);
       }
-    }
+    },
   });
 
   const {
@@ -128,7 +146,6 @@ const FormRegister = ({changeMessage}) => {
         }))
       : []
     : null;
-    
 
   return (
     <form className="form" onSubmit={formik.handleSubmit}>
@@ -342,7 +359,11 @@ const FormRegister = ({changeMessage}) => {
               value={formatCurrency(totalCust)}
             />
           </label>
-          <input disabled={loadingInsertItem ? true : false} type="submit" value={loadingInsertItem ? "Inserindo..." : "Cadastrar Novo Item"} />
+          <input
+            disabled={loadingInsertItem ? true : false}
+            type="submit"
+            value={loadingInsertItem ? "Inserindo..." : "Cadastrar Novo Item"}
+          />
         </div>
       </div>
     </form>
