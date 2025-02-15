@@ -1,9 +1,8 @@
 import Menu from "./components/Menu";
 import Navgation from "./components/Navgation";
 import CardItems from "./components/CardItems/CardItems";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import FormRegister from "./components/FormRegister";
-import apiRequest from "./utils/api/baseRequest";
 import FormEdition from "./components/FormEdition";
 
 const stages = [
@@ -15,7 +14,6 @@ const stages = [
 function App() {
   // Estado
   const [stage, setStage] = useState(stages[0].name);
-  const [items, setItems] = useState([]);
 
   // Função para ir para para lista
   const openList = () => {
@@ -38,17 +36,6 @@ function App() {
     }
   };
 
-  // Função para buscar
-  useEffect(() => {
-    const fetchData = async () => {
-      if (stage === stages[0].name) {
-        const data = await apiRequest("http://localhost:3000/api/gic/items");
-        if (data) setItems(data);
-      }
-    };
-    fetchData();
-  }, [stage]);
-
   return (
     <div className="container">
       <Menu
@@ -58,7 +45,7 @@ function App() {
         stage={stage}
       />
       <Navgation />
-      {stage === stages[0].name && <CardItems items={items} />}
+      {stage === stages[0].name && <CardItems stage={stage} />}
       {stage === stages[1].name && <FormRegister />}
       {stage === stages[2].name && <FormEdition />}
     </div>

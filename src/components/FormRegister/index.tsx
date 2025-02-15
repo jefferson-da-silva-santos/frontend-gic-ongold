@@ -2,16 +2,15 @@ import React, { useEffect, useState } from "react";
 import { useFormik } from "formik";
 import useApi from "../../hooks/useApi";
 import { Dropdown } from "primereact/dropdown";
-import { formattedValues } from "../../utils/validation/validations";
-import { alert } from "notie";
-
 import {
-  limitWord,
+  formattedValues,
+  validate,
   calculateTotCust,
   formatCurrency,
-  validate,
-  FormValues,
-} from "../../utils/validation/validations";
+  limitWord,
+  showAlert,
+} from "../../utils/validation/validation";
+import { FormValues } from "../../utils/validation/formValidation";
 
 const FormRegister = () => {
   const {
@@ -20,6 +19,7 @@ const FormRegister = () => {
     loading: loadingInsertItem,
     requestAPI: requestAPIInsertItem,
   } = useApi("/items", "POST");
+  const [isEanExist, setIsEanExist] = useState(false);
 
   const formik = useFormik<FormValues>({
     initialValues: {
@@ -37,35 +37,24 @@ const FormRegister = () => {
     onSubmit: async (values, { setSubmitting, resetForm }) => {
       // Formata os dados de acordo com o formato esperado pela API
       const formattedData = formattedValues(values);
-
+      console.log('O código de barras já existe? ', isEanExist);
+      
+      if (isEanExist) {
+        return;
+      }
       try {
-        const result = await requestAPIInsertItem(formattedData);
+        const result = await requestAPIInsertItem(formattedData);;
+        
         if (result) {
-          alert({
-            type: 1, 
-            text: "Item cadastrado com sucesso!",
-            stay: false, 
-            time: 2, 
-            position: "top",
-          });
+          showAlert(1, "Item cadastrado com sucesso!");
+          setIsEanExist(false);
+          setSelectNCM(null);
           resetForm();
         } else {
-          alert({
-            type: 3, 
-            text: "Erro ao tentar inserir item!",
-            stay: false, 
-            time: 2, 
-            position: "top",
-          });
+          showAlert(3, "Erro ao tentar inserir item!");
         }
       } catch (error) {
-        alert({
-          type: 3, 
-          text: "Erro ao tantar inserir o item!",
-          stay: false, 
-          time: 2, 
-          position: 'top'
-        })
+        showAlert(3, "Erro ao tentar inserir item!");
         if (error.response) {
           console.log("Resposta da API:", error.response.data); // Log do erro
         }
@@ -74,6 +63,30 @@ const FormRegister = () => {
       }
     },
   });
+
+  const {
+    data: dataEan,
+    error: errorEan,
+    loading: loadingEan,
+    requestAPI: requestApiEan,
+  } = useApi(`/items/ean/${formik.values.ean}`, "GET");
+
+  useEffect(() => {
+    async function fetchData() {
+      try {
+        const data = await requestApiEan();
+        if (data) {
+          setIsEanExist(true);
+        } else {
+          setIsEanExist(false);
+        }
+      } catch (error) {
+        setIsEanExist(false);
+      }
+    }
+    fetchData();
+  }, [formik.values.ean]);
+
 
   const {
     data: dataCsts,
@@ -114,14 +127,14 @@ const FormRegister = () => {
   ]);
 
   // Requizição par aos NCMs
-  const [selectNCN, setSelectNCM] = useState(null);
+  const [selectNCM, setSelectNCM] = useState(null);
 
   const {
     data: dataNcms,
     error: errorNcms,
     loading: loadingNcms,
     requestAPI: requestApiNcms,
-  } = useApi(`/ncms/${selectNCN}`, "GET");
+  } = useApi(`/ncms/${selectNCM}`, "GET");
 
   // Adicione um estado para armazenar o erro de NCM
   const [errorNcmRequest, setErrorNcmRequest] = useState(null);
@@ -133,12 +146,12 @@ const FormRegister = () => {
   };
 
   useEffect(() => {
-    if (selectNCN) {
+    if (selectNCM) {
       requestApiNcms().catch((error) => setErrorNcmRequest(error));
     }
-  }, [selectNCN]);
+  }, [selectNCM]);
 
-  const ncms = selectNCN
+  const ncms = selectNCM
     ? Array.isArray(dataNcms)
       ? dataNcms.map((item) => ({
           name: item.codncm + " - " + limitWord(item.nomencm),
@@ -183,19 +196,22 @@ const FormRegister = () => {
             {formik.touched.ean && formik.errors.ean ? (
               <span className="text-error">{formik.errors.ean}</span>
             ) : null}
+            {isEanExist && (
+              <span className="text-error">O código de barras informado já existe!</span>
+            )}
           </label>
 
           <label>
             <span>NCM:</span>
             <Dropdown
-              value={selectNCN}
+              value={selectNCM}
               onChange={(e) => {
                 handleSelectNCM(e.value);
                 formik.setFieldValue("ncm", e.value.code);
                 setErrorNcmRequest(null);
               }}
               onBlur={() => formik.setFieldTouched("ncm", true)}
-              options={ncms}
+              options={ncms || []}
               optionLabel="name"
               editable
               placeholder="Busque um NCM"
@@ -204,7 +220,7 @@ const FormRegister = () => {
                 loadingNcms ? (
                   <p className="message-empty-loading">Carregando...</p>
                 ) : errorNcmRequest ? (
-                  <p className="message-empty-error">Erro ao buscar NCMs</p>
+                  <p className="message-empty">Nenhum NCM encontrado</p>
                 ) : (
                   <p className="message-empty">Nenhum NCM encontrado</p>
                 )

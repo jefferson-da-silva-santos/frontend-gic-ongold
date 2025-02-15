@@ -1,11 +1,37 @@
 import React, { useEffect, useState } from "react";
 import { useFormik } from "formik";
-import { formattedValues, validate } from "../../utils/validation/validations";
+import {
+  formattedValues,
+  isValidId,
+  validate,
+  showAlert,
+  hasPassed36Hours,
+} from "../../utils/validation/validation";
 import useApi from "../../hooks/useApi";
-import { confirm, alert } from "notie";
+import notie from "notie";
 
 const FormEdition = () => {
   const [id, setId] = useState("");
+  // Buscar a String de Data de criação do item
+  const [stringDataCreatedItem, setStringDataCreatedItem] = useState(null);
+  const {
+    data,
+    error: errorCreatedItem,
+    loading: loadingCreatedItem,
+    requestAPI: requestApiCreatedItem,
+  } = useApi(`/items/id/${id}`, "GET");
+
+  useEffect(() => {
+    async function fetchData() {
+      try {
+        const data = await requestApiCreatedItem();
+        setStringDataCreatedItem(data[0].criado_em);
+      } catch (error) {
+        setStringDataCreatedItem(null);
+      }
+    }
+    fetchData();
+  }, [id]);
 
   const {
     data: dataUpdateItem,
@@ -23,43 +49,34 @@ const FormEdition = () => {
       icmsOut: "",
       cst: "",
       cfop: "",
-      valorUnit: "",
-      comission: "",
+      valorUnit: 0,
+      comission: 0,
       totCust: "",
     },
     validate: (values) => validate(values, true),
     onSubmit: async (values, { setSubmitting, resetForm }) => {
       const formattedData = formattedValues(values);
       try {
+        if (stringDataCreatedItem && !hasPassed36Hours(stringDataCreatedItem)) {
+          showAlert(
+            3,
+            "Não é possível editar um item após 36 horas de sua criação!"
+          );
+          return;
+        }
         const result = await requestApiUpdateItem(formattedData);
         if (result) {
-          alert({
-            type: 1, // optional, default = 4, enum: [1, 2, 3, 4, 5, 'success', 'warning', 'error', 'info', 'neutral']
-            text: "Item atualizado com sucesso!",
-            stay: false, // optional, default = false
-            time: 2, // optional, default = 3, minimum = 1,
-            position: 'top' // optional, default = 'top', enum: ['top', 'bottom']
-          })
-          
+          showAlert(1, "Item atualizado com sucesso!");
           setId("");
           resetForm();
         } else {
-          alert({
-            type: 3, // optional, default = 4, enum: [1, 2, 3, 4, 5, 'success', 'warning', 'error', 'info', 'neutral']
-            text: "Erro ao tantar atualizar item!",
-            stay: false, // optional, default = false
-            time: 2, // optional, default = 3, minimum = 1,
-            position: 'top' // optional, default = 'top', enum: ['top', 'bottom']
-          })
+          showAlert(3, "Erro ao tantar atualizar item!");
         }
       } catch (error) {
-        alert({
-          type: 3, // optional, default = 4, enum: [1, 2, 3, 4, 5, 'success', 'warning', 'error', 'info', 'neutral']
-          text: "Erro ao tantar atualizar item! (Altere algo antes de editar)",
-          stay: false, // optional, default = false
-          time: 2, // optional, default = 3, minimum = 1,
-          position: 'top' // optional, default = 'top', enum: ['top', 'bottom']
-        })
+        showAlert(
+          3,
+          "Erro ao tantar atualizar item! (Altere algo antes de editar)"
+        );
       }
     },
   });
@@ -74,27 +91,16 @@ const FormEdition = () => {
 
   const handleSearchItem = async () => {
     if (!id || isNaN(Number(id))) {
-      alert({
-        type: 2, // optional, default = 4, enum: [1, 2, 3, 4, 5, 'success', 'warning', 'error', 'info', 'neutral']
-        text: "Passe um id válido para a busca!",
-        stay: false, // optional, default = false
-        time: 2, // optional, default = 3, minimum = 1,
-        position: 'top' // optional, default = 'top', enum: ['top', 'bottom']
-      })
+      showAlert(2, "Passe um id válido para a busca!");
       setId("");
+      formik.resetForm();
       return;
     }
 
     try {
       const result = await requestApiSearchItem();
       if (result) {
-        alert({
-          type: 1, // optional, default = 4, enum: [1, 2, 3, 4, 5, 'success', 'warning', 'error', 'info', 'neutral']
-          text: "Item encontrado!",
-          stay: false, // optional, default = false
-          time: 2, // optional, default = 3, minimum = 1,
-          position: 'top' // optional, default = 'top', enum: ['top', 'bottom']
-        })
+        showAlert(1, "Item encontrado!");
         const data = result[0];
         formik.setValues({
           description: data.descricao,
@@ -110,15 +116,56 @@ const FormEdition = () => {
         });
       }
     } catch (error) {
-      alert({
-        type: 3, // optional, default = 4, enum: [1, 2, 3, 4, 5, 'success', 'warning', 'error', 'info', 'neutral']
-        text: "Não existe nenhum item com este id!",
-        stay: false, // optional, default = false
-        time: 2, // optional, default = 3, minimum = 1,
-        position: 'top' // optional, default = 'top', enum: ['top', 'bottom']
-      })
+      showAlert(
+        3,
+        "Erro ao tentar buscar item: Não existe nenhum item com este id!"
+      );
+      formik.resetForm();
     }
   };
+
+  const {
+    data: dataDeleteItem,
+    error: errorDeleteItem,
+    loading: loadingDeleteItem,
+    requestAPI: requestApiDeleteItem,
+  } = useApi(`/items/${id}`, "DELETE");
+
+  const handleDeleteItem = async (e) => {
+    e.preventDefault();
+
+    if (!isValidId(id)) {
+      showAlert(2, "Passe um id válido para a busca!");
+      setId("");
+      return;
+    }
+
+    const confirmDelete = () => {
+      notie.confirm(
+        {
+          text: "Tem certeza que deseja deletar este item?",
+          submitText: "Sim",
+          cancelText: "Não",
+          position: "top",
+        },
+        async () => {
+          try {
+            const result = await requestApiDeleteItem();
+            if (result) {
+              showAlert(1, "Item deletado com sucesso!");
+              formik.resetForm();
+              setId("");
+            }
+          } catch (error) {
+            showAlert(3, "Erro ao tentar deletar item!");
+          }
+        },
+        () => console.log("Ação de cancelamento executada")
+      );
+    };
+    confirmDelete();
+  };
+
   return (
     <form className="form" onSubmit={formik.handleSubmit}>
       <h2 className="form__title">Edição de Itens</h2>
@@ -155,7 +202,9 @@ const FormEdition = () => {
               value={
                 loadingSearchItem ? "Carregando..." : formik.values.description
               }
-              disabled={loadingSearchItem}
+              disabled={
+                loadingUpdateItem || loadingSearchItem || loadingDeleteItem
+              }
             />
             {formik.touched.description && formik.errors.description ? (
               <span className="text-alert">{formik.errors.description}</span>
@@ -171,7 +220,9 @@ const FormEdition = () => {
               onChange={formik.handleChange}
               onBlur={formik.handleBlur}
               value={loadingSearchItem ? "Carregando..." : formik.values.ean}
-              disabled={loadingSearchItem}
+              disabled={
+                loadingUpdateItem || loadingSearchItem || loadingDeleteItem
+              }
             />
             {formik.touched.ean && formik.errors.ean ? (
               <span className="text-alert">{formik.errors.ean}</span>
@@ -205,7 +256,9 @@ const FormEdition = () => {
               onChange={formik.handleChange}
               onBlur={formik.handleBlur}
               value={loadingSearchItem ? "Carregando..." : formik.values.icmsIn}
-              disabled={loadingSearchItem}
+              disabled={
+                loadingUpdateItem || loadingSearchItem || loadingDeleteItem
+              }
             />
             {formik.touched.icmsIn && formik.errors.icmsIn ? (
               <span className="text-alert">{formik.errors.icmsIn}</span>
@@ -222,7 +275,9 @@ const FormEdition = () => {
               value={
                 loadingSearchItem ? "Carregando..." : formik.values.icmsOut
               }
-              disabled={loadingSearchItem}
+              disabled={
+                loadingUpdateItem || loadingSearchItem || loadingDeleteItem
+              }
             />
             {formik.touched.icmsOut && formik.errors.icmsOut ? (
               <span className="text-alert">{formik.errors.icmsOut}</span>
@@ -273,7 +328,9 @@ const FormEdition = () => {
               value={
                 loadingSearchItem ? "Carregando..." : formik.values.valorUnit
               }
-              disabled={loadingSearchItem}
+              disabled={
+                loadingUpdateItem || loadingSearchItem || loadingDeleteItem
+              }
             />
             {formik.touched.valorUnit && formik.errors.valorUnit ? (
               <span className="text-alert">{formik.errors.valorUnit}</span>
@@ -291,7 +348,9 @@ const FormEdition = () => {
               value={
                 loadingSearchItem ? "Carregando..." : formik.values.comission
               }
-              disabled={loadingSearchItem}
+              disabled={
+                loadingUpdateItem || loadingSearchItem || loadingDeleteItem
+              }
             />
             {formik.touched.comission && formik.errors.comission ? (
               <span className="text-alert">{formik.errors.comission}</span>
@@ -314,29 +373,20 @@ const FormEdition = () => {
           </label>
           <input
             type="submit"
-            disabled={loadingUpdateItem || loadingSearchItem}
+            disabled={
+              loadingUpdateItem || loadingSearchItem || loadingDeleteItem
+            }
             value={loadingUpdateItem ? "Atualizando..." : "Atualizar Item"}
           />
           <button
-            onClick={(event) => {
-              event.preventDefault();
-              confirm({
-                text: "Tem cereza que deseja deletar este item?",
-                submitText: "Sim", // optional, default = 'Yes'
-                cancelText: "Não", // optional, default = 'Cancel'
-                position: 'top', // optional, default = 'top', enum: ['top', 'bottom']
-                submitCallback: null, // optional
-                cancelCallback: null // optional
-              }, function() {
-                console.log('Yes clicked');
-              }, function() {
-                console.log('No clicked');
-              })
-            }}
+            onClick={handleDeleteItem}
             style={{ backgroundColor: "rgb(255, 109, 109)", color: "white" }}
             className="button-delete"
+            disabled={
+              loadingDeleteItem || loadingUpdateItem || loadingSearchItem
+            }
           >
-            Deletar item
+            {loadingDeleteItem ? "Deletando..." : "Deletar item"}
           </button>
         </div>
       </div>

@@ -1,60 +1,8 @@
-import { addHours, isAfter, parseISO } from "date-fns";
 import { isNaN } from "formik";
-import { alert } from "notie";
 
-// Função que calcula compara um datatime com o datatime atual e valida se já se passaram 36h da sua criação
-export function hasPassed36Hours(creationDate: string) {
-  const date = parseISO(creationDate); // Converte a string para um objeto Date
-  const datePlus36Hours = addHours(date, 36); // Soma 36 horas à data original
-  return isAfter(new Date(), datePlus36Hours); // Compara se a data atual já passou da data + 36h
-}
-
-// Função que valida o id dentro dos submits
-export const validateIdentify = (id, changeMessage, getElement) => {
-  if (!id) {
-    alert({
-      type: 2, // optional, default = 4, enum: [1, 2, 3, 4, 5, 'success', 'warning', 'error', 'info', 'neutral']
-      text: "Passe um id e faça uma busca!", // required
-      stay: false, // optional, default = false
-      time: 2, // optional, default = 3, minimum = 1,
-      position: 'top' // optional, default = 'top', enum: ['top', 'bottom']
-    })
-    getElement("id").focus();
-    return false;
-  }
-};
-
-// Função responsável por limitar as descrições dos itens nos selects
-export const limitWord = (texto) => {
-  const palavras = texto.split(/\s+/);
-  if (palavras.length > 5) {
-    return palavras.slice(0, 5).join(" ") + "...";
-  }
-  return texto;
-};
-
-// Função que calcula o total de custo
-export const calculateTotCust = (
-  value = 0,
-  entryIcms = 0,
-  exitIcms = 0,
-  commissionRate = 0
-) => {
-  return parseFloat(
-    ((entryIcms / 100 + exitIcms / 100 + commissionRate / 100) * value).toFixed(
-      2
-    )
-  );
-};
-
-// Função que formata o valor total de custo para o padrão BR
-export const formatCurrency = (value: number): string => {
-  return value.toLocaleString("pt-BR", {
-    style: "currency",
-    currency: "BRL",
-  });
-};
-
+/**
+ * Interface para os valores do formulário
+ */
 export interface FormValues {
   description: string;
   ean: string;
@@ -67,6 +15,13 @@ export interface FormValues {
   comission: string;
 }
 
+/**
+ * Função de validação do formulário
+ * @param values Valores do formulário
+ * @param edit Flag para verificar se é uma edição ou uma criação
+ * @returns Erros de validação
+ * @example validate({description: "Produto", ean: "1234567890123", ncm: "12345678", icmsIn: "18", icmsOut: "12", cst: "123", cfop: "123", valorUnit: "1000", comission: "5"}) => {}
+ */
 export const validate = (values: FormValues, edit = false) => {
   const errors: Partial<FormValues> = {};
 
@@ -147,20 +102,4 @@ export const validate = (values: FormValues, edit = false) => {
   }
 
   return errors;
-};
-
-// Função responsável por formatar os dados de envio da requisição (body)
-export const formattedValues = (values) => {
-  return {
-    valor_unitario: Number(values.valorUnit) || 0,
-    descricao: values.description.trim(),
-    taxa_icms_entrada: Number(values.icmsIn) || 0,
-    taxa_icms_saida: Number(values.icmsOut) || 0,
-    comissao: Number(values.comission) || 0,
-    ncm: values.ncm.trim(),
-    cst: values.cst.trim(),
-    cfop: Number(values.cfop) || 0,
-    ean: values.ean.trim(),
-    excluido: 0,
-  };
 };
