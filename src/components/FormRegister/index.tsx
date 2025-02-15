@@ -37,14 +37,14 @@ const FormRegister = () => {
     onSubmit: async (values, { setSubmitting, resetForm }) => {
       // Formata os dados de acordo com o formato esperado pela API
       const formattedData = formattedValues(values);
-      console.log('O código de barras já existe? ', isEanExist);
-      
+      console.log("O código de barras já existe? ", isEanExist);
+
       if (isEanExist) {
         return;
       }
       try {
-        const result = await requestAPIInsertItem(formattedData);;
-        
+        const result = await requestAPIInsertItem(formattedData);
+
         if (result) {
           showAlert(1, "Item cadastrado com sucesso!");
           setIsEanExist(false);
@@ -86,7 +86,6 @@ const FormRegister = () => {
     }
     fetchData();
   }, [formik.values.ean]);
-
 
   const {
     data: dataCsts,
@@ -197,7 +196,9 @@ const FormRegister = () => {
               <span className="text-error">{formik.errors.ean}</span>
             ) : null}
             {isEanExist && (
-              <span className="text-error">O código de barras informado já existe!</span>
+              <span className="text-error">
+                O código de barras informado já existe!
+              </span>
             )}
           </label>
 
