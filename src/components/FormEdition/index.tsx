@@ -10,8 +10,8 @@ import {
 import useApi from "../../hooks/useApi";
 import notie from "notie";
 
-const FormEdition = () => {
-  const [id, setId] = useState("");
+const FormEdition = ({identify = null}) => {
+  const [id, setId] = useState(identify || "");
   // Buscar a String de Data de criação do item
   const [stringDataCreatedItem, setStringDataCreatedItem] = useState(null);
   const {
@@ -19,19 +19,27 @@ const FormEdition = () => {
     error: errorCreatedItem,
     loading: loadingCreatedItem,
     requestAPI: requestApiCreatedItem,
-  } = useApi(`/items/id/${id}`, "GET");
+  } = useApi(`/items/id/${identify !== null ? identify : id}`, "GET");
 
   useEffect(() => {
     async function fetchData() {
-      try {
-        const data = await requestApiCreatedItem();
-        setStringDataCreatedItem(data[0].criado_em);
-      } catch (error) {
-        setStringDataCreatedItem(null);
+      if (identify !== null) {
+        try {
+          const data = await requestApiCreatedItem();
+          setStringDataCreatedItem(data[0].criado_em);
+        } catch (error) {
+          setStringDataCreatedItem(null);
+        }
       }
     }
     fetchData();
-  }, [id]);
+  }, [id, identify]);
+
+  if (identify !== null) {
+    useEffect(() => {
+      handleSearchItem();
+    }, [identify]);
+  }
 
   const {
     data: dataUpdateItem,
@@ -40,7 +48,20 @@ const FormEdition = () => {
     requestAPI: requestApiUpdateItem,
   } = useApi(`/items/${id}`, "PUT");
 
-  const formik = useFormik({
+  interface FormValues {
+    description: string;
+    ean: string;
+    ncm: string;
+    icmsIn: string;
+    icmsOut: string;
+    cst: string;
+    cfop: string;
+    valorUnit: string;
+    comission: string;
+    totCust: string;
+  }
+
+  const formik = useFormik<FormValues>({
     initialValues: {
       description: "",
       ean: "",
@@ -49,8 +70,8 @@ const FormEdition = () => {
       icmsOut: "",
       cst: "",
       cfop: "",
-      valorUnit: 0,
-      comission: 0,
+      valorUnit: "",
+      comission: "",
       totCust: "",
     },
     validate: (values) => validate(values, true),

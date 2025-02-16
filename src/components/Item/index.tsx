@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import FormEdition from "../FormEdition";
 
 const Item = ({
   id,
@@ -12,21 +13,25 @@ const Item = ({
   v_unit,
   cms,
   vtc,
+  openAutoEdit
 }) => {
-  const [copied, setCopied] = useState(false);
 
-  const handleCopy = async () => {
-    try {
-      await navigator.clipboard.writeText(id);
-      setCopied(true);
-      setTimeout(() => setCopied(false), 2000);
-    } catch (err) {
-      console.error("Falha ao copiar:", err);
-    }
-  };
+  const [showButtonEdt, setShowButtonEdt] = useState(false);
+
+  const handleButtonEdit = (e) => {
+    e.preventDefault();
+    openAutoEdit(id);
+  }
 
   return (
-    <div className="card-items__group-items__item">
+    <div
+      onMouseEnter={(e) => setShowButtonEdt(true)}
+      onMouseLeave={(e) => setShowButtonEdt(false)}
+      className="card-items__group-items__item"
+    >
+      <button onClick={handleButtonEdit} className={`btn-edit-item ${!showButtonEdt && "hidden-btn"}`}>
+        <i className="bi bi-pen-fill"></i>
+      </button>
       <div className="card-items__group-items__item__g1">
         <img src="/public/box.png" alt="" className="img-produto" />
       </div>
@@ -36,21 +41,6 @@ const Item = ({
         <p className="item-ean">
           Código de barras: <span>{ean}</span>
         </p>
-        <button
-          className="btn-copy"
-          onClick={handleCopy}
-          style={{ color: copied ? "green" : "#66788b" }}
-        >
-          {copied ? (
-            <>
-              Copiado com sucesso! <i className="bi bi-check-circle-fill"></i>
-            </>
-          ) : (
-            <>
-              Copiar id do item <i className="bi bi-copy"></i>
-            </>
-          )}
-        </button>
         <p className="discr">Descrição</p>
       </div>
 

@@ -20,7 +20,7 @@ interface ItemType {
   totalCusto: number;
 }
 
-const CardItems = ({ stage }) => {
+const CardItems = ({ stage, openAutoEdit }) => {
   const [items, setItems] = useState<ItemType[]>([]);
 
   const {
@@ -75,6 +75,7 @@ const CardItems = ({ stage }) => {
                   ean={item.ean}
                   ncm={item.ncm}
                   vtc={item.totalCusto}
+                  openAutoEdit={openAutoEdit}
                 />
               );
             })}
