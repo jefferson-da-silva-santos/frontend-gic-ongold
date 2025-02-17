@@ -4,12 +4,14 @@ import CardItems from "./components/CardItems/CardItems";
 import { useState } from "react";
 import FormRegister from "./components/FormRegister";
 import FormEdition from "./components/FormEdition";
+import PageBin from "./components/PageBin";
 
 const stages = [
   { id: 1, name: "list" },
   { id: 2, name: "register" },
   { id: 3, name: "edit" },
-  { id: 4, name: "autoedit"}
+  { id: 4, name: "autoedit"},
+  {id: 5, name: "bin"}
 ];
 
 function App() {
@@ -45,19 +47,27 @@ function App() {
     }
   }
 
+  const openBin = () => {
+    if (stage !== stages[4].name) {
+      setStage(stages[4].name)
+    }
+  }
+
   return (
     <div className="container">
       <Menu
         openList={openList}
         openRegister={openRegister}
         openEdit={openEdit}
+        openBin={openBin}
         stage={stage}
       />
       <Navgation />
       {stage === stages[0].name && <CardItems openAutoEdit={openAutoEdit}/>}
       {stage === stages[1].name && <FormRegister />}
-      {stage === stages[2].name && <FormEdition identify={null}/>}
-      {stage === stages[3].name && <FormEdition identify={identify}/>}
+      {stage === stages[2].name && <FormEdition/>}
+      {stage === stages[3].name && <FormEdition identify={identify} setIdentify={setIdentify}/>}
+      {stage === stages[4].name && <PageBin stage={stage}/>}
     </div>
   );
 }

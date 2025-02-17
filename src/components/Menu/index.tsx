@@ -1,6 +1,6 @@
 import React from "react";
 
-export const Menu = ({ openList, openRegister, openEdit, stage }) => {
+export const Menu = ({ openList, openRegister, openEdit, openBin }) => {
   const handleSubmitLinks = (e) => {
     e.preventDefault();
   };
@@ -58,7 +58,7 @@ export const Menu = ({ openList, openRegister, openEdit, stage }) => {
             <i className="bi bi-telephone-inbound"></i> Fale Conosco
           </a>
         </li>
-        <li className="menu__list__item">
+        <li onClick={openBin} className="menu__list__item">
           <a
             onClick={handleSubmitLinks}
             href=""

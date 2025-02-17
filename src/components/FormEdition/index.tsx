@@ -155,7 +155,7 @@ const FormEdition = ({identify = null}) => {
   const handleDeleteItem = async (e) => {
     e.preventDefault();
 
-    if (!isValidId(id)) {
+    if (!isValidId(id) || !isValidId(id)) {
       showAlert(2, "Passe um id válido para a busca!");
       setId("");
       return;

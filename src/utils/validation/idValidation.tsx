@@ -5,5 +5,5 @@
  * @example isValidId(1) => true
  */
 export const isValidId = (id: number | string | null | undefined): boolean => {
-  return id !== null && id !== undefined && !isNaN(Number(id));
+  return id !== null && id !== undefined && id !== '' && !isNaN(Number(id));
 };
