@@ -2,15 +2,19 @@ import React, { useEffect, useState } from "react";
 import useApi from "../../hooks/useApi";
 import { ThreeDot } from "react-loading-indicators";
 import ItemBin from "../ItemBin";
+import { showAlert } from "../../utils/ui/alertUtils";
+import notie from 'notie';
 
-const PageBin = ({ stage }) => {
+const PageBin = ({ stage, setStage }) => {
+  const [isItemModify, setIsItemModify] = useState(false);
+
   const [itemsBin, setItemsBin] = useState<any>(null);
   const {
     data: dataItemsBin,
     error: errorItemsBin,
     loading: loadingItemsBin,
     requestAPI: requestItemsBin,
-  } = useApi("/items/excluido/1", "GET");
+  } = useApi("/items/deleted", "GET");
 
   useEffect(() => {
     async function getItemsBin() {
@@ -18,26 +22,89 @@ const PageBin = ({ stage }) => {
         const result = await requestItemsBin();
         if (result) {
           setItemsBin(result);
+          setIsItemModify(false);
         }
       } catch (error) {
         console.error(error);
       }
     }
+    
     if (stage === "bin") {
       getItemsBin();
     }
-  }, [stage]);
+  }, [stage, isItemModify]);
+  
 
+  const {data: dataCleanBin, error: errorCleanBin, loading: loadingCleanBin, requestAPI: requestCleanBin} = useApi("/items/permanent", "DELETE");
+
+  const handleCleanBin = async () => {
+    try {
+      const result = await requestCleanBin();
+      if (result) {
+        showAlert(1, "Lixeira esvaziada com sucesso!");
+        setIsItemModify(true);
+        setItemsBin([]);
+      }
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  const {data: dataRestoreAll, error: errorRestoreAll, loading: loadingRestoreAll, requestAPI: requestRestoreAll} = useApi("/items/restore", "PUT");
+
+  const handleRestoreAll = async () => {
+    try {
+      const result = await requestRestoreAll();
+      if (result) {
+        showAlert(1, "Itens restaurados com sucesso!");
+        setIsItemModify(true);
+        setItemsBin([]);
+      }
+    } catch (error) {
+      console.error(error);
+    }
+  };
+  
   return (
     <div className="page-bin">
       <div className="page-bin__top">
-        <h1 className="page-bin__title">Itens da lixeira</h1>
-        <div className="group-buttons-top-bin">
-          <button className="btn-clean-bin">Esvaziar Lixeira</button>
-          <button className="btn-restart-bin">Restaurar Tudo</button>
-        </div>
+        <h1 className="page-bin__title">{itemsBin && itemsBin.length > 0 ? "Itens da lixeira" : "Lixeira vazia"}</h1>
+        {itemsBin && itemsBin.length > 0 && (
+          <div className="group-buttons-top-bin">
+            <button
+              onClick={() => {
+                notie.confirm({
+                  text: "Deseja realmente esvaziar a lixeira?",
+                  submitText: "Sim",
+                  cancelText: "Não",
+                  submitCallback: function () {
+                    handleCleanBin();
+                  },
+                });
+              }}
+              className="btn-clean-bin"
+            >
+              Esvaziar Lixeira
+            </button>
+            <button
+              onClick={() => {
+                notie.confirm({
+                  text: "Deseja realmente restaurar todos os itens?",
+                  submitText: "Sim",
+                  cancelText: "Não",
+                  submitCallback: function () {
+                    handleRestoreAll();
+                  },
+                });
+              }}
+              className="btn-restart-bin"
+            >
+              Restaurar Tudo
+            </button>
+          </div>
+        )}
       </div>
-      {loadingItemsBin ? (
+      {loadingItemsBin || loadingCleanBin || loadingRestoreAll ? (
         <ThreeDot
           variant="bounce"
           color="#797979"
@@ -52,6 +119,7 @@ const PageBin = ({ stage }) => {
             itemsBin.map((item: any) => (
               <ItemBin
                 key={item.id}
+                id={item.id}
                 description={item.descricao}
                 ean={item.ean}
                 icms_in={item.taxa_icms_entrada}
@@ -62,6 +130,8 @@ const PageBin = ({ stage }) => {
                 v_unit={item.valor_unitario}
                 cms={item.comissao}
                 vtc={item.totalCusto}
+                setIsItemModify={setIsItemModify}
+                setItemsBin={setItemsBin}
               />
             ))}
         </>

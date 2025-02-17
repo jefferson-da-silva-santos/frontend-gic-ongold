@@ -67,7 +67,7 @@ function App() {
       {stage === stages[1].name && <FormRegister />}
       {stage === stages[2].name && <FormEdition/>}
       {stage === stages[3].name && <FormEdition identify={identify} setIdentify={setIdentify}/>}
-      {stage === stages[4].name && <PageBin stage={stage}/>}
+      {stage === stages[4].name && <PageBin stage={stage} setStage={setStage}/>}
     </div>
   );
 }

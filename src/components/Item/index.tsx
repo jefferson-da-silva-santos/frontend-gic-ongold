@@ -25,8 +25,7 @@ const Item = ({
 
   return (
     <div
-      onMouseEnter={(e) => setShowButtonEdt(true)}
-      onMouseLeave={(e) => setShowButtonEdt(false)}
+    onClick={() => setShowButtonEdt(!showButtonEdt)}
       className="card-items__group-items__item"
     >
       <button onClick={handleButtonEdit} className={`btn-edit-item ${!showButtonEdt && "hidden-btn"}`}>

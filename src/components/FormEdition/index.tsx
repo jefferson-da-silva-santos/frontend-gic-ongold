@@ -121,7 +121,6 @@ const FormEdition = ({identify = null}) => {
     try {
       const result = await requestApiSearchItem();
       if (result) {
-        showAlert(1, "Item encontrado!");
         const data = result[0];
         formik.setValues({
           description: data.descricao,

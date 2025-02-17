@@ -189,6 +189,7 @@ $color-primary: #f2f2f2;
       border-radius: 8px;
       transition: all 0.2s ease;
       position: relative;
+      cursor: pointer;
 
       &:hover {
         background-color: darken(white, 3%);
@@ -658,10 +659,12 @@ $color-primary: #f2f2f2;
       .btn-clean-bin {
         border: 2px solid rgb(255, 155, 155);
         color: rgb(255, 100, 100);
+        background-color: transparent;
       }
       .btn-restart-bin {
         border: 2px solid rgb(124, 224, 255);
         color: rgb(15, 199, 255);
+        background-color: transparent;
       }
     }
   }
@@ -687,12 +690,34 @@ $color-primary: #f2f2f2;
         position: absolute;
         z-index: 99999;
         right: 0;
+        margin: .5rem 1rem .5rem .5rem;
+        background-color: transparent;
+        border: none;
+        cursor: pointer;
+        transition: all .4s ease; 
+        i {
+          font-size: 1.8rem;
+          color: #414141;
+          cursor: pointer;
+        }
+        &:hover {
+          transform: rotate(0deg);
+          scale: 1.1;
+        }
+      }
+
+
+      .btn-res-bin-item {
+        position: absolute;
+        z-index: 99999;
+        right: 0;
         margin: .5rem;
         background-color: transparent;
         border: none;
         cursor: pointer;
         transform: rotate(50deg);
         transition: all .4s ease; 
+        right: 3rem;
         i {
           font-size: 2rem;
           color: #414141;

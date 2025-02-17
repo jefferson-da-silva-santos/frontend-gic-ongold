@@ -1,6 +1,10 @@
 import React from "react";
+import useApi from "../../hooks/useApi";
+import notie from 'notie';
+import { showAlert } from "../../utils/ui/alertUtils";
 
 const ItemBin = ({
+  id,
   description,
   ean,
   icms_in,
@@ -11,11 +15,78 @@ const ItemBin = ({
   v_unit,
   cms,
   vtc,
+  setIsItemModify,
+  setItemsBin
 }) => {
+
+  const { data: dataRestoreItem, error: errorRestoreItem, loading: loadingRestoreItem, requestAPI: requestRestoreItem } = useApi(`/items/restore/${id}`, "PUT");
+
+  const handleRestoreItem = async () => {
+    try {
+      const result = await requestRestoreItem();
+      if (result) {
+        showAlert(1, "Item restaurado com sucesso!");
+        setIsItemModify(true);
+        // Se for o último item na lixeira, forçamos a atualização do estado
+        setItemsBin((prevItems) => {
+          const updatedItems = prevItems.filter((item) => item.id !== id);
+          return updatedItems.length > 0 ? updatedItems : [];
+        });
+      } else {
+        showAlert(3, "Erro ao restaurar o item!");
+      }
+    } catch (error) {
+      console.error(error);
+    }
+  }
+
+  const { data: deletePermanentlyItem, error: errorDeletePermanentlyItem, loading: loadingDeletePermanentlyItem, requestAPI: requestDeletePermanentlyItem } = useApi(`/items/permanent/${id}`, "DELETE");
+
+  const handleDeletePermanentlyItem = async () => {
+    try {
+      const result = await requestDeletePermanentlyItem();
+      if (result) {
+        showAlert(1, "Item excluído permanentemente com sucesso!");
+        setIsItemModify(true);
+  
+        // Se for o último item na lixeira, forçamos a atualização do estado
+        setItemsBin((prevItems) => {
+          const updatedItems = prevItems.filter((item) => item.id !== id);
+          return updatedItems.length > 0 ? updatedItems : [];
+        });
+      } else {
+        showAlert(3, "Erro ao excluir o item permanentemente!");
+      }
+    } catch (error) {
+      console.error(error);
+    }
+  };
+  
   return (
     <div className="page-bin__group-items__item">
-      <button className="btn-rm-bin-item">
-        <i className="bi bi-arrow-counterclockwise"></i>
+      <button onClick={() => {
+        notie.confirm({
+          text: "Deseja realmente restaurar o item?",
+          submitText: "Sim",
+          cancelText: "Não",
+          submitCallback: function () {
+            handleRestoreItem();
+          },
+        });
+      }} className="btn-res-bin-item">
+        <i className="bi bi-arrow-counterclockwise icon-restore-loading"></i>
+      </button>
+      <button onClick={() => {
+        notie.confirm({
+          text: "Deseja realmente excluir permanentemente o item?",
+          submitText: "Sim",
+          cancelText: "Não",
+          submitCallback: function () {
+            handleDeletePermanentlyItem();
+          },
+        });
+      }} className="btn-rm-bin-item">
+      <i className="bi bi-trash-fill"></i>
       </button>
       <div className="page-bin__group-items__item__g1">
         <img src="/public/box-bin.png" alt="" className="img-produto" />

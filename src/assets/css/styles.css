@@ -294,6 +294,7 @@
   border-radius: 8px;
   transition: all 0.2s ease;
   position: relative;
+  cursor: pointer;
 }
 .card-items__group-items__item:hover {
   background-color: rgb(247.35, 247.35, 247.35);
@@ -744,10 +745,12 @@
 .page-bin .page-bin__top .group-buttons-top-bin .btn-clean-bin {
   border: 2px solid rgb(255, 155, 155);
   color: rgb(255, 100, 100);
+  background-color: transparent;
 }
 .page-bin .page-bin__top .group-buttons-top-bin .btn-restart-bin {
   border: 2px solid rgb(124, 224, 255);
   color: rgb(15, 199, 255);
+  background-color: transparent;
 }
 .page-bin__group-items__item {
   display: grid;
@@ -768,19 +771,39 @@
   position: absolute;
   z-index: 99999;
   right: 0;
+  margin: 0.5rem 1rem 0.5rem 0.5rem;
+  background-color: transparent;
+  border: none;
+  cursor: pointer;
+  transition: all 0.4s ease;
+}
+.page-bin__group-items__item .btn-rm-bin-item i {
+  font-size: 1.8rem;
+  color: #414141;
+  cursor: pointer;
+}
+.page-bin__group-items__item .btn-rm-bin-item:hover {
+  transform: rotate(0deg);
+  scale: 1.1;
+}
+.page-bin__group-items__item .btn-res-bin-item {
+  position: absolute;
+  z-index: 99999;
+  right: 0;
   margin: 0.5rem;
   background-color: transparent;
   border: none;
   cursor: pointer;
   transform: rotate(50deg);
   transition: all 0.4s ease;
+  right: 3rem;
 }
-.page-bin__group-items__item .btn-rm-bin-item i {
+.page-bin__group-items__item .btn-res-bin-item i {
   font-size: 2rem;
   color: #414141;
   cursor: pointer;
 }
-.page-bin__group-items__item .btn-rm-bin-item:hover {
+.page-bin__group-items__item .btn-res-bin-item:hover {
   transform: rotate(0deg);
   scale: 1.1;
 }

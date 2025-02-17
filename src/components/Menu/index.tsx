@@ -40,24 +40,6 @@ export const Menu = ({ openList, openRegister, openEdit, openBin }) => {
           <hr />
         </li>
 
-        <li className="menu__list__item">
-          <a
-            onClick={handleSubmitLinks}
-            href=""
-            className="menu__list__item__btn"
-          >
-            <i className="bi bi-info-circle-fill"></i> Informações
-          </a>
-        </li>
-        <li className="menu__list__item">
-          <a
-            onClick={handleSubmitLinks}
-            href=""
-            className="menu__list__item__btn"
-          >
-            <i className="bi bi-telephone-inbound"></i> Fale Conosco
-          </a>
-        </li>
         <li onClick={openBin} className="menu__list__item">
           <a
             onClick={handleSubmitLinks}
