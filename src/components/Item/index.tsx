@@ -13,22 +13,29 @@ const Item = ({
   v_unit,
   cms,
   vtc,
-  openAutoEdit
+  openAutoEdit,
+  activeItemId,
+  onItemClick,
 }) => {
-
-  const [showButtonEdt, setShowButtonEdt] = useState(false);
 
   const handleButtonEdit = (e) => {
     e.preventDefault();
     openAutoEdit(id);
   }
 
+  const handleClick = () => {
+    onItemClick(id); // Define o item como ativo
+  };
+
   return (
     <div
-    onClick={() => setShowButtonEdt(!showButtonEdt)}
+    onClick={handleClick}
       className="card-items__group-items__item"
     >
-      <button onClick={handleButtonEdit} className={`btn-edit-item ${!showButtonEdt && "hidden-btn"}`}>
+      <button
+        onClick={handleButtonEdit}
+        className={`btn-edit-item ${activeItemId === id ? "" : "hidden-btn"}`}
+      >
         <i className="bi bi-pen-fill"></i>
       </button>
       <div className="card-items__group-items__item__g1">

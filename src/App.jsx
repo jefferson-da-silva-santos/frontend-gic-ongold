@@ -15,6 +15,8 @@ const stages = [
 ];
 
 function App() {
+  const [items, setItems] = useState([]);
+  const [description, setDescription] = useState("");
   // Estado
   const [stage, setStage] = useState(stages[0].name);
   const [identify, setIdentify] = useState(null);
@@ -62,8 +64,8 @@ function App() {
         openBin={openBin}
         stage={stage}
       />
-      <Navgation />
-      {stage === stages[0].name && <CardItems openAutoEdit={openAutoEdit}/>}
+      <Navgation setStage={setStage} setItems={setItems}/>
+      {stage === stages[0].name && <CardItems openAutoEdit={openAutoEdit} items={items} setItems={setItems}/>}
       {stage === stages[1].name && <FormRegister />}
       {stage === stages[2].name && <FormEdition/>}
       {stage === stages[3].name && <FormEdition identify={identify} setIdentify={setIdentify}/>}
@@ -72,4 +74,4 @@ function App() {
   );
 }
 
-f
+export default App;

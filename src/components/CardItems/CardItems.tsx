@@ -20,8 +20,8 @@ interface ItemType {
   totalCusto: number;
 }
 
-const CardItems = ({ stage, openAutoEdit }) => {
-  const [items, setItems] = useState<ItemType[]>([]);
+const CardItems = ({ stage, openAutoEdit, items, setItems }) => {
+  const [activeItemId, setActiveItemId] = useState<number | null>(null); // Armazenar o id do item ativo
 
   const {
     data: dataItems,
@@ -44,6 +44,11 @@ const CardItems = ({ stage, openAutoEdit }) => {
     }
     fetchData();
   }, [stage]);
+
+   // Função para lidar com o clique no item
+   const handleItemClick = (id) => {
+    setActiveItemId(id); // Atualiza o id do item clicado
+  };
 
   return (
     <section className="card-items">
@@ -76,6 +81,8 @@ const CardItems = ({ stage, openAutoEdit }) => {
                   ncm={item.ncm}
                   vtc={item.totalCusto}
                   openAutoEdit={openAutoEdit}
+                  activeItemId={activeItemId} 
+                  onItemClick={handleItemClick} 
                 />
               );
             })}
