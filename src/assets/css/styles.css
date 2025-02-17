@@ -297,7 +297,7 @@
   cursor: pointer;
 }
 .card-items__group-items__item:hover {
-  background-color: rgb(247.35, 247.35, 247.35);
+  background-color: #fffcef;
 }
 .card-items__group-items__item .btn-edit-item {
   position: absolute;
@@ -779,7 +779,7 @@
 }
 .page-bin__group-items__item .btn-rm-bin-item i {
   font-size: 1.8rem;
-  color: #414141;
+  color: #8998af;
   cursor: pointer;
 }
 .page-bin__group-items__item .btn-rm-bin-item:hover {
@@ -800,7 +800,7 @@
 }
 .page-bin__group-items__item .btn-res-bin-item i {
   font-size: 2rem;
-  color: #414141;
+  color: #8998af;
   cursor: pointer;
 }
 .page-bin__group-items__item .btn-res-bin-item:hover {

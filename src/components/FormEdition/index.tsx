@@ -163,7 +163,7 @@ const FormEdition = ({identify = null}) => {
     const confirmDelete = () => {
       notie.confirm(
         {
-          text: "Tem certeza que deseja deletar este item?",
+          text: "Deseja mover esse item para lixeira?",
           submitText: "Sim",
           cancelText: "Não",
           position: "top",
@@ -172,7 +172,7 @@ const FormEdition = ({identify = null}) => {
           try {
             const result = await requestApiDeleteItem();
             if (result) {
-              showAlert(1, "Item deletado com sucesso!");
+              showAlert(1, "Item movido para lixeira!");
               formik.resetForm();
               setId("");
             }

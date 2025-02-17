@@ -192,7 +192,7 @@ $color-primary: #f2f2f2;
       cursor: pointer;
 
       &:hover {
-        background-color: darken(white, 3%);
+        background-color: #fffcef;
       }
 
       .btn-edit-item {
@@ -697,7 +697,7 @@ $color-primary: #f2f2f2;
         transition: all .4s ease; 
         i {
           font-size: 1.8rem;
-          color: #414141;
+          color: #8998af;
           cursor: pointer;
         }
         &:hover {
@@ -720,7 +720,7 @@ $color-primary: #f2f2f2;
         right: 3rem;
         i {
           font-size: 2rem;
-          color: #414141;
+          color: #8998af;
           cursor: pointer;
         }
         &:hover {
