@@ -100,6 +100,8 @@ function App() {
     fetchData();
   }, []);
 
+  const [isMenuMobileVisible, setIsMenuMobileVisible] = useState(false);
+
   return (
     <div className="container">
       <Menu
@@ -108,8 +110,10 @@ function App() {
         openEdit={openEdit}
         openBin={openBin}
         stage={stage}
+        isMenuMobileVisible={isMenuMobileVisible}
+        setIsMenuMobileVisible={setIsMenuMobileVisible}
       />
-      <Navgation setStage={setStage} setItems={setItems} currentPage={currentPage} setCurrentPage={setCurrentPage}/>
+      <Navgation setStage={setStage} setItems={setItems} currentPage={currentPage} setCurrentPage={setCurrentPage} isMenuMobileVisible={isMenuMobileVisible} setIsMenuMobileVisible={setIsMenuMobileVisible}/>
       {stage === stages[0].name && (
         <CardItems
           openAutoEdit={openAutoEdit}

@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import useApi from "../../hooks/useApi";
 import { showAlert } from "../../utils/ui/alertUtils";
 
-const Navgation = ({ setStage, setItems, currentPage, setCurrentPage }) => {
+const Navgation = ({ setStage, setItems, currentPage, setCurrentPage, isMenuMobileVisible, setIsMenuMobileVisible }) => {
   const [description, setDescription] = useState("");
 
   const {
@@ -61,8 +61,8 @@ const Navgation = ({ setStage, setItems, currentPage, setCurrentPage }) => {
 
   return (
     <nav className="navigation">
-      <button className="navigation__menu">
-      <i className="bi bi-list"></i>
+      <button onClick={() => setIsMenuMobileVisible(!isMenuMobileVisible)} className="navigation__menu">
+      <i  className="bi bi-list"></i>
       </button>
       <button className="navigation__btn">
         <i className="bi bi-search"></i>

@@ -1,16 +1,21 @@
 import React, { useState } from "react";
 
-export const Menu = ({ openList, openRegister, openEdit, openBin }) => {
+export const Menu = ({ openList, openRegister, openEdit, openBin, isMenuMobileVisible, setIsMenuMobileVisible }) => {
   const handleSubmitLinks = (e) => {
     e.preventDefault();
   };
-  const [isMenuMobileVisible, setIsMenuMobileVisible] = useState(null);
   return (
-    <div className="container-menu">
+    <div
+      className={`container-menu ${
+        isMenuMobileVisible ? "container-menu-show" : "container-menu-hidden"
+      }`}
+    >
       <aside className="menu">
-      <button className="button-close-menu">
-        <img src="/public/close-menu.png" alt="" />
-      </button>
+        
+        <button onClick={() => setIsMenuMobileVisible(!isMenuMobileVisible)} className="button-close-menu">
+          <img src="/public/close-menu.png" alt="" />
+        </button>
+
         <img src="/public/logo_gic.png" alt="" className="menu__logo" />
         <ul className="menu__list">
           <li className="menu__list__item" onClick={openList}>
