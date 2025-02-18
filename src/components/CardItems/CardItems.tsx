@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import Item from "../Item";
 import useApi from "../../hooks/useApi";
 import { ThreeDot } from "react-loading-indicators";
+import BasicPagination from "../Pagination";
 
 /**
  * Interface para os itens retornados pela API do backend 
@@ -20,7 +21,7 @@ interface ItemType {
   totalCusto: number;
 }
 
-const CardItems = ({ stage, openAutoEdit, items, setItems }) => {
+const CardItems = ({ stage, openAutoEdit, items, setItems, currentPage, setCurrentPage }) => {
   const [activeItemId, setActiveItemId] = useState<number | null>(null); // Armazenar o id do item ativo
 
   const {
@@ -30,16 +31,24 @@ const CardItems = ({ stage, openAutoEdit, items, setItems }) => {
     requestAPI: requestApiItems,
   } = useApi("/items");
 
+  const [itensPerPage] = useState(4);
+  const totPage = Math.ceil(items.length / itensPerPage);
+  const init = (currentPage - 1) * itensPerPage;
+  const end = init + itensPerPage;
+  const itemsPage = items.slice(init, end);
+  
+
+
   // Função para buscar os dados
   useEffect(() => {
     async function fetchData() {
       try {
-        const data = await requestApiItems(); // Requisição para pegar os itens
+        const data = await requestApiItems();
         if (data) {
-          setItems(data); // Atualiza os itens na UI
+          setItems(data);
         }
       } catch (error) {
-        console.error("Erro ao carregar os itens:", error); // Log do erro no console
+        console.error("Erro ao carregar os itens:", error);
       }
     }
     fetchData();
@@ -52,7 +61,9 @@ const CardItems = ({ stage, openAutoEdit, items, setItems }) => {
 
   return (
     <section className="card-items">
-      <p className="card-items__text">Lista de Itens</p>
+      {items.length > 0 && (
+        <>
+        <p className="card-items__text">Lista de Itens</p>
       {loadingItems ? (
         <ThreeDot
           variant="bounce"
@@ -63,9 +74,10 @@ const CardItems = ({ stage, openAutoEdit, items, setItems }) => {
           style={{marginTop: "3rem"}}
         />
       ) : (
+        <>
         <div className="card-items__group-items">
-          {items &&
-            items.map((item) => {
+          {itemsPage &&
+            itemsPage.map((item) => {
               return (
                 <Item
                   key={item.id}
@@ -87,7 +99,20 @@ const CardItems = ({ stage, openAutoEdit, items, setItems }) => {
               );
             })}
         </div>
+        <div className="group-pagination">
+        <BasicPagination
+          quant={totPage}
+          handlePage={(event, value) => setCurrentPage(value)}
+          currentPage={currentPage}
+        />
+      </div></>
       )}
+        </>
+      )}
+      {items.length === 0 && (
+        <p className="alert-not-found">Nenhum item encontrado! 😐</p>
+      )}
+      
     </section>
   );
 };

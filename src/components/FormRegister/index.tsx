@@ -37,7 +37,6 @@ const FormRegister = () => {
     onSubmit: async (values, { setSubmitting, resetForm }) => {
       // Formata os dados de acordo com o formato esperado pela API
       const formattedData = formattedValues(values);
-      console.log("O código de barras já existe? ", isEanExist);
 
       if (isEanExist) {
         return;

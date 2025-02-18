@@ -2,10 +2,10 @@
 @import "bootstrap-icons/font/bootstrap-icons.css";
 @import url("https://fonts.googleapis.com/css2?family=Nunito:ital,wght@0,200..1000;1,200..1000&display=swap");
 // Before notie is imported:
-$notie-color-success: #57BF57;
-$notie-color-warning: #D6A14D;
+$notie-color-success: #E9D17B;
+$notie-color-warning: #D9AC80;
 $notie-color-error: #E1715B;
-$notie-color-info: #4D82D6;
+$notie-color-info: #D9AC80;
 $notie-color-neutral: #A0A0A0;
 @import '../../../node_modules/notie/src/notie.scss';
 
@@ -64,6 +64,14 @@ $color-primary: #f2f2f2;
   }
 }
 // Componente de menu lateral
+
+.container-menu {
+  position: sticky;
+  top: 0;
+  background-color: white;
+  width: 16em;
+  height: 100vh;
+}
 .menu {
   position: sticky;
   top: 0;
@@ -78,6 +86,24 @@ $color-primary: #f2f2f2;
     width: 6em;
     margin: 0;
     transform: translateX(16px);
+  }
+
+  .button-close-menu {
+    position: absolute;
+    right: -19px;
+    top: 1.5em;
+    border: none;
+    padding: 1rem;
+    background-color: darken(white, 2%);
+    width: 40px;
+    height: 40px;
+    @include flex-box(row, center, center, 0);
+    border-radius: 50%;
+    display: none;
+
+    img {
+      width: 28px;
+    }
   }
 
   &__list {
@@ -136,6 +162,16 @@ $color-primary: #f2f2f2;
     }
   }
 
+  &__menu {
+    border: none;
+    background-color: transparent;
+    color: #66788b;
+    display: none;
+    i {
+      font-size: 2rem;
+    }
+  }
+
   &__input {
     width: 100%;
     padding: 0.8rem;
@@ -161,7 +197,7 @@ $color-primary: #f2f2f2;
   margin: auto;
   height: 100%;
   max-width: 85em;
-  margin-bottom: 3rem;
+  padding-bottom: 1rem;
 
   &__text {
     text-align: start;
@@ -799,6 +835,62 @@ $color-primary: #f2f2f2;
           font-weight: bold;
         }
       }
+    }
+  }
+}
+
+.MuiPagination-ul {
+  justify-content: center;
+}
+
+.MuiPaginationItem-textSecondary.Mui-selected {
+  color: #fff;
+  background-color: #443500;
+}
+
+.alert-not-found {
+  padding: 1rem;
+  border-radius: 10px;
+  font-size: 1.5rem;
+  color: #6482a0;
+}
+
+// Media Query
+
+@include media-query(1199px) {
+  .container {
+    grid-template-columns: none;
+    padding: 0 2rem;
+  }
+  .navigation__menu {
+    display: block;
+  }
+  .container-menu {
+    width: 100%;
+    position: fixed;
+    z-index: 9999;
+    left: 0;
+    right: 0;
+    top: 0;
+    bottom: 0;
+    background-color: #11315c67;
+  }
+
+  .menu {
+    box-shadow: 0px 0px 20px darken(white, 20%);
+    transform: translateX(-100%);
+    animation: menuMobile .5s ease 0s 1 normal forwards;
+    .button-close-menu {
+      display: flex;
+    }
+  }
+
+  @keyframes menuMobile {
+    0% {
+      transform: translateX(-100%);
+    }
+    100% {
+      transform: translateX(0);
     }
   }
 }

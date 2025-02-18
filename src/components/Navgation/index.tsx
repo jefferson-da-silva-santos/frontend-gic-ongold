@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import useApi from "../../hooks/useApi";
 import { showAlert } from "../../utils/ui/alertUtils";
 
-const Navgation = ({ setStage, setItems }) => {
+const Navgation = ({ setStage, setItems, currentPage, setCurrentPage }) => {
   const [description, setDescription] = useState("");
 
   const {
@@ -61,11 +61,17 @@ const Navgation = ({ setStage, setItems }) => {
 
   return (
     <nav className="navigation">
+      <button className="navigation__menu">
+      <i className="bi bi-list"></i>
+      </button>
       <button className="navigation__btn">
         <i className="bi bi-search"></i>
       </button>
       <input
-        onClick={() => setStage("list")}
+        onClick={() => {
+          setStage("list");
+          setCurrentPage(1);
+        }}
         onChange={(e) => {
           if (e.target.value.trim() === "") {
             setItems(dataItems)
@@ -73,6 +79,7 @@ const Navgation = ({ setStage, setItems }) => {
             setDescription(e.target.value);
             console.log(e.target.value);
           }
+          setCurrentPage(1);
         }}
         onKeyDown={handleKeyDown}
         type="text"

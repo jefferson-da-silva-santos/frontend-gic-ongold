@@ -36,7 +36,7 @@ const ItemBin = ({
         showAlert(3, "Erro ao restaurar o item!");
       }
     } catch (error) {
-      console.error(error);
+      console.error('Erro ao tentar restaurar item: ', error);
     }
   }
 
@@ -58,7 +58,7 @@ const ItemBin = ({
         showAlert(3, "Erro ao excluir o item permanentemente!");
       }
     } catch (error) {
-      console.error(error);
+      console.error('Erro ao tentar deletar item permanentemente: ', error);
     }
   };
   

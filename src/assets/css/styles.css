@@ -33,11 +33,11 @@
 }
 
 .notie-background-success {
-  background-color: #57BF57;
+  background-color: #E9D17B;
 }
 
 .notie-background-warning {
-  background-color: #D6A14D;
+  background-color: #D9AC80;
 }
 
 .notie-background-error {
@@ -45,7 +45,7 @@
 }
 
 .notie-background-info {
-  background-color: #4D82D6;
+  background-color: #D9AC80;
 }
 
 .notie-background-neutral {
@@ -167,6 +167,14 @@
   z-index: 99999;
 }
 
+.container-menu {
+  position: sticky;
+  top: 0;
+  background-color: white;
+  width: 16em;
+  height: 100vh;
+}
+
 .menu {
   position: sticky;
   top: 0;
@@ -185,6 +193,26 @@
   width: 6em;
   margin: 0;
   transform: translateX(16px);
+}
+.menu .button-close-menu {
+  position: absolute;
+  right: -19px;
+  top: 1.5em;
+  border: none;
+  padding: 1rem;
+  background-color: rgb(249.9, 249.9, 249.9);
+  width: 40px;
+  height: 40px;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  gap: 0;
+  border-radius: 50%;
+  display: none;
+}
+.menu .button-close-menu img {
+  width: 28px;
 }
 .menu__list {
   margin: 0;
@@ -243,6 +271,15 @@
 .navigation__btn i {
   font-size: 1.3rem;
 }
+.navigation__menu {
+  border: none;
+  background-color: transparent;
+  color: #66788b;
+  display: none;
+}
+.navigation__menu i {
+  font-size: 2rem;
+}
 .navigation__input {
   width: 100%;
   padding: 0.8rem;
@@ -263,7 +300,7 @@
   margin: auto;
   height: 100%;
   max-width: 85em;
-  margin-bottom: 3rem;
+  padding-bottom: 1rem;
 }
 .card-items__text {
   text-align: start;
@@ -873,6 +910,58 @@
 .page-bin__group-items__item .item-text span {
   color: #66788b;
   font-weight: bold;
+}
+
+.MuiPagination-ul {
+  justify-content: center;
+}
+
+.MuiPaginationItem-textSecondary.Mui-selected {
+  color: #fff;
+  background-color: #443500;
+}
+
+.alert-not-found {
+  padding: 1rem;
+  border-radius: 10px;
+  font-size: 1.5rem;
+  color: #6482a0;
+}
+
+@media screen and (max-width: 1199px) {
+  .container {
+    grid-template-columns: none;
+    padding: 0 2rem;
+  }
+  .navigation__menu {
+    display: block;
+  }
+  .container-menu {
+    width: 100%;
+    position: fixed;
+    z-index: 9999;
+    left: 0;
+    right: 0;
+    top: 0;
+    bottom: 0;
+    background-color: rgba(17, 49, 92, 0.4039215686);
+  }
+  .menu {
+    box-shadow: 0px 0px 20px #cccccc;
+    transform: translateX(-100%);
+    animation: menuMobile 0.5s ease 0s 1 normal forwards;
+  }
+  .menu .button-close-menu {
+    display: flex;
+  }
+  @keyframes menuMobile {
+    0% {
+      transform: translateX(-100%);
+    }
+    100% {
+      transform: translateX(0);
+    }
+  }
 }
 
 /*# sourceMappingURL=styles.css.map */

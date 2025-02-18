@@ -1,12 +1,12 @@
 import { formatCurrency } from "../currency/currencyUtils";
-import { hasPassed36Hours } from "../date/dateUtils";
+import { hasPassedValueHours } from "../date/dateUtils";
 import { calculateTotCust } from "../helpers/calculateUtils";
 import { formattedValues } from "../helpers/dataFormattingUtils";
 import { limitWord } from "../helpers/stringUtils";
 import { isValidId } from "./idValidation";
 import { validate } from "./formValidation";
 import { showAlert } from "../ui/alertUtils";
-
+import { hasPassed30Days } from "../date/dateUtils";
 /**
  * Exportação de todas as funções de validação e formatação para serem usadas em outros arquivos da aplicação.
  * @module utils/validation
@@ -24,12 +24,13 @@ import { showAlert } from "../ui/alertUtils";
  * @see module:utils/date/dateUtils
  */
 export {
-  hasPassed36Hours,
+  hasPassedValueHours,
   validate,
   formattedValues,
   isValidId,
   formatCurrency,
   limitWord,
   calculateTotCust,
-  showAlert
+  showAlert,
+  hasPassed30Days
 };

@@ -25,7 +25,7 @@ const PageBin = ({ stage, setStage }) => {
           setIsItemModify(false);
         }
       } catch (error) {
-        console.error(error);
+        console.error('Erro ao carregar itens da lixeira: ',error);
       }
     }
     
@@ -46,7 +46,7 @@ const PageBin = ({ stage, setStage }) => {
         setItemsBin([]);
       }
     } catch (error) {
-      console.error(error);
+      console.error('Erro ao tentar limpar a lixeira: ', error);
     }
   };
 
@@ -61,7 +61,7 @@ const PageBin = ({ stage, setStage }) => {
         setItemsBin([]);
       }
     } catch (error) {
-      console.error(error);
+      console.error('Erro ao tentar restaurar todos os itens da lixeira: ',error);
     }
   };
   

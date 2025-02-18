@@ -5,7 +5,7 @@ import {
   isValidId,
   validate,
   showAlert,
-  hasPassed36Hours,
+  hasPassedValueHours,
 } from "../../utils/validation/validation";
 import useApi from "../../hooks/useApi";
 import notie from "notie";
@@ -78,7 +78,7 @@ const FormEdition = ({identify = null}) => {
     onSubmit: async (values, { setSubmitting, resetForm }) => {
       const formattedData = formattedValues(values);
       try {
-        if (stringDataCreatedItem && !hasPassed36Hours(stringDataCreatedItem)) {
+        if (stringDataCreatedItem && !hasPassedValueHours(stringDataCreatedItem, 36)) {
           showAlert(
             3,
             "Não é possível editar um item após 36 horas de sua criação!"
