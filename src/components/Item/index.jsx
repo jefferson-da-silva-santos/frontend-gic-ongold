@@ -78,7 +78,7 @@ const Item = ({
         <p className="item-text">
           Valor Total de Custo: <span>{vtc} R$</span>
         </p>
-        <p className="discr">Custos</p>
+        <p className="discr discr-custos">Custos</p>
       </div>
     </div>
   );

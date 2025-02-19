@@ -35,7 +35,7 @@ const PageBin = ({ stage, setStage }) => {
   }, [stage, isItemModify]);
   
 
-  const {data: dataCleanBin, error: errorCleanBin, loading: loadingCleanBin, requestAPI: requestCleanBin} = useApi("/items/permanent", "DELETE");
+  const {data, error, loading: loadingCleanBin, requestAPI: requestCleanBin} = useApi("/items/permanent", "DELETE");
 
   const handleCleanBin = async () => {
     try {
@@ -72,6 +72,7 @@ const PageBin = ({ stage, setStage }) => {
         {itemsBin && itemsBin.length > 0 && (
           <div className="group-buttons-top-bin">
             <button
+             disabled={loadingCleanBin}
               onClick={() => {
                 notie.confirm({
                   text: "Deseja realmente esvaziar a lixeira?",
@@ -84,9 +85,10 @@ const PageBin = ({ stage, setStage }) => {
               }}
               className="btn-clean-bin"
             >
-              Esvaziar Lixeira
+              {loadingCleanBin ? 'Esvaziando...' : 'Esvaziar Lixeira'}
             </button>
             <button
+            disabled={loadingRestoreAll}
               onClick={() => {
                 notie.confirm({
                   text: "Deseja realmente restaurar todos os itens?",
@@ -99,7 +101,7 @@ const PageBin = ({ stage, setStage }) => {
               }}
               className="btn-restart-bin"
             >
-              Restaurar Tudo
+              {loadingRestoreAll ? "Restaurando..." : "Restaurar Tudo"}
             </button>
           </div>
         )}

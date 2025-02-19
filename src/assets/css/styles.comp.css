@@ -33,23 +33,23 @@
 }
 
 .notie-background-success {
-  background-color: #E9D17B;
+  background-color: #e9d17b;
 }
 
 .notie-background-warning {
-  background-color: #D9AC80;
+  background-color: #d9ac80;
 }
 
 .notie-background-error {
-  background-color: #E1715B;
+  background-color: #e1715b;
 }
 
 .notie-background-info {
-  background-color: #D9AC80;
+  background-color: #d9ac80;
 }
 
 .notie-background-neutral {
-  background-color: #A0A0A0;
+  background-color: #a0a0a0;
 }
 
 .notie-background-overlay {
@@ -195,6 +195,7 @@
   transform: translateX(16px);
 }
 .menu .button-close-menu {
+  cursor: pointer;
   position: absolute;
   right: -19px;
   top: 1.5em;
@@ -226,9 +227,6 @@
   border-radius: 8px;
   font-weight: 500;
   transition: all 0.4s ease;
-}
-.menu__list__item:hover {
-  background-color: #f8f8f9;
 }
 .menu__list__item__btn {
   text-decoration: none;
@@ -453,6 +451,7 @@
 }
 .form input[type=submit] {
   padding: 1rem;
+  height: 3.7rem;
 }
 .form__title {
   margin: 0;
@@ -469,7 +468,7 @@
 }
 .form__group-inputs__g0 {
   display: grid;
-  grid-template-columns: 1fr 2em;
+  grid-template-columns: 1fr 3em;
   gap: 0.5rem;
   width: 100%;
   max-width: 40em;
@@ -583,6 +582,7 @@
   max-width: 40em;
   padding: 0.7em 1em;
   margin-top: 1rem;
+  height: 3.7rem;
   font-weight: 700;
   box-shadow: 4px 4px 12px 0 rgba(134, 146, 160, 0.27);
   color: #242930;
@@ -730,7 +730,7 @@
 }
 
 .message-empty-loading {
-  background-color: #E8F0FE;
+  background-color: #e8f0fe;
 }
 
 .message-empty-error {
@@ -832,7 +832,6 @@
   background-color: transparent;
   border: none;
   cursor: pointer;
-  transform: rotate(50deg);
   transition: all 0.4s ease;
   right: 3rem;
 }
@@ -842,7 +841,6 @@
   cursor: pointer;
 }
 .page-bin__group-items__item .btn-res-bin-item:hover {
-  transform: rotate(0deg);
   scale: 1.1;
 }
 .page-bin__group-items__item .hidden-btn {
@@ -968,6 +966,187 @@
     100% {
       transform: translateX(0);
     }
+  }
+}
+@media screen and (max-width: 1073px) {
+  .form__group-inputs label span {
+    font-size: 0.85em;
+  }
+}
+@media screen and (max-width: 990px) {
+  .card-items__group-items__item__g2 .item-title,
+  .page-bin__group-items__item__g2 .item-title {
+    font-size: 1rem;
+  }
+  .card-items__group-items__item .item-text,
+  .card-items__group-items__item__g2 .item-ean,
+  .page-bin__group-items__item .item-text,
+  .page-bin__group-items__item__g2 .item-ean {
+    font-size: 0.8em;
+  }
+  .card-items__group-items__item .discr,
+  .page-bin__group-items__item .discr {
+    font-size: 0.6em;
+  }
+}
+@media screen and (max-width: 862px) {
+  .container {
+    padding: 0 1rem;
+  }
+  .alert-not-found {
+    font-size: 1.2em;
+  }
+  .card-items__group-items__item,
+  .page-bin__group-items__item {
+    grid-template-columns: 1fr;
+    max-width: 20rem;
+    text-align: center;
+    overflow: hidden;
+    padding-bottom: 2rem;
+  }
+  .page-bin__group-items__item .btn-res-bin-item {
+    right: -7px;
+    top: 35px;
+    background-color: rgb(242.25, 242.25, 242.25);
+    padding: 0.5rem;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    gap: 0;
+    border-bottom-left-radius: 10px;
+    box-shadow: 0px 0px 5px rgb(229.5, 229.5, 229.5);
+    z-index: 2;
+  }
+  .page-bin__group-items__item .btn-res-bin-item i {
+    font-size: 1.5em;
+  }
+  .page-bin__group-items__item .btn-rm-bin-item {
+    right: -15px;
+    top: -8px;
+    background-color: rgb(242.25, 242.25, 242.25);
+    z-index: 2;
+    padding: 0.5rem;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    gap: 0;
+    box-shadow: 0px 0px 5px rgb(229.5, 229.5, 229.5);
+  }
+  .page-bin__group-items__item .btn-rm-bin-item i {
+    font-size: 1.5em;
+  }
+  .page-bin__group-items__item {
+    margin: auto;
+  }
+  .form__group-inputs input[type=submit],
+  .form__group-inputs .button-delete {
+    max-width: 100%;
+    margin-top: 0rem;
+  }
+  .card-items__group-items__item .btn-edit-item {
+    padding: 1em;
+    background-color: white;
+    margin: 0;
+    height: 4em;
+    z-index: 1;
+    width: 4em;
+    display: flex;
+    flex-direction: none;
+    justify-content: center;
+    align-items: center;
+    gap: 0;
+    border-bottom-left-radius: 50%;
+    box-shadow: 0px 0px 5px rgb(229.5, 229.5, 229.5);
+  }
+  .card-items__group-items__item .hidden-btn {
+    display: none;
+  }
+  .card-items__group-items__item .discr-custos {
+    bottom: -21px;
+  }
+  .card-items__group-items__item__g1,
+  .page-bin__group-items__item__g1 {
+    height: 8em;
+  }
+  .card-items__group-items__item__g2 {
+    height: 5.5em;
+  }
+  .card-items__group-items__item__g2,
+  .card-items__group-items__item__g3,
+  .page-bin__group-items__item__g2,
+  .page-bin__group-items__item__g3 {
+    border-right: none;
+    border-bottom: 1px solid #e7e6e6;
+    padding: 1rem 0 1rem 0;
+  }
+  .card-items__group-items__item__g4 {
+    padding-top: 1rem;
+  }
+  .card-items__group-items__item .discr,
+  .page-bin__group-items__item .discr {
+    font-size: 0.5em;
+    left: 0;
+  }
+  .card-items__group-items__item__g2 .item-title {
+    margin-bottom: 6px;
+  }
+  .form {
+    gap: 1rem;
+  }
+  .form__group-inputs__g1 {
+    grid-template-columns: 1fr;
+    grid-template-rows: 1fr 1fr 1fr;
+    row-gap: 2rem;
+  }
+  .form__group-inputs__g2 {
+    grid-template-columns: 1fr;
+    grid-template-rows: 1fr 1fr 1fr;
+    row-gap: 2rem;
+  }
+  .form__group-inputs__g3 {
+    grid-template-columns: 1fr;
+    grid-template-rows: 1fr 1fr 1fr;
+    row-gap: 2rem;
+  }
+  .form__group-inputs .input {
+    font-size: 0.9em;
+  }
+}
+@media screen and (max-width: 689px) {
+  .page-bin .page-bin__top .group-buttons-top-bin {
+    gap: 10px;
+  }
+  .page-bin .page-bin__top .group-buttons-top-bin .btn-clean-bin,
+  .page-bin .page-bin__top .group-buttons-top-bin .btn-restart-bin {
+    font-size: 0.8em;
+    padding: 2px 9px;
+  }
+}
+@media screen and (max-width: 509px) {
+  .page-bin__title {
+    font-size: 1em;
+  }
+}
+@media screen and (max-width: 478px) {
+  .navigation__input {
+    font-size: 1em;
+  }
+  .navigation {
+    gap: 0.8rem;
+    margin: auto;
+    padding: 0.3rem 1rem;
+  }
+}
+@media screen and (max-width: 382px) {
+  .form {
+    padding: 1rem 1rem 1rem 1rem;
+    margin: 1em auto 1em auto;
+  }
+  .form .form__group-inputs input[type=submit],
+  .form .form__group-inputs .button-delete {
+    margin-top: 0rem;
   }
 }
 

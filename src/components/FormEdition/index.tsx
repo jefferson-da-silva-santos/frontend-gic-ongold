@@ -11,6 +11,24 @@ import useApi from "../../hooks/useApi";
 import notie from "notie";
 
 const FormEdition = ({identify = null}) => {
+  const [gridColumns, setGridColumns] = useState("1fr"); 
+
+  useEffect(() => {
+    const updateGridColumns = () => {
+      if (window.innerWidth > 862) {
+        setGridColumns("1fr 1fr 1fr 10em 10em");
+      } else {
+        setGridColumns("1fr"); // Define um layout mais simples para telas menores
+      }
+    };
+
+    updateGridColumns(); // Chamada inicial
+    window.addEventListener("resize", updateGridColumns); // Adiciona evento de resize
+
+    return () => window.removeEventListener("resize", updateGridColumns); // Remove o evento ao desmontar
+  }, []);
+
+  
   const [id, setId] = useState(identify || "");
   // Buscar a String de Data de criação do item
   const [stringDataCreatedItem, setStringDataCreatedItem] = useState(null);
@@ -334,7 +352,7 @@ const FormEdition = ({identify = null}) => {
         </div>
         <div
           className="form__group-inputs__g3"
-          style={{ gridTemplateColumns: "1fr 1fr 1fr 10em 10em" }}
+          style={{ gridTemplateColumns: gridColumns }}
         >
           <label>
             <span>Valor unitário</span>

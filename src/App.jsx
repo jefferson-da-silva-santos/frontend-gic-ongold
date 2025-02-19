@@ -22,10 +22,13 @@ function App() {
   const [stage, setStage] = useState(stages[0].name);
   const [identify, setIdentify] = useState(null);
   const [currentPage, setCurrentPage] = useState(1);
+  const [isMenuMobileVisible, setIsMenuMobileVisible] = useState(false);
 
   // Função para ir para para lista
   const openList = () => {
     if (stage !== stages[0].name) {
+      setCurrentPage(1);
+      setIsMenuMobileVisible(false);
       setStage(stages[0].name);
     }
   };
@@ -33,6 +36,7 @@ function App() {
   // Função para ir para para o cadastro
   const openRegister = () => {
     if (stage !== stages[1].name) {
+      setIsMenuMobileVisible(false);
       setStage(stages[1].name);
     }
   };
@@ -40,6 +44,7 @@ function App() {
   // Função para ir para a edição
   const openEdit = () => {
     if (stage !== stages[2].name) {
+      setIsMenuMobileVisible(false);
       setStage(stages[2].name);
     }
   };
@@ -53,6 +58,7 @@ function App() {
 
   const openBin = () => {
     if (stage !== stages[4].name) {
+      setIsMenuMobileVisible(false);
       setStage(stages[4].name);
     }
   };
@@ -99,8 +105,6 @@ function App() {
     }
     fetchData();
   }, []);
-
-  const [isMenuMobileVisible, setIsMenuMobileVisible] = useState(false);
 
   return (
     <div className="container">
