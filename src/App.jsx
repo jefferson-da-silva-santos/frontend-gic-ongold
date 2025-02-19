@@ -104,7 +104,7 @@ function App() {
           />} />
           <Route path="/register" element={<FormRegister />} />
           <Route path="/edition" element={<FormEdition />} />
-          <Route path="/edition-i" element={<FormEdition identify={identify} setIdentify={setIdentify} />} />
+          <Route path="/edition/:id" element={<FormEdition identify={identify} setIdentify={setIdentify} />} />
           <Route path="/bin" element={<PageBin stage={stage} />} />
         </Routes>
         <ToastContainer />
