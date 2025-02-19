@@ -4,9 +4,11 @@ import { ThreeDot } from "react-loading-indicators";
 import ItemBin from "../ItemBin";
 import { showAlert } from "../../utils/ui/alertUtils";
 import notie from 'notie';
+import { useLocation } from "react-router-dom";
 
-const PageBin = ({ stage, setStage }) => {
+const PageBin = ({ stage }) => {
   const [isItemModify, setIsItemModify] = useState(false);
+  const location = useLocation();
 
   const [itemsBin, setItemsBin] = useState<any>(null);
   const {
@@ -32,7 +34,7 @@ const PageBin = ({ stage, setStage }) => {
     if (stage === "bin") {
       getItemsBin();
     }
-  }, [stage, isItemModify]);
+  }, [location.pathname, isItemModify]);
   
 
   const {data, error, loading: loadingCleanBin, requestAPI: requestCleanBin} = useApi("/items/permanent", "DELETE");

@@ -3,6 +3,7 @@ import Item from "../Item";
 import useApi from "../../hooks/useApi";
 import { ThreeDot } from "react-loading-indicators";
 import BasicPagination from "../Pagination";
+import { useLocation } from "react-router-dom";
 
 /**
  * Interface para os itens retornados pela API do backend 
@@ -23,6 +24,7 @@ interface ItemType {
 
 const CardItems = ({ stage, openAutoEdit, items, setItems, currentPage, setCurrentPage }) => {
   const [activeItemId, setActiveItemId] = useState<number | null>(null); // Armazenar o id do item ativo
+  const location = useLocation();
 
   const {
     data: dataItems,
@@ -52,7 +54,7 @@ const CardItems = ({ stage, openAutoEdit, items, setItems, currentPage, setCurre
       }
     }
     fetchData();
-  }, [stage]);
+  }, [location.pathname]);
 
    // Função para lidar com o clique no item
    const handleItemClick = (id) => {
