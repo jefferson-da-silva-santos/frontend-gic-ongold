@@ -48,14 +48,14 @@ const Navgation = ({ setStage, setItems, currentPage, setCurrentPage, isMenuMobi
   } = useApi("/items");
 
   // Função para buscar os dados
-  useEffect(() => {
-    async function fetchData() {
-      try {
-        await requestApiItems();
-      } catch (error) {
-        console.error("Erro ao carregar os itens:", error);
-      }
+  async function fetchData() {
+    try {
+      await requestApiItems();
+    } catch (error) {
+      console.error("Erro ao carregar os itens:", error);
     }
+  }
+  useEffect(() => {
     fetchData();
   }, [description]);
 

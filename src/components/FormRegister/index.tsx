@@ -70,19 +70,19 @@ const FormRegister = () => {
     requestAPI: requestApiEan,
   } = useApi(`/items/ean/${formik.values.ean}`, "GET");
 
-  useEffect(() => {
-    async function fetchData() {
-      try {
-        const data = await requestApiEan();
-        if (data) {
-          setIsEanExist(true);
-        } else {
-          setIsEanExist(false);
-        }
-      } catch (error) {
+  async function fetchData() {
+    try {
+      const data = await requestApiEan();
+      if (data) {
+        setIsEanExist(true);
+      } else {
         setIsEanExist(false);
       }
+    } catch (error) {
+      setIsEanExist(false);
     }
+  }
+  useEffect(() => {
     fetchData();
   }, [formik.values.ean]);
 

@@ -87,22 +87,22 @@ function App() {
   };
 
   // Função para buscar os dados
-  useEffect(() => {
-    async function fetchData() {
-      try {
-        const data = await requestApiDeleted();
-        if (data) {
-          data.map((item) => {
-            console.log(item.id);
-            if (hasPassed30Days(item?.excluido_em)) {
-              handlerDeletePermanentItem(item.id)
-            }
-          });
-        }
-      } catch (error) {
-        console.error("Erro ao carregar os itens:", error);
+  async function fetchData() {
+    try {
+      const data = await requestApiDeleted();
+      if (data) {
+        data.map((item) => {
+          console.log(item.id);
+          if (hasPassed30Days(item?.excluido_em)) {
+            handlerDeletePermanentItem(item.id)
+          }
+        });
       }
+    } catch (error) {
+      console.error("Erro ao carregar os itens:", error);
     }
+  }
+  useEffect(() => {
     fetchData();
   }, []);
 

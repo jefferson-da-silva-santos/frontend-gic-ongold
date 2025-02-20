@@ -16,19 +16,18 @@ const PageBin = ({ stage, setStage }) => {
     requestAPI: requestItemsBin,
   } = useApi("/items/deleted", "GET");
 
-  useEffect(() => {
-    async function getItemsBin() {
-      try {
-        const result = await requestItemsBin();
-        if (result) {
-          setItemsBin(result);
-          setIsItemModify(false);
-        }
-      } catch (error) {
-        console.error('Erro ao carregar itens da lixeira: ',error);
+  async function getItemsBin() {
+    try {
+      const result = await requestItemsBin();
+      if (result) {
+        setItemsBin(result);
+        setIsItemModify(false);
       }
+    } catch (error) {
+      console.error('Erro ao carregar itens da lixeira: ',error);
     }
-    
+  }
+  useEffect(() => {
     if (stage === "bin") {
       getItemsBin();
     }
