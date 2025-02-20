@@ -40,17 +40,17 @@ const CardItems = ({ stage, openAutoEdit, items, setItems, currentPage, setCurre
 
 
   // Função para buscar os dados
-  useEffect(() => {
-    async function fetchData() {
-      try {
-        const data = await requestApiItems();
-        if (data) {
-          setItems(data);
-        }
-      } catch (error) {
-        console.error("Erro ao carregar os itens:", error);
+  async function fetchData() {
+    try {
+      const data = await requestApiItems();
+      if (data) {
+        setItems(data);
       }
+    } catch (error) {
+      console.error("Erro ao carregar os itens:", error);
     }
+  }
+  useEffect(() => {
     fetchData();
   }, [stage]);
 
