@@ -93,7 +93,7 @@ const FormEdition = ({identify = null}) => {
       totCust: "",
     },
     validate: (values) => validate(values, true),
-    onSubmit: async (values, { setSubmitting, resetForm }) => {
+    onSubmit: async (values: any, { setSubmitting, resetForm }) => {
       const formattedData = formattedValues(values);
       try {
         if (stringDataCreatedItem && !hasPassedValueHours(stringDataCreatedItem, 36)) {

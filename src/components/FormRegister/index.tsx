@@ -34,7 +34,7 @@ const FormRegister = () => {
       comission: "",
     },
     validate,
-    onSubmit: async (values, { setSubmitting, resetForm }) => {
+    onSubmit: async (values: any, { setSubmitting, resetForm }) => {
       // Formata os dados de acordo com o formato esperado pela API
       const formattedData = formattedValues(values);
 
