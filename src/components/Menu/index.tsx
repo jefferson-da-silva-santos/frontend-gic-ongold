@@ -1,11 +1,11 @@
 import React, { useState } from "react";
+import { Link } from "react-router-dom";
 
-export const Menu = ({ openList, openRegister, openEdit, openBin, isMenuMobileVisible, setIsMenuMobileVisible }) => {
+export const Menu = ({ isMenuMobileVisible, setIsMenuMobileVisible }) => {
   const [activeIndex, setActiveIndex] = useState(null);
 
-  const handleClick = (index, callback) => {
+  const handleClick = (index) => {
     setActiveIndex(index);
-    if (callback) callback();
   };
 
   return (
@@ -22,20 +22,20 @@ export const Menu = ({ openList, openRegister, openEdit, openBin, isMenuMobileVi
         <img src="/public/logo_gic.png" alt="" className="menu__logo" />
         <ul className="menu__list">
           {[
-            { label: "Lista de Itens", icon: "bi-card-checklist", action: openList },
-            { label: "Cadastrar Item", icon: "bi-plus-circle-fill", action: openRegister },
-            { label: "Editar Item", icon: "bi-pen", action: openEdit },
-            { label: "Lixeira", icon: "bi-trash-fill", action: openBin },
+            { label: "Lista de Itens", icon: "bi-card-checklist", path: '/' },
+            { label: "Cadastrar Item", icon: "bi-plus-circle-fill", path: '/register'  },
+            { label: "Editar Item", icon: "bi-pen", path: '/edition' },
+            { label: "Lixeira", icon: "bi-trash-fill", path: '/bin' },
           ].map((item, index) => (
             <li
               key={index}
               className="menu__list__item"
               style={{ backgroundColor: activeIndex === index ? "rgb(245, 245, 245)" : "transparent" }}
-              onClick={() => handleClick(index, item.action)}
+              onClick={() => handleClick(index)}
             >
-              <a href="#" className="menu__list__item__btn">
+              <Link to={item.path} className="menu__list__item__btn">
                 <i className={`bi ${item.icon}`}></i> {item.label}
-              </a>
+              </Link>
             </li>
           ))}
         </ul>

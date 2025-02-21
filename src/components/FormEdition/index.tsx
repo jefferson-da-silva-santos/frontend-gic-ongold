@@ -9,8 +9,10 @@ import {
 } from "../../utils/validation/validation";
 import useApi from "../../hooks/useApi";
 import notie from "notie";
+import { useParams } from "react-router-dom";
 
-const FormEdition = ({identify = null}) => {
+const FormEdition = () => {
+  const {id} = useParams();
   const [gridColumns, setGridColumns] = useState("1fr"); 
 
   useEffect(() => {
@@ -27,9 +29,8 @@ const FormEdition = ({identify = null}) => {
 
     return () => window.removeEventListener("resize", updateGridColumns); // Remove o evento ao desmontar
   }, []);
-
   
-  const [id, setId] = useState(identify || "");
+  const [identify, setIdentify] = useState(id || "");
   // Buscar a String de Data de criação do item
   const [stringDataCreatedItem, setStringDataCreatedItem] = useState(null);
   const {
@@ -37,10 +38,10 @@ const FormEdition = ({identify = null}) => {
     error: errorCreatedItem,
     loading: loadingCreatedItem,
     requestAPI: requestApiCreatedItem,
-  } = useApi(`/items/id/${identify !== null ? identify : id}`, "GET");
+  } = useApi(`/items/id/${id !== null ? id : identify}`, "GET");
 
   async function fetchData() {
-    if (identify !== null) {
+    if (id !== null) {
       try {
         const data = await requestApiCreatedItem();
         setStringDataCreatedItem(data[0].criado_em);
@@ -51,12 +52,12 @@ const FormEdition = ({identify = null}) => {
   }
   useEffect(() => {
     fetchData();
-  }, [id, identify]);
+  }, [identify, id]);
 
-  if (identify !== null) {
+  if (id !== null) {
     useEffect(() => {
       handleSearchItem();
-    }, [identify]);
+    }, [id]);
   }
 
   const {
@@ -64,7 +65,7 @@ const FormEdition = ({identify = null}) => {
     error: errorUpdateItem,
     loading: loadingUpdateItem,
     requestAPI: requestApiUpdateItem,
-  } = useApi(`/items/${id}`, "PUT");
+  } = useApi(`/items/${identify}`, "PUT");
 
   interface FormValues {
     description: string;
@@ -106,7 +107,7 @@ const FormEdition = ({identify = null}) => {
         const result = await requestApiUpdateItem(formattedData);
         if (result) {
           showAlert(1, "Item atualizado com sucesso!");
-          setId("");
+          setIdentify("");
           resetForm();
         } else {
           showAlert(3, "Erro ao tantar atualizar item!");
@@ -126,12 +127,12 @@ const FormEdition = ({identify = null}) => {
     error: errorSearchItem,
     loading: loadingSearchItem,
     requestAPI: requestApiSearchItem,
-  } = useApi(`items/id/${id}`, "GET");
+  } = useApi(`items/id/${identify}`, "GET");
 
   const handleSearchItem = async () => {
-    if (!id || isNaN(Number(id))) {
+    if (!identify || isNaN(Number(identify))) {
       showAlert(2, "Passe um id válido para a busca!");
-      setId("");
+      setIdentify("");
       formik.resetForm();
       return;
     }
@@ -167,14 +168,14 @@ const FormEdition = ({identify = null}) => {
     error: errorDeleteItem,
     loading: loadingDeleteItem,
     requestAPI: requestApiDeleteItem,
-  } = useApi(`/items/${id}`, "DELETE");
+  } = useApi(`/items/${identify}`, "DELETE");
 
   const handleDeleteItem = async (e) => {
     e.preventDefault();
 
-    if (!isValidId(id) || !isValidId(id)) {
+    if (!isValidId(identify) || !isValidId(identify)) {
       showAlert(2, "Passe um id válido para a busca!");
-      setId("");
+      setIdentify("");
       return;
     }
 
@@ -192,7 +193,7 @@ const FormEdition = ({identify = null}) => {
             if (result) {
               showAlert(1, "Item movido para lixeira!");
               formik.resetForm();
-              setId("");
+              setIdentify("");
             }
           } catch (error) {
             showAlert(3, "Erro ao tentar deletar item!");
@@ -211,9 +212,9 @@ const FormEdition = ({identify = null}) => {
         <div className="form__group-inputs__g0">
           <input
             type="text"
-            value={id}
+            value={identify}
             onChange={(e) => {
-              setId(e.target.value);
+              setIdentify(e.target.value);
             }}
             name=""
             id="id"

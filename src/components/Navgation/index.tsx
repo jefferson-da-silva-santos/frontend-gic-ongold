@@ -1,9 +1,10 @@
 import React, { useState, useEffect } from "react";
 import useApi from "../../hooks/useApi";
-import { showAlert } from "../../utils/ui/alertUtils";
+import { useNavigate } from "react-router-dom";
 
 const Navgation = ({ setStage, setItems, currentPage, setCurrentPage, isMenuMobileVisible, setIsMenuMobileVisible }) => {
   const [description, setDescription] = useState("");
+  const navigate = useNavigate();
 
   const {
     data: dataSearch,
@@ -69,7 +70,7 @@ const Navgation = ({ setStage, setItems, currentPage, setCurrentPage, isMenuMobi
       </button>
       <input
         onClick={() => {
-          setStage("list");
+          navigate('/');
           setCurrentPage(1);
         }}
         onChange={(e) => {

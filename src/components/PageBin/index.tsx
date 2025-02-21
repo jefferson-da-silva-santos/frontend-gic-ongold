@@ -4,9 +4,11 @@ import { ThreeDot } from "react-loading-indicators";
 import ItemBin from "../ItemBin";
 import { showAlert } from "../../utils/ui/alertUtils";
 import notie from 'notie';
+import { useLocation } from "react-router-dom";
 
-const PageBin = ({ stage, setStage }) => {
+const PageBin = ({ stage }) => {
   const [isItemModify, setIsItemModify] = useState(false);
+  const location = useLocation();
 
   const [itemsBin, setItemsBin] = useState<any>(null);
   const {
@@ -28,7 +30,7 @@ const PageBin = ({ stage, setStage }) => {
     }
   }
   useEffect(() => {
-    if (stage === "bin") {
+    if (location.pathname === '/bin') {
       getItemsBin();
     }
   }, [stage, isItemModify]);

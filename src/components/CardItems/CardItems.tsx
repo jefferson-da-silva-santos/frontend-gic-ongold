@@ -3,6 +3,7 @@ import Item from "../Item";
 import useApi from "../../hooks/useApi";
 import { ThreeDot } from "react-loading-indicators";
 import BasicPagination from "../Pagination";
+import { useNavigate } from "react-router-dom";
 
 /**
  * Interface para os itens retornados pela API do backend 
@@ -21,8 +22,13 @@ interface ItemType {
   totalCusto: number;
 }
 
-const CardItems = ({ stage, openAutoEdit, items, setItems, currentPage, setCurrentPage }) => {
+const CardItems = ({ stage, items, setItems, currentPage, setCurrentPage }) => {
   const [activeItemId, setActiveItemId] = useState<number | null>(null); // Armazenar o id do item ativo
+  const navigate = useNavigate();
+
+  const openAutoEdit = (id: number) => {
+    navigate(`/edition/${id}`);
+  };
 
   const {
     data: dataItems,
