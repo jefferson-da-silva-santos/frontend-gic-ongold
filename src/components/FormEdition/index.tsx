@@ -39,17 +39,17 @@ const FormEdition = ({identify = null}) => {
     requestAPI: requestApiCreatedItem,
   } = useApi(`/items/id/${identify !== null ? identify : id}`, "GET");
 
-  useEffect(() => {
-    async function fetchData() {
-      if (identify !== null) {
-        try {
-          const data = await requestApiCreatedItem();
-          setStringDataCreatedItem(data[0].criado_em);
-        } catch (error) {
-          setStringDataCreatedItem(null);
-        }
+  async function fetchData() {
+    if (identify !== null) {
+      try {
+        const data = await requestApiCreatedItem();
+        setStringDataCreatedItem(data[0].criado_em);
+      } catch (error) {
+        setStringDataCreatedItem(null);
       }
     }
+  }
+  useEffect(() => {
     fetchData();
   }, [id, identify]);
 
@@ -93,7 +93,7 @@ const FormEdition = ({identify = null}) => {
       totCust: "",
     },
     validate: (values) => validate(values, true),
-    onSubmit: async (values, { setSubmitting, resetForm }) => {
+    onSubmit: async (values: any, { setSubmitting, resetForm }) => {
       const formattedData = formattedValues(values);
       try {
         if (stringDataCreatedItem && !hasPassedValueHours(stringDataCreatedItem, 36)) {
