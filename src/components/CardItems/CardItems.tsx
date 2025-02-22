@@ -2,25 +2,9 @@ import React, { useEffect, useState } from "react";
 import Item from "../Item";
 import useApi from "../../hooks/useApi";
 import { ThreeDot } from "react-loading-indicators";
-import BasicPagination from "../Pagination";
 import { useNavigate } from "react-router-dom";
-
-/**
- * Interface para os itens retornados pela API do backend 
- */
-interface ItemType {
-  id: number;
-  descricao: string;
-  valor_unitario: number;
-  taxa_icms_entrada: number;
-  taxa_icms_saida: number;
-  cfop: string;
-  comissao: number;
-  cst: string;
-  ean: string;
-  ncm: string;
-  totalCusto: number;
-}
+import Pagination from "@mui/material/Pagination";
+import Stack from "@mui/material/Stack";
 
 const CardItems = ({ items, setItems, currentPage, setCurrentPage }) => {
   const [activeItemId, setActiveItemId] = useState<number | null>(null); // Armazenar o id do item ativo
@@ -42,8 +26,6 @@ const CardItems = ({ items, setItems, currentPage, setCurrentPage }) => {
   const init = (currentPage - 1) * itensPerPage;
   const end = init + itensPerPage;
   const itemsPage = items.slice(init, end);
-  
-
 
   // Função para buscar os dados
   async function fetchData() {
@@ -60,8 +42,8 @@ const CardItems = ({ items, setItems, currentPage, setCurrentPage }) => {
     fetchData();
   }, []);
 
-   // Função para lidar com o clique no item
-   const handleItemClick = (id) => {
+  // Função para lidar com o clique no item
+  const handleItemClick = (id) => {
     setActiveItemId(id); // Atualiza o id do item clicado
   };
 
@@ -69,56 +51,59 @@ const CardItems = ({ items, setItems, currentPage, setCurrentPage }) => {
     <section className="card-items">
       {items.length > 0 && (
         <>
-        <p className="card-items__text">Lista de Itens</p>
-      {loadingItems ? (
-        <ThreeDot
-          variant="bounce"
-          color="#e6c241"
-          size="medium"
-          text=""
-          textColor=""
-          style={{marginTop: "3rem"}}
-        />
-      ) : (
-        <>
-        <div className="card-items__group-items">
-          {itemsPage &&
-            itemsPage.map((item) => {
-              return (
-                <Item
-                  key={item.id}
-                  id={item.id}
-                  description={item.descricao}
-                  v_unit={item.valor_unitario}
-                  imc_in={item.taxa_icms_entrada}
-                  imc_out={item.taxa_icms_saida}
-                  cfop={item.cfop}
-                  cms={item.comissao}
-                  cst={item.cst}
-                  ean={item.ean}
-                  ncm={item.ncm}
-                  vtc={item.totalCusto}
-                  openAutoEdit={openAutoEdit}
-                  activeItemId={activeItemId} 
-                  onItemClick={handleItemClick} 
-                />
-              );
-            })}
-        </div>
-        <div className="group-pagination">
-        <BasicPagination
-          quant={totPage}
-          handlePage={(event, value) => setCurrentPage(value)}
-          currentPage={currentPage}
-        />
-      </div></>
-      )}
+          <p className="card-items__text">Lista de Itens</p>
+          {loadingItems ? (
+            <ThreeDot
+              variant="bounce"
+              color="#e6c241"
+              size="medium"
+              text=""
+              textColor=""
+              style={{ marginTop: "3rem" }}
+            />
+          ) : (
+            <>
+              <div className="card-items__group-items">
+                {itemsPage &&
+                  itemsPage.map((item) => {
+                    return (
+                      <Item
+                        key={item.id}
+                        id={item.id}
+                        description={item.descricao}
+                        v_unit={item.valor_unitario}
+                        imc_in={item.taxa_icms_entrada}
+                        imc_out={item.taxa_icms_saida}
+                        cfop={item.cfop}
+                        cms={item.comissao}
+                        cst={item.cst}
+                        ean={item.ean}
+                        ncm={item.ncm}
+                        vtc={item.totalCusto}
+                        openAutoEdit={openAutoEdit}
+                        activeItemId={activeItemId}
+                        onItemClick={handleItemClick}
+                      />
+                    );
+                  })}
+              </div>
+              <div className="group-pagination">
+                <Stack spacing={2}>
+                  <Pagination
+                    count={totPage}
+                    page={currentPage}
+                    onChange={(event, value) => setCurrentPage(value)}
+                    color="primary"
+                  />
+                </Stack>
+              </div>
+            </>
+          )}
         </>
       )}
       {items.length === 0 && (
         <p className="alert-not-found">Nenhum item encontrado! 😐</p>
       )}
-      
     </section>
   );
 };

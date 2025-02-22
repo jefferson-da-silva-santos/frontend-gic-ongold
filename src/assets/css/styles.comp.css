@@ -222,15 +222,21 @@
 }
 .menu__list__item {
   cursor: pointer;
-  padding: 0.7em 1em;
   width: 100%;
   border-radius: 8px;
   font-weight: 500;
   transition: all 0.4s ease;
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-start;
+  align-items: center;
+  gap: 0;
 }
 .menu__list__item__btn {
   text-decoration: none;
   color: #66788b;
+  padding: 0.7em 1em;
+  width: 100%;
 }
 .menu__list__item__btn i {
   margin-right: 10px;
@@ -300,6 +306,9 @@
   height: 100%;
   max-width: 85em;
   padding-bottom: 1rem;
+}
+.card-items .group-pagination {
+  margin-top: 2rem;
 }
 .card-items__text {
   text-align: start;

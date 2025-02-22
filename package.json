@@ -16,9 +16,9 @@
     "git:all": "git add . && git commit -a -m 'Update' && git push origin main"
   },
   "dependencies": {
-    "@material-ui/core": "^4.12.4",
-    "@material-ui/lab": "^4.0.0-alpha.61",
-    "@material-ui/styles": "^4.11.5",
+    "@emotion/react": "^11.14.0",
+    "@emotion/styled": "^11.14.0",
+    "@mui/material": "^6.4.5",
     "axios": "^1.7.9",
     "bootstrap-icons": "^1.11.3",
     "date-fns": "^4.1.0",
