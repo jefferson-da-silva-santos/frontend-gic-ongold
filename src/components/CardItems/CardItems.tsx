@@ -8,6 +8,9 @@ import Stack from "@mui/material/Stack";
 
 const CardItems = ({ items, setItems, currentPage, setCurrentPage }) => {
   const [activeItemId, setActiveItemId] = useState<number | null>(null); // Armazenar o id do item ativo
+  const [itensPerPage] = useState(4);
+  const [totalPaginas, setTotalPaginas] = useState(1);
+
   const navigate = useNavigate();
 
   const openAutoEdit = (id: number) => {
@@ -19,20 +22,18 @@ const CardItems = ({ items, setItems, currentPage, setCurrentPage }) => {
     error: errorItems,
     loading: loadingItems,
     requestAPI: requestApiItems,
-  } = useApi("/items");
-
-  const [itensPerPage] = useState(4);
-  const totPage = Math.ceil(items.length / itensPerPage);
-  const init = (currentPage - 1) * itensPerPage;
-  const end = init + itensPerPage;
-  const itemsPage = items.slice(init, end);
+  } = useApi(`/items/page/${currentPage}/${itensPerPage}`);
 
   // Função para buscar os dados
   async function fetchData() {
     try {
-      const data = await requestApiItems();
-      if (data) {
-        setItems(data);
+      const result = await requestApiItems();
+      console.log(result);
+      if (result) {
+        setItems(result.items);
+        setTotalPaginas(result.totalPages);
+      } else {
+        console.log("Erro na busca");
       }
     } catch (error) {
       console.error("Erro ao carregar os itens:", error);
@@ -40,12 +41,16 @@ const CardItems = ({ items, setItems, currentPage, setCurrentPage }) => {
   }
   useEffect(() => {
     fetchData();
-  }, []);
+  }, [currentPage, itensPerPage]);
 
   // Função para lidar com o clique no item
   const handleItemClick = (id) => {
     setActiveItemId(id); // Atualiza o id do item clicado
   };
+
+  const handlePageChange = (event, value) => {
+    setCurrentPage(value);
+  }
 
   return (
     <section className="card-items">
@@ -64,8 +69,8 @@ const CardItems = ({ items, setItems, currentPage, setCurrentPage }) => {
           ) : (
             <>
               <div className="card-items__group-items">
-                {itemsPage &&
-                  itemsPage.map((item) => {
+                {items &&
+                  items.map((item) => {
                     return (
                       <Item
                         key={item.id}
@@ -90,9 +95,9 @@ const CardItems = ({ items, setItems, currentPage, setCurrentPage }) => {
               <div className="group-pagination">
                 <Stack spacing={2}>
                   <Pagination
-                    count={totPage}
+                    count={totalPaginas}
                     page={currentPage}
-                    onChange={(event, value) => setCurrentPage(value)}
+                    onChange={handlePageChange}
                     color="primary"
                   />
                 </Stack>
