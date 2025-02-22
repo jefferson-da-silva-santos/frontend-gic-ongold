@@ -8,27 +8,15 @@ import PageBin from "./components/PageBin";
 import useApi from "./hooks/useApi";
 import { hasPassed30Days } from "./utils/date/dateUtils";
 import { ToastContainer, toast } from "react-toastify";
-import { BrowserRouter, Routes, Route, Link } from "react-router-dom";
-
-const stages = [
-  { id: 1, name: "list" },
-  { id: 2, name: "register" },
-  { id: 3, name: "edit" },
-  { id: 4, name: "autoedit" },
-  { id: 5, name: "bin" },
-];
+import { BrowserRouter, Routes, Route } from "react-router-dom";
 
 function App() {
   const [items, setItems] = useState([]);
-  const [stage, setStage] = useState(stages[0].name);
   const [currentPage, setCurrentPage] = useState(1);
   const [isMenuMobileVisible, setIsMenuMobileVisible] = useState(false);
   
   // Remoção dos itens da Lixeira após 30 dias da sua exclusão
   const {
-    data: dataDeleted,
-    error: errorDeleted,
-    loading: loadingDeleted,
     requestAPI: requestApiDeleted,
   } = useApi("/items/deleted", "GET");
 
@@ -79,7 +67,6 @@ function App() {
           setIsMenuMobileVisible={setIsMenuMobileVisible}
         />
         <Navgation
-          setStage={setStage}
           setItems={setItems}
           currentPage={currentPage}
           setCurrentPage={setCurrentPage}
@@ -94,7 +81,7 @@ function App() {
           <Route path="/register" element={<FormRegister />} />
           <Route path="/edition" element={<FormEdition />} />
           <Route path="/edition/:id" element={<FormEdition />} />
-          <Route path="/bin" element={<PageBin stage={stage} setStage={setStage}/>} />
+          <Route path="/bin" element={<PageBin/>} />
         </Routes>
         <ToastContainer />
       </BrowserRouter>

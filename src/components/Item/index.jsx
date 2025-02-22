@@ -1,5 +1,4 @@
 import React from "react";
-
 const Item = ({
   id,
   description,
@@ -23,7 +22,7 @@ const Item = ({
   }
 
   const handleClick = () => {
-    onItemClick(id); // Define o item como ativo
+    onItemClick(id);
   };
 
   return (

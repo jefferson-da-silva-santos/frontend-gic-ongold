@@ -113,14 +113,17 @@ $color-primary: #f2f2f2;
     width: 100%;
     &__item {
       cursor: pointer;
-      padding: 0.7em 1em;
       width: 100%;
       border-radius: 8px;
       font-weight: 500;
       transition: all 0.4s ease;
+      @include flex-box(row, flex-start, center, 0);
+
       &__btn {
         text-decoration: none;
         color: #66788b;
+        padding: 0.7em 1em;
+        width: 100%;
         i {
           margin-right: 10px;
           font-size: 1.1em;
@@ -940,7 +943,7 @@ $color-primary: #f2f2f2;
     right: -7px;
     top: 35px;
     background-color: darken(white, 5%);
-    padding: .5rem;
+    padding: 0.5rem;
     @include flex-box(row, center, center, 0);
     border-bottom-left-radius: 10px;
     box-shadow: 0px 0px 5px darken(white, 10%);
@@ -955,7 +958,7 @@ $color-primary: #f2f2f2;
     top: -8px;
     background-color: darken(white, 5%);
     z-index: 2;
-    padding: .5rem;
+    padding: 0.5rem;
     @include flex-box(row, center, center, 0);
     box-shadow: 0px 0px 5px darken(white, 10%);
 
@@ -1060,7 +1063,7 @@ $color-primary: #f2f2f2;
   }
   .page-bin .page-bin__top .group-buttons-top-bin .btn-clean-bin,
   .page-bin .page-bin__top .group-buttons-top-bin .btn-restart-bin {
-    font-size: .8em;
+    font-size: 0.8em;
     padding: 2px 9px;
   }
 }

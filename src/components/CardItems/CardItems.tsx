@@ -22,7 +22,7 @@ interface ItemType {
   totalCusto: number;
 }
 
-const CardItems = ({ stage, items, setItems, currentPage, setCurrentPage }) => {
+const CardItems = ({ items, setItems, currentPage, setCurrentPage }) => {
   const [activeItemId, setActiveItemId] = useState<number | null>(null); // Armazenar o id do item ativo
   const navigate = useNavigate();
 
@@ -58,7 +58,7 @@ const CardItems = ({ stage, items, setItems, currentPage, setCurrentPage }) => {
   }
   useEffect(() => {
     fetchData();
-  }, [stage]);
+  }, []);
 
    // Função para lidar com o clique no item
    const handleItemClick = (id) => {

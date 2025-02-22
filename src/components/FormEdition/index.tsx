@@ -129,39 +129,42 @@ const FormEdition = () => {
     requestAPI: requestApiSearchItem,
   } = useApi(`items/id/${identify}`, "GET");
 
-  const handleSearchItem = async () => {
-    if (!identify || isNaN(Number(identify))) {
-      showAlert(2, "Passe um id válido para a busca!");
-      setIdentify("");
-      formik.resetForm();
-      return;
-    }
+ const handleSearchItem = async () => {
+  if (!identify || isNaN(Number(identify))) {
+    return;
+  }
 
-    try {
-      const result = await requestApiSearchItem();
-      if (result) {
-        const data = result[0];
-        formik.setValues({
-          description: data.descricao,
-          ean: data.ean,
-          ncm: data.ncm,
-          icmsIn: data.taxa_icms_entrada,
-          icmsOut: data.taxa_icms_saida,
-          cst: data.cst,
-          cfop: data.cfop,
-          comission: data.comissao,
-          valorUnit: data.valor_unitario,
-          totCust: data.totalCusto,
-        });
-      }
-    } catch (error) {
-      showAlert(
-        3,
-        "Erro ao tentar buscar item: Não existe nenhum item com este id!"
-      );
-      formik.resetForm();
+  if (identify.trim() === "") {  // Verifica se o campo está vazio
+    showAlert(2, "O campo de ID não pode estar vazio!");
+    return;
+  }
+
+  try {
+    const result = await requestApiSearchItem();
+    if (result) {
+      const data = result[0];
+      formik.setValues({
+        description: data.descricao,
+        ean: data.ean,
+        ncm: data.ncm,
+        icmsIn: data.taxa_icms_entrada,
+        icmsOut: data.taxa_icms_saida,
+        cst: data.cst,
+        cfop: data.cfop,
+        comission: data.comissao,
+        valorUnit: data.valor_unitario,
+        totCust: data.totalCusto,
+      });
     }
-  };
+  } catch (error) {
+    showAlert(
+      3,
+      "Erro ao tentar buscar item: Não existe nenhum item com este id!"
+    );
+    formik.resetForm();
+  }
+};
+
 
   const {
     data: dataDeleteItem,

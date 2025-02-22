@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import useApi from "../../hooks/useApi";
 import { useNavigate } from "react-router-dom";
 
-const Navgation = ({ setStage, setItems, currentPage, setCurrentPage, isMenuMobileVisible, setIsMenuMobileVisible }) => {
+const Navgation = ({ setItems, currentPage, setCurrentPage, isMenuMobileVisible, setIsMenuMobileVisible }) => {
   const [description, setDescription] = useState("");
   const navigate = useNavigate();
 

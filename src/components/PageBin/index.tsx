@@ -6,7 +6,7 @@ import { showAlert } from "../../utils/ui/alertUtils";
 import notie from 'notie';
 import { useLocation } from "react-router-dom";
 
-const PageBin = ({ stage }) => {
+const PageBin = () => {
   const [isItemModify, setIsItemModify] = useState(false);
   const location = useLocation();
 
@@ -33,7 +33,7 @@ const PageBin = ({ stage }) => {
     if (location.pathname === '/bin') {
       getItemsBin();
     }
-  }, [stage, isItemModify]);
+  }, [isItemModify]);
   
 
   const {data, error, loading: loadingCleanBin, requestAPI: requestCleanBin} = useApi("/items/permanent", "DELETE");
