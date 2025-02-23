@@ -59,6 +59,9 @@ function App() {
     fetchData();
   }, []);
 
+  const [itensPerPage] = useState(4);
+  const [totalPaginas, setTotalPaginas] = useState(1);
+
   return (
     <div className="container">
       <BrowserRouter>
@@ -72,12 +75,18 @@ function App() {
           setCurrentPage={setCurrentPage}
           isMenuMobileVisible={isMenuMobileVisible}
           setIsMenuMobileVisible={setIsMenuMobileVisible}
+          itensPerPage={itensPerPage}
+          setTotalPaginas={setTotalPaginas}
         />
         <Routes>
           <Route path="/" element={<CardItems items={items}
             setItems={setItems}
             currentPage={currentPage}
-            setCurrentPage={setCurrentPage}  />} />
+            setCurrentPage={setCurrentPage}
+            itensPerPage={itensPerPage}
+            totalPaginas={totalPaginas}
+            setTotalPaginas={setTotalPaginas}
+            />} />
           <Route path="/register" element={<FormRegister />} />
           <Route path="/edition" element={<FormEdition />} />
           <Route path="/edition/:id" element={<FormEdition />} />

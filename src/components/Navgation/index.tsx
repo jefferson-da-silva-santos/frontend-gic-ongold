@@ -2,7 +2,15 @@ import React, { useState, useEffect } from "react";
 import useApi from "../../hooks/useApi";
 import { useNavigate } from "react-router-dom";
 
-const Navgation = ({ setItems, currentPage, setCurrentPage, isMenuMobileVisible, setIsMenuMobileVisible }) => {
+const Navgation = ({
+  setItems,
+  currentPage,
+  setCurrentPage,
+  isMenuMobileVisible,
+  setIsMenuMobileVisible,
+  itensPerPage,
+  setTotalPaginas,
+}) => {
   const [description, setDescription] = useState("");
   const navigate = useNavigate();
 
@@ -11,15 +19,18 @@ const Navgation = ({ setItems, currentPage, setCurrentPage, isMenuMobileVisible,
     error: errorSearch,
     loading: loadingSearch,
     requestAPI: requestSearch,
-  } = useApi(`/items/search/${description}`, "GET");
+  } = useApi(`/items/search/${currentPage}/${itensPerPage}/${description}`, "GET");
 
   // Função para fazer a busca
   const searchItems = async () => {
     try {
       const result = await requestSearch();
       if (result) {
-        setItems(result);
-      } 
+        setItems(result.items);
+        setTotalPaginas(result.totalPages)
+      } else {
+        console.log("Erro na busca");
+      }
     } catch (error) {
       return;
     }
@@ -46,7 +57,7 @@ const Navgation = ({ setItems, currentPage, setCurrentPage, isMenuMobileVisible,
     error: errorItems,
     loading: loadingItems,
     requestAPI: requestApiItems,
-  } = useApi("/items");
+  } = useApi(`/items/${currentPage}/${itensPerPage}`);
 
   // Função para buscar os dados
   async function fetchData() {
@@ -62,20 +73,23 @@ const Navgation = ({ setItems, currentPage, setCurrentPage, isMenuMobileVisible,
 
   return (
     <nav className="navigation">
-      <button onClick={() => setIsMenuMobileVisible(!isMenuMobileVisible)} className="navigation__menu">
-      <i  className="bi bi-list"></i>
+      <button
+        onClick={() => setIsMenuMobileVisible(!isMenuMobileVisible)}
+        className="navigation__menu"
+      >
+        <i className="bi bi-list"></i>
       </button>
       <button className="navigation__btn">
         <i className="bi bi-search"></i>
       </button>
       <input
         onClick={() => {
-          navigate('/');
+          navigate("/");
           setCurrentPage(1);
         }}
         onChange={(e) => {
           if (e.target.value.trim() === "") {
-            setItems(dataItems)
+            setItems(dataItems.items);
           } else {
             setDescription(e.target.value);
             console.log(e.target.value);

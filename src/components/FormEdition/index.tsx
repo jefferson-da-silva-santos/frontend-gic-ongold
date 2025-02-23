@@ -38,7 +38,7 @@ const FormEdition = () => {
     error: errorCreatedItem,
     loading: loadingCreatedItem,
     requestAPI: requestApiCreatedItem,
-  } = useApi(`/items/id/${id !== null ? id : identify}`, "GET");
+  } = useApi(`/items/filter/id/${id !== null ? id : identify}`, "GET");
 
   async function fetchData() {
     if (id !== null) {
@@ -127,7 +127,7 @@ const FormEdition = () => {
     error: errorSearchItem,
     loading: loadingSearchItem,
     requestAPI: requestApiSearchItem,
-  } = useApi(`items/id/${identify}`, "GET");
+  } = useApi(`/items/filter/id/${identify}`, "GET");
 
  const handleSearchItem = async () => {
   if (!identify || isNaN(Number(identify))) {

@@ -6,10 +6,16 @@ import { useNavigate } from "react-router-dom";
 import Pagination from "@mui/material/Pagination";
 import Stack from "@mui/material/Stack";
 
-const CardItems = ({ items, setItems, currentPage, setCurrentPage }) => {
+const CardItems = ({
+  items,
+  setItems,
+  currentPage,
+  setCurrentPage,
+  itensPerPage,
+  totalPaginas,
+  setTotalPaginas,
+}) => {
   const [activeItemId, setActiveItemId] = useState<number | null>(null); // Armazenar o id do item ativo
-  const [itensPerPage] = useState(4);
-  const [totalPaginas, setTotalPaginas] = useState(1);
 
   const navigate = useNavigate();
 
@@ -22,7 +28,7 @@ const CardItems = ({ items, setItems, currentPage, setCurrentPage }) => {
     error: errorItems,
     loading: loadingItems,
     requestAPI: requestApiItems,
-  } = useApi(`/items/page/${currentPage}/${itensPerPage}`);
+  } = useApi(`/items/${currentPage}/${itensPerPage}`);
 
   // Função para buscar os dados
   async function fetchData() {
@@ -50,7 +56,7 @@ const CardItems = ({ items, setItems, currentPage, setCurrentPage }) => {
 
   const handlePageChange = (event, value) => {
     setCurrentPage(value);
-  }
+  };
 
   return (
     <section className="card-items">
