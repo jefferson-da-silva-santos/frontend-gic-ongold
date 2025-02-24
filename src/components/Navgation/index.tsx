@@ -28,6 +28,8 @@ const Navgation = ({
       if (result) {
         setItems(result.items);
         setTotalPaginas(result.totalPages)
+        console.log(result.totalPages);
+        
       } else {
         console.log("Erro na busca");
       }

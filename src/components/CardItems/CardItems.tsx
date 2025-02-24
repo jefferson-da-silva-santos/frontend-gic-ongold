@@ -38,6 +38,8 @@ const CardItems = ({
       if (result) {
         setItems(result.items);
         setTotalPaginas(result.totalPages);
+        console.log(totalPaginas);
+        
       } else {
         console.log("Erro na busca");
       }
@@ -55,6 +57,7 @@ const CardItems = ({
   };
 
   const handlePageChange = (event, value) => {
+    event.preventDefault();
     setCurrentPage(value);
   };
 
