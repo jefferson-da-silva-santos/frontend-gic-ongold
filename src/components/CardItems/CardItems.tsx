@@ -28,7 +28,7 @@ const CardItems = ({
     error: errorItems,
     loading: loadingItems,
     requestAPI: requestApiItems,
-  } = useApi(`/items/${currentPage}/${itensPerPage}`);
+  } = useApi(`/items?page=${currentPage}&limit=${itensPerPage}`);
 
   // Função para buscar os dados
   async function fetchData() {

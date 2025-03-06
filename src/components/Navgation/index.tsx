@@ -19,7 +19,7 @@ const Navgation = ({
     error: errorSearch,
     loading: loadingSearch,
     requestAPI: requestSearch,
-  } = useApi(`/items/search/${currentPage}/${itensPerPage}/${description}`, "GET");
+  } = useApi(`/items/search?description=${description}&page=${currentPage}&limit=${itensPerPage}`, "GET");
 
   // Função para fazer a busca
   const searchItems = async () => {
@@ -59,7 +59,7 @@ const Navgation = ({
     error: errorItems,
     loading: loadingItems,
     requestAPI: requestApiItems,
-  } = useApi(`/items/${currentPage}/${itensPerPage}`);
+  } = useApi(`/items?page=${currentPage}&limit=${itensPerPage}`);
 
   // Função para buscar os dados
   async function fetchData() {

@@ -3,7 +3,7 @@ import useApi from "../../hooks/useApi";
 import { ThreeDot } from "react-loading-indicators";
 import ItemBin from "../ItemBin";
 import { showAlert } from "../../utils/ui/alertUtils";
-import notie from 'notie';
+import notie from "notie";
 import { useLocation } from "react-router-dom";
 
 const PageBin = () => {
@@ -11,12 +11,10 @@ const PageBin = () => {
   const location = useLocation();
 
   const [itemsBin, setItemsBin] = useState<any>(null);
-  const {
-    data: dataItemsBin,
-    error: errorItemsBin,
-    loading: loadingItemsBin,
-    requestAPI: requestItemsBin,
-  } = useApi("/items/deleted", "GET");
+  const { loading: loadingItemsBin, requestAPI: requestItemsBin } = useApi(
+    "/items/deleted",
+    "GET"
+  );
 
   async function getItemsBin() {
     try {
@@ -26,17 +24,19 @@ const PageBin = () => {
         setIsItemModify(false);
       }
     } catch (error) {
-      console.error('Erro ao carregar itens da lixeira: ',error);
+      console.error("Erro ao carregar itens da lixeira: ", error);
     }
   }
   useEffect(() => {
-    if (location.pathname === '/bin') {
+    if (location.pathname === "/bin") {
       getItemsBin();
     }
   }, [isItemModify]);
-  
 
-  const {data, error, loading: loadingCleanBin, requestAPI: requestCleanBin} = useApi("/items/permanent", "DELETE");
+  const {
+    loading: loadingCleanBin,
+    requestAPI: requestCleanBin,
+  } = useApi("/items/permanent", "DELETE");
 
   const handleCleanBin = async () => {
     try {
@@ -47,11 +47,14 @@ const PageBin = () => {
         setItemsBin([]);
       }
     } catch (error) {
-      console.error('Erro ao tentar limpar a lixeira: ', error);
+      console.error("Erro ao tentar limpar a lixeira: ", error);
     }
   };
 
-  const {data: dataRestoreAll, error: errorRestoreAll, loading: loadingRestoreAll, requestAPI: requestRestoreAll} = useApi("/items/restore", "PUT");
+  const {
+    loading: loadingRestoreAll,
+    requestAPI: requestRestoreAll,
+  } = useApi("/items/restore", "PATCH");
 
   const handleRestoreAll = async () => {
     try {
@@ -62,18 +65,25 @@ const PageBin = () => {
         setItemsBin([]);
       }
     } catch (error) {
-      console.error('Erro ao tentar restaurar todos os itens da lixeira: ',error);
+      console.error(
+        "Erro ao tentar restaurar todos os itens da lixeira: ",
+        error
+      );
     }
   };
-  
+
   return (
     <div className="page-bin">
       <div className="page-bin__top">
-        <h1 className="page-bin__title">{itemsBin && itemsBin.length > 0 ? "Itens da lixeira" : "Lixeira vazia"}</h1>
+        <h1 className="page-bin__title">
+          {itemsBin && itemsBin.length > 0
+            ? "Itens da lixeira"
+            : "Lixeira vazia"}
+        </h1>
         {itemsBin && itemsBin.length > 0 && (
           <div className="group-buttons-top-bin">
             <button
-             disabled={loadingCleanBin}
+              disabled={loadingCleanBin}
               onClick={() => {
                 notie.confirm({
                   text: "Deseja realmente esvaziar a lixeira?",
@@ -86,10 +96,10 @@ const PageBin = () => {
               }}
               className="btn-clean-bin"
             >
-              {loadingCleanBin ? 'Esvaziando...' : 'Esvaziar Lixeira'}
+              {loadingCleanBin ? "Esvaziando..." : "Esvaziar Lixeira"}
             </button>
             <button
-            disabled={loadingRestoreAll}
+              disabled={loadingRestoreAll}
               onClick={() => {
                 notie.confirm({
                   text: "Deseja realmente restaurar todos os itens?",

@@ -34,11 +34,8 @@ const FormEdition = () => {
   // Buscar a String de Data de criação do item
   const [stringDataCreatedItem, setStringDataCreatedItem] = useState(null);
   const {
-    data,
-    error: errorCreatedItem,
-    loading: loadingCreatedItem,
     requestAPI: requestApiCreatedItem,
-  } = useApi(`/items/filter/id/${id !== null ? id : identify}`, "GET");
+  } = useApi(`/items/filter?field=id&value=${id !== null ? id : identify}`, "GET");
 
   async function fetchData() {
     if (id !== null) {
@@ -127,7 +124,7 @@ const FormEdition = () => {
     error: errorSearchItem,
     loading: loadingSearchItem,
     requestAPI: requestApiSearchItem,
-  } = useApi(`/items/filter/id/${identify}`, "GET");
+  } = useApi(`/items/filter?field=id&value=${identify}`, "GET");
 
  const handleSearchItem = async () => {
   if (!identify || isNaN(Number(identify))) {
@@ -167,8 +164,6 @@ const FormEdition = () => {
 
 
   const {
-    data: dataDeleteItem,
-    error: errorDeleteItem,
     loading: loadingDeleteItem,
     requestAPI: requestApiDeleteItem,
   } = useApi(`/items/${identify}`, "DELETE");

@@ -14,8 +14,6 @@ import { FormValues } from "../../utils/validation/formValidation";
 
 const FormRegister = () => {
   const {
-    data,
-    error,
     loading: loadingInsertItem,
     requestAPI: requestAPIInsertItem,
   } = useApi("/items", "POST");
@@ -64,11 +62,8 @@ const FormRegister = () => {
   });
 
   const {
-    data: dataEan,
-    error: errorEan,
-    loading: loadingEan,
     requestAPI: requestApiEan,
-  } = useApi(`/items/filter/ean/${formik.values.ean}`, "GET");
+  } = useApi(`/items/filter?field=ean&value=${formik.values.ean}`, "GET");
 
   async function fetchData() {
     try {
@@ -135,7 +130,6 @@ const FormRegister = () => {
 
   const {
     data: dataNcms,
-    error: errorNcms,
     loading: loadingNcms,
     requestAPI: requestApiNcms,
   } = useApi(`/ncms/${selectNCM}`, "GET");
