@@ -93,6 +93,7 @@ const FormRegister = () => {
     loading: loadingCsts,
     requestAPI: requestApiCsts,
   } = useApi("/csts", "GET");
+
   const {
     data: dataCfops,
     error: errorCfops,
@@ -152,6 +153,7 @@ const FormRegister = () => {
   const ncms = selectNCM
     ? Array.isArray(dataNcms)
       ? dataNcms.map((item) => ({
+          idncm: item.idncm,
           name: item.codncm + " - " + limitWord(item.nomencm),
           code: item.codncm,
         }))
@@ -207,7 +209,7 @@ const FormRegister = () => {
               value={selectNCM}
               onChange={(e) => {
                 handleSelectNCM(e.value);
-                formik.setFieldValue("ncm", e.value.code);
+                formik.setFieldValue("ncm", e.value.idncm); // adicionando o id
                 setErrorNcmRequest(null);
               }}
               onBlur={() => formik.setFieldTouched("ncm", true)}
@@ -287,8 +289,8 @@ const FormRegister = () => {
                 )}
               </option>
               {dataCsts &&
-                dataCsts.map((item, i) => (
-                  <option key={item.codcst} value={item.codcst}>
+                dataCsts.map((item: any, i: number) => (
+                  <option key={i} value={item.idcst}>
                     {item.codcst} - {limitWord(item.descricao)}
                   </option>
                 ))}
@@ -319,8 +321,8 @@ const FormRegister = () => {
                 )}
               </option>
               {dataCfops &&
-                dataCfops.map((item, i) => (
-                  <option key={item.codcfop} value={item.codcfop}>
+                dataCfops.map((item: any, i: any) => (
+                  <option key={i} value={item.idcfop}>
                     {item.codcfop} - {limitWord(item.descricaocfop)}
                   </option>
                 ))}
