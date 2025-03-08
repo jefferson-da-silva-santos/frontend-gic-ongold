@@ -45,7 +45,6 @@ function App() {
       const data = await requestApiDeleted();
       if (data) {
         data.map((item) => {
-          console.log(item.id);
           if (hasPassed30Days(item?.excluido_em)) {
             handlerDeletePermanentItem(item.id);
           }

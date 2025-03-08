@@ -27,8 +27,7 @@ const Navgation = ({
       const result = await requestSearch();
       if (result) {
         setItems(result.items);
-        setTotalPaginas(result.totalPages)
-        console.log(result.totalPages);
+        setTotalPaginas(result.totalPages);
         
       } else {
         console.log("Erro na busca");
@@ -40,15 +39,17 @@ const Navgation = ({
 
   // A cada mudança no campo de descrição, chamamos a busca.
   useEffect(() => {
-    if (description.trim() !== "") {
-      searchItems();
-    } else {
+    if (description.trim() === "") {
+      console.log('Agora entrou na lista vazia');
       setItems([]); // Caso a descrição esteja vazia, limpamos a lista
+    } else {
+      console.log('Pesquisa realizada');
+      searchItems(); // Caso contrário, realizamos a busca
     }
   }, [description, setItems]); // O efeito depende da mudança em 'description'
 
   // Função que altera o estágio para 'list' quando Enter é pressionado
-  const handleKeyDown = (e) => {
+  const handleKeyDown = (e: any) => {
     if (e.key === "Enter") {
       searchItems(); // Garante que a lista estará filtrada ao mudar para 'list'
     }
@@ -56,7 +57,6 @@ const Navgation = ({
 
   const {
     data: dataItems,
-    error: errorItems,
     loading: loadingItems,
     requestAPI: requestApiItems,
   } = useApi(`/items?page=${currentPage}&limit=${itensPerPage}`);
@@ -69,6 +69,7 @@ const Navgation = ({
       console.error("Erro ao carregar os itens:", error);
     }
   }
+
   useEffect(() => {
     fetchData();
   }, [description]);
@@ -90,11 +91,12 @@ const Navgation = ({
           setCurrentPage(1);
         }}
         onChange={(e) => {
-          if (e.target.value.trim() === "") {
-            setItems(dataItems.items);
+          const value = e.target.value;
+          if (value.trim() === "") {
+            setItems(dataItems.items); // Limpa a lista se estiver vazio
+            setTotalPaginas(dataItems.totalPages)
           } else {
-            setDescription(e.target.value);
-            console.log(e.target.value);
+            setDescription(value); // Caso contrário, atualiza a descrição
           }
           setCurrentPage(1);
         }}
