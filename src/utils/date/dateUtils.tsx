@@ -13,14 +13,6 @@ export function hasPassedValueHours(creationDate: string, value: number) {
 }
 
 
-export function hasPassed30Days(creationDate: string) {
-  const date = new Date(creationDate); // Converte a string para um objeto Date
-  const datePlus30Days = new Date(date.getTime() + 30 * 24 * 60 * 60 * 1000); // Adiciona 30 dias à data original
-  return new Date() > datePlus30Days; // Compara se a data atual já passou da data + 30 dias
-}
-
-
-
 export function hasPassed10Seconds(creationDate: string) {
   const date = new Date(creationDate); // Converte a string para um objeto Date
   const datePlus10Seconds = new Date(date.getTime() + 10000); // Adiciona 10 segundos à data original

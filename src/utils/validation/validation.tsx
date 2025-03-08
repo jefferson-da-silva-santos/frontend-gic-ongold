@@ -6,7 +6,6 @@ import { limitWord } from "../helpers/stringUtils";
 import { isValidId } from "./idValidation";
 import { validate } from "./formValidation";
 import { showAlert } from "../ui/alertUtils";
-import { hasPassed30Days } from "../date/dateUtils";
 /**
  * Exportação de todas as funções de validação e formatação para serem usadas em outros arquivos da aplicação.
  * @module utils/validation
@@ -31,6 +30,5 @@ export {
   formatCurrency,
   limitWord,
   calculateTotCust,
-  showAlert,
-  hasPassed30Days
+  showAlert
 };
