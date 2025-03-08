@@ -5,7 +5,7 @@
 $notie-color-success: #e9d17b;
 $notie-color-warning: #d9ac80;
 $notie-color-error: #e1715b;
-$notie-color-info: #d9ac80;
+$notie-color-info: rgb(204, 156, 112);
 $notie-color-neutral: #a0a0a0;
 @import "../../../node_modules/notie/src/notie.scss";
 
@@ -118,6 +118,10 @@ $color-primary: #f2f2f2;
       font-weight: 500;
       transition: all 0.4s ease;
       @include flex-box(row, flex-start, center, 0);
+
+      &:hover {
+        background-color: darken(white, 5%);
+      }
 
       &__btn {
         text-decoration: none;

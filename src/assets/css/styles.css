@@ -45,7 +45,7 @@
 }
 
 .notie-background-info {
-  background-color: #d9ac80;
+  background-color: rgb(204, 156, 112);
 }
 
 .notie-background-neutral {
@@ -231,6 +231,9 @@
   justify-content: flex-start;
   align-items: center;
   gap: 0;
+}
+.menu__list__item:hover {
+  background-color: rgb(242.25, 242.25, 242.25);
 }
 .menu__list__item__btn {
   text-decoration: none;

@@ -1,12 +1,8 @@
-import React, { useState } from "react";
+import React from "react";
 import { Link } from "react-router-dom";
-
-export const Menu = ({ isMenuMobileVisible, setIsMenuMobileVisible }) => {
-  const [activeIndex, setActiveIndex] = useState(null);
-
-  const handleClick = (index) => {
-    setActiveIndex(index);
-  };
+import { useMenu } from "../../context/MenuContext";
+export const Menu = () => {
+  const { isMenuMobileVisible, toggleMenuVisibility } = useMenu();
 
   return (
     <div
@@ -15,7 +11,7 @@ export const Menu = ({ isMenuMobileVisible, setIsMenuMobileVisible }) => {
       }`}
     >
       <aside className="menu">
-        <button onClick={() => setIsMenuMobileVisible(!isMenuMobileVisible)} className="button-close-menu">
+        <button onClick={toggleMenuVisibility} className="button-close-menu">
           <img src="/public/close-menu.png" alt="" />
         </button>
 
@@ -30,8 +26,6 @@ export const Menu = ({ isMenuMobileVisible, setIsMenuMobileVisible }) => {
             <li
               key={index}
               className="menu__list__item"
-              style={{ backgroundColor: activeIndex === index ? "rgb(245, 245, 245)" : "transparent" }}
-              onClick={() => handleClick(index)}
             >
               <Link to={item.path} className="menu__list__item__btn">
                 <i className={`bi ${item.icon}`}></i> {item.label}

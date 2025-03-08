@@ -7,6 +7,7 @@ import FormEdition from "./components/FormEdition";
 import PageBin from "./components/PageBin";
 import { ToastContainer } from "react-toastify";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { MenuProvider } from "./context/MenuContext";
 
 function App() {
   const [items, setItems] = useState([]);
@@ -17,44 +18,46 @@ function App() {
   const [totalPaginas, setTotalPaginas] = useState(1);
 
   return (
-    <div className="container">
-      <BrowserRouter>
-        <Menu
-          isMenuMobileVisible={isMenuMobileVisible}
-          setIsMenuMobileVisible={setIsMenuMobileVisible}
-        />
-        <Navgation
-          setItems={setItems}
-          currentPage={currentPage}
-          setCurrentPage={setCurrentPage}
-          isMenuMobileVisible={isMenuMobileVisible}
-          setIsMenuMobileVisible={setIsMenuMobileVisible}
-          itensPerPage={itensPerPage}
-          setTotalPaginas={setTotalPaginas}
-        />
-        <Routes>
-          <Route
-            path="/"
-            element={
-              <CardItems
-                items={items}
-                setItems={setItems}
-                currentPage={currentPage}
-                setCurrentPage={setCurrentPage}
-                itensPerPage={itensPerPage}
-                totalPaginas={totalPaginas}
-                setTotalPaginas={setTotalPaginas}
-              />
-            }
+    <MenuProvider>
+      <div className="container">
+        <BrowserRouter>
+          <Menu
+            isMenuMobileVisible={isMenuMobileVisible}
+            setIsMenuMobileVisible={setIsMenuMobileVisible}
           />
-          <Route path="/register" element={<FormRegister />} />
-          <Route path="/edition" element={<FormEdition />} />
-          <Route path="/edition/:id" element={<FormEdition />} />
-          <Route path="/bin" element={<PageBin />} />
-        </Routes>
-        <ToastContainer />
-      </BrowserRouter>
-    </div>
+          <Navgation
+            setItems={setItems}
+            currentPage={currentPage}
+            setCurrentPage={setCurrentPage}
+            isMenuMobileVisible={isMenuMobileVisible}
+            setIsMenuMobileVisible={setIsMenuMobileVisible}
+            itensPerPage={itensPerPage}
+            setTotalPaginas={setTotalPaginas}
+          />
+          <Routes>
+            <Route
+              path="/"
+              element={
+                <CardItems
+                  items={items}
+                  setItems={setItems}
+                  currentPage={currentPage}
+                  setCurrentPage={setCurrentPage}
+                  itensPerPage={itensPerPage}
+                  totalPaginas={totalPaginas}
+                  setTotalPaginas={setTotalPaginas}
+                />
+              }
+            />
+            <Route path="/register" element={<FormRegister />} />
+            <Route path="/edition" element={<FormEdition />} />
+            <Route path="/edition/:id" element={<FormEdition />} />
+            <Route path="/bin" element={<PageBin />} />
+          </Routes>
+          <ToastContainer />
+        </BrowserRouter>
+      </div>
+    </MenuProvider>
   );
 }
 
