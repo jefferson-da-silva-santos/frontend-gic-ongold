@@ -1,13 +1,13 @@
 import React, { useState, useEffect } from "react";
 import useApi from "../../hooks/useApi";
 import { useNavigate } from "react-router-dom";
+import ButtonReport from "../ButtonReport";
+import { useMenu } from "../../context/MenuContext";
 
 const Navgation = ({
   setItems,
   currentPage,
   setCurrentPage,
-  isMenuMobileVisible,
-  setIsMenuMobileVisible,
   itensPerPage,
   setTotalPaginas,
 }) => {
@@ -19,7 +19,10 @@ const Navgation = ({
     error: errorSearch,
     loading: loadingSearch,
     requestAPI: requestSearch,
-  } = useApi(`/items/search?description=${description}&page=${currentPage}&limit=${itensPerPage}`, "GET");
+  } = useApi(
+    `/items/search?description=${description}&page=${currentPage}&limit=${itensPerPage}`,
+    "GET"
+  );
 
   // Função para fazer a busca
   const searchItems = async () => {
@@ -28,7 +31,6 @@ const Navgation = ({
       if (result) {
         setItems(result.items);
         setTotalPaginas(result.totalPages);
-        
       } else {
         console.log("Erro na busca");
       }
@@ -40,10 +42,10 @@ const Navgation = ({
   // A cada mudança no campo de descrição, chamamos a busca.
   useEffect(() => {
     if (description.trim() === "") {
-      console.log('Agora entrou na lista vazia');
+      console.log("Agora entrou na lista vazia");
       setItems([]); // Caso a descrição esteja vazia, limpamos a lista
     } else {
-      console.log('Pesquisa realizada');
+      console.log("Pesquisa realizada");
       searchItems(); // Caso contrário, realizamos a busca
     }
   }, [description, setItems]); // O efeito depende da mudança em 'description'
@@ -74,10 +76,14 @@ const Navgation = ({
     fetchData();
   }, [description]);
 
+  const {toggleMenuVisibility} = useMenu();
+
   return (
     <nav className="navigation">
       <button
-        onClick={() => setIsMenuMobileVisible(!isMenuMobileVisible)}
+        onClick={() => {
+          toggleMenuVisibility();
+        }}
         className="navigation__menu"
       >
         <i className="bi bi-list"></i>
@@ -94,7 +100,7 @@ const Navgation = ({
           const value = e.target.value;
           if (value.trim() === "") {
             setItems(dataItems.items); // Limpa a lista se estiver vazio
-            setTotalPaginas(dataItems.totalPages)
+            setTotalPaginas(dataItems.totalPages);
           } else {
             setDescription(value); // Caso contrário, atualiza a descrição
           }
@@ -105,6 +111,7 @@ const Navgation = ({
         placeholder="Pesquisar um item aqui..."
         className="navigation__input"
       />
+      <ButtonReport />
     </nav>
   );
 };

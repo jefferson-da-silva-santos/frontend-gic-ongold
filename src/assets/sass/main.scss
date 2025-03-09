@@ -158,6 +158,55 @@ $color-primary: #f2f2f2;
   margin-top: 1rem;
   max-width: 85em;
 
+  .group-button-report {
+    .btn-report {
+      border: none;
+      background-color: transparent;
+      cursor: pointer;
+      i {
+        font-size: 1.5rem;
+        color: #6482a0;
+      }
+    }
+
+    .progress-container {
+      position: relative;
+      @include flex-box(row, center, center, 0);
+    }
+
+    .progress-circle {
+      width: 27px;
+      height: 27px;
+      border-radius: 50%;
+      background: conic-gradient(#4caf50 75%, #ddd 0%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: bold;
+      font-size: 20px;
+      color: #333;
+      animation: animatedProgress 1s linear 0s infinite normal forwards;
+    }
+
+    @keyframes animatedProgress {
+      0% {
+        transform: rotate(0deg);
+      }
+      100% {
+        transform: rotate(360deg);
+      }
+    }
+
+    .progress-circle::before {
+      content: "";
+      width: 20px;
+      height: 20px;
+      background: white;
+      border-radius: 50%;
+      position: absolute;
+    }
+  }
+
   &__btn {
     border: none;
     background-color: transparent;

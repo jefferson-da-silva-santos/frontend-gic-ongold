@@ -270,6 +270,52 @@
   margin-top: 1rem;
   max-width: 85em;
 }
+.navigation .group-button-report .btn-report {
+  border: none;
+  background-color: transparent;
+  cursor: pointer;
+}
+.navigation .group-button-report .btn-report i {
+  font-size: 1.5rem;
+  color: #6482a0;
+}
+.navigation .group-button-report .progress-container {
+  position: relative;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  gap: 0;
+}
+.navigation .group-button-report .progress-circle {
+  width: 27px;
+  height: 27px;
+  border-radius: 50%;
+  background: conic-gradient(#4caf50 75%, #ddd 0%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: bold;
+  font-size: 20px;
+  color: #333;
+  animation: animatedProgress 1s linear 0s infinite normal forwards;
+}
+@keyframes animatedProgress {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+.navigation .group-button-report .progress-circle::before {
+  content: "";
+  width: 20px;
+  height: 20px;
+  background: white;
+  border-radius: 50%;
+  position: absolute;
+}
 .navigation__btn {
   border: none;
   background-color: transparent;
