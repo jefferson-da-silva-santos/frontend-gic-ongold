@@ -20,7 +20,7 @@ const Navgation = ({
     loading: loadingSearch,
     requestAPI: requestSearch,
   } = useApi(
-    `/items/?description=${description}&page=${currentPage}&limit=${itensPerPage}`,
+    `/items?page=${currentPage}&limit=${itensPerPage}&field=descricao&value=${description}`,
     "GET"
   );
 
@@ -93,10 +93,10 @@ const Navgation = ({
       </button>
       <input
         onClick={() => {
-          navigate("/");
           setCurrentPage(1);
         }}
         onChange={(e) => {
+          navigate("/");
           const value = e.target.value;
           if (value.trim() === "") {
             setItems(dataItems.items); // Limpa a lista se estiver vazio

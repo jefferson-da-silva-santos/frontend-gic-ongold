@@ -63,12 +63,12 @@ const FormRegister = () => {
 
   const {
     requestAPI: requestApiEan,
-  } = useApi(`/items/filter?field=ean&value=${formik.values.ean}`, "GET");
+  } = useApi(`/items?page=1&limit=4&field=ean&value=${formik.values.ean}`, "GET");
 
   async function fetchData() {
     try {
       const data = await requestApiEan();
-      if (data) {
+      if (data.items.length > 0) {
         setIsEanExist(true);
       } else {
         setIsEanExist(false);
@@ -80,7 +80,7 @@ const FormRegister = () => {
   
   useEffect(() => {
     // Verifica se o valor de 'ean' não é vazio antes de fazer a requisição
-    if (formik.values.ean) {
+    if (formik.values.ean && formik.values.ean.length === 13) {
       fetchData();
     } else {
       setIsEanExist(false); // Reseta o estado de EAN se o campo estiver vazio
