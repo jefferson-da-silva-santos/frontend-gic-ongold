@@ -36,7 +36,7 @@ const PageBin = () => {
   const {
     loading: loadingCleanBin,
     requestAPI: requestCleanBin,
-  } = useApi("/items/permanent", "DELETE");
+  } = useApi("/items", "DELETE");
 
   const handleCleanBin = async () => {
     try {
@@ -54,7 +54,7 @@ const PageBin = () => {
   const {
     loading: loadingRestoreAll,
     requestAPI: requestRestoreAll,
-  } = useApi("/items/restore", "PATCH");
+  } = useApi("/items", "PATCH");
 
   const handleRestoreAll = async () => {
     try {

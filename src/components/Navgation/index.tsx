@@ -20,7 +20,7 @@ const Navgation = ({
     loading: loadingSearch,
     requestAPI: requestSearch,
   } = useApi(
-    `/items/search?description=${description}&page=${currentPage}&limit=${itensPerPage}`,
+    `/items/?description=${description}&page=${currentPage}&limit=${itensPerPage}`,
     "GET"
   );
 
