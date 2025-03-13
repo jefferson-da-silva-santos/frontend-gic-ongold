@@ -23,7 +23,7 @@ const ItemBin = ({
     error: errorRestoreItem,
     loading: loadingRestoreItem,
     requestAPI: requestRestoreItem,
-  } = useApi(`/items/${id}/restore`, "PATCH");
+  } = useApi(`/items?id=${id}`, "PATCH");
 
   const handleRestoreItem = async () => {
     try {
@@ -49,7 +49,7 @@ const ItemBin = ({
     error: errorDeletePermanentlyItem,
     loading: loadingDeletePermanentlyItem,
     requestAPI: requestDeletePermanentlyItem,
-  } = useApi(`/items/${id}/permanent`, "DELETE");
+  } = useApi(`/items?id=${id}`, "DELETE");
 
   const handleDeletePermanentlyItem = async () => {
     try {

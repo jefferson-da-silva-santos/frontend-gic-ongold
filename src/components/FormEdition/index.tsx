@@ -35,7 +35,7 @@ const FormEdition = () => {
   const [stringDataCreatedItem, setStringDataCreatedItem] = useState(null);
   const {
     requestAPI: requestApiCreatedItem,
-  } = useApi(`/items/filter?field=id&value=${id !== null ? id : identify}`, "GET");
+  } = useApi(`/items/${id !== null ? id : identify}`, "GET");
 
   async function fetchData() {
     if (id !== null) {
@@ -124,7 +124,7 @@ const FormEdition = () => {
     error: errorSearchItem,
     loading: loadingSearchItem,
     requestAPI: requestApiSearchItem,
-  } = useApi(`/items/filter?field=id&value=${identify}`, "GET");
+  } = useApi(`/items/${identify}`, "GET");
 
  const handleSearchItem = async () => {
   if (!identify || isNaN(Number(identify))) {
@@ -166,7 +166,7 @@ const FormEdition = () => {
   const {
     loading: loadingDeleteItem,
     requestAPI: requestApiDeleteItem,
-  } = useApi(`/items/${identify}`, "DELETE");
+  } = useApi(`/items/delete/${identify}`, "PATCH");
 
   const handleDeleteItem = async (e) => {
     e.preventDefault();
