@@ -93,6 +93,10 @@ const FormEdition = () => {
     validate: (values) => validate(values, true),
     onSubmit: async (values: any, { setSubmitting, resetForm }) => {
       const formattedData = formattedValues(values);
+
+
+      console.log(formattedData);
+      
       try {
         if (stringDataCreatedItem && !hasPassedValueHours(stringDataCreatedItem, 36)) {
           showAlert(

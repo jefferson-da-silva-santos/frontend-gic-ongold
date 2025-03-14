@@ -16,11 +16,7 @@ interface FormattedValues {
   taxa_icms_entrada: number;
   taxa_icms_saida: number;
   comissao: number;
-  ncm_id: number;
-  cst_id: number;
-  cfop_id: number;
   ean: string;
-  excluido: number;
 }
 
 /**
@@ -36,10 +32,6 @@ export const formattedValues = (values: InputValues): FormattedValues => {
     taxa_icms_entrada: Number(values.icmsIn) || 0,
     taxa_icms_saida: Number(values.icmsOut) || 0,
     comissao: Number(values.comission) || 0,
-    ncm_id: Number(values.ncm),
-    cst_id: Number(values.cst),
-    cfop_id: Number(values.cfop) || 0,
     ean: values.ean.trim(),
-    excluido: 0,
   };
 };
