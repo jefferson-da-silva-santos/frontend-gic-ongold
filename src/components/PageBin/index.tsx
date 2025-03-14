@@ -12,7 +12,7 @@ const PageBin = () => {
 
   const [itemsBin, setItemsBin] = useState<any>(null);
   const { loading: loadingItemsBin, requestAPI: requestItemsBin } = useApi(
-    "/items/deleted",
+    "/items?page=1&limit=10&field=excluido&value=1",
     "GET"
   );
 
