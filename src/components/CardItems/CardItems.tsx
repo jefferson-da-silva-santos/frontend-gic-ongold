@@ -49,7 +49,7 @@ const CardItems = ({
   }
   useEffect(() => {
     fetchData();
-  }, [currentPage, itensPerPage]);
+  }, [currentPage, itensPerPage, setItems, setTotalPaginas]);
 
   // Função para lidar com o clique no item
   const handleItemClick = (id) => {

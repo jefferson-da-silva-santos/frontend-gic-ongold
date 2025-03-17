@@ -3,7 +3,6 @@ import { useFormik } from "formik";
 import useApi from "../../hooks/useApi";
 import { Dropdown } from "primereact/dropdown";
 import {
-  formattedValues,
   validate,
   calculateTotCust,
   formatCurrency,
@@ -11,6 +10,7 @@ import {
   showAlert,
 } from "../../utils/validation/validation";
 import { FormValues } from "../../utils/validation/formValidation";
+import { formattedValuesInsert } from "../../utils/helpers/dataFormattingUtils";
 
 const FormRegister = () => {
   const {
@@ -34,7 +34,7 @@ const FormRegister = () => {
     validate,
     onSubmit: async (values: any, { setSubmitting, resetForm }) => {
       // Formata os dados de acordo com o formato esperado pela API
-      const formattedData = formattedValues(values);
+      const formattedData = formattedValuesInsert(values);
 
       if (isEanExist) {
         return;
@@ -192,6 +192,9 @@ const FormRegister = () => {
               onBlur={formik.handleBlur}
               value={formik.values.ean}
               placeholder="Ex: 098463764736"
+              maxLength={13}
+              pattern="\d{13}"
+              title="O código de barras deve ter exatamente 13 dígitos"
             />
             {formik.touched.ean && formik.errors.ean ? (
               <span className="text-error">{formik.errors.ean}</span>
