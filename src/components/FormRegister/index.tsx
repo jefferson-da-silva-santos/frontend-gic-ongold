@@ -242,7 +242,7 @@ const FormRegister = () => {
             <span>Taxa ICMS de entrada (%):</span>
             <input
               className="input"
-              type="text"
+              type="number"
               name="icmsIn"
               id="icmsIn"
               onChange={formik.handleChange}
@@ -258,7 +258,7 @@ const FormRegister = () => {
             <span>Taxa ICMS de saída (%):</span>
             <input
               className="input"
-              type="text"
+              type="number"
               name="icmsOut"
               id="icmsOut"
               onChange={formik.handleChange}
@@ -340,7 +340,7 @@ const FormRegister = () => {
             <span>Valor unitário</span>
             <input
               className="input"
-              type="text"
+              type="number"
               name="valorUnit"
               id="valorUnit"
               onChange={formik.handleChange}
@@ -356,7 +356,7 @@ const FormRegister = () => {
             <span>Comissão para o vendedor (%):</span>
             <input
               className="input"
-              type="text"
+              type='number'
               name="comission"
               id="comission"
               onChange={formik.handleChange}

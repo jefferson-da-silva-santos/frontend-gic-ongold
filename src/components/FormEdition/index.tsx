@@ -101,7 +101,7 @@ const FormEdition = () => {
         if (stringDataCreatedItem && !hasPassedValueHours(stringDataCreatedItem, 36)) {
           showAlert(
             3,
-            "Não é possível editar um item após 36 horas de sua criação!"
+            "Não é possível editar um item antes das 36 horas de sua criação!"
           );
           return;
         }
