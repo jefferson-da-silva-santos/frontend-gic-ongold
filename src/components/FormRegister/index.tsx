@@ -13,11 +13,10 @@ import { FormValues } from "../../utils/validation/formValidation";
 import { formattedValuesInsert } from "../../utils/helpers/dataFormattingUtils";
 
 const FormRegister = () => {
-  const {
-    loading: loadingInsertItem,
-    requestAPI: requestAPIInsertItem,
-  } = useApi("/items", "POST");
+  const { loading: loadingInsertItem, requestAPI: requestAPIInsertItem } =
+    useApi("/items", "POST");
   const [isEanExist, setIsEanExist] = useState(false);
+  const [selectNCM, setSelectNCM] = useState(null);
 
   const formik = useFormik<FormValues>({
     initialValues: {
@@ -33,12 +32,12 @@ const FormRegister = () => {
     },
     validate,
     onSubmit: async (values: any, { setSubmitting, resetForm }) => {
-      // Formata os dados de acordo com o formato esperado pela API
       const formattedData = formattedValuesInsert(values);
 
       if (isEanExist) {
         return;
       }
+
       try {
         const result = await requestAPIInsertItem(formattedData);
 
@@ -46,14 +45,14 @@ const FormRegister = () => {
           showAlert(1, "Item cadastrado com sucesso!");
           setIsEanExist(false);
           setSelectNCM(null);
-          resetForm();
+          resetForm(); // Resetar o formulário apenas em caso de sucesso
         } else {
           showAlert(3, "Erro ao tentar inserir item!");
         }
       } catch (error) {
         showAlert(3, "Erro ao tentar inserir item!");
         if (error.response) {
-          console.log("Resposta da API:", error.response.data); // Log do erro
+          console.log("Resposta da API:", error.response.data);
         }
       } finally {
         setSubmitting(false);
@@ -61,9 +60,13 @@ const FormRegister = () => {
     },
   });
 
-  const {
-    requestAPI: requestApiEan,
-  } = useApi(`/items?page=1&limit=4&field=ean&value=${formik.values.ean}`, "GET");
+  console.log("Veja erros: ", formik.errors);
+  console.log("Veja os acionados: ", formik.touched);
+
+  const { requestAPI: requestApiEan } = useApi(
+    `/items?page=1&limit=4&field=ean&value=${formik.values.ean}`,
+    "GET"
+  );
 
   async function fetchData() {
     try {
@@ -77,7 +80,7 @@ const FormRegister = () => {
       setIsEanExist(false);
     }
   }
-  
+
   useEffect(() => {
     // Verifica se o valor de 'ean' não é vazio antes de fazer a requisição
     if (formik.values.ean && formik.values.ean.length === 13) {
@@ -127,7 +130,6 @@ const FormRegister = () => {
   ]);
 
   // Requizição par aos NCMs
-  const [selectNCM, setSelectNCM] = useState(null);
 
   const {
     data: dataNcms,
@@ -139,9 +141,12 @@ const FormRegister = () => {
   const [errorNcmRequest, setErrorNcmRequest] = useState(null);
 
   // Função para resetar erro quando um novo NCM for selecionado
-  const handleSelectNCM = (value) => {
+  const handleSelectNCM = async (value) => {
     setSelectNCM(value);
-    setErrorNcmRequest(null); // Limpa o erro para permitir novas tentativas
+    formik.setFieldValue("ncm", value.idncm);
+    formik.setFieldTouched("ncm", true);
+    await formik.validateForm(); // Força a reavaliação da validação
+    setErrorNcmRequest(null);
   };
 
   useEffect(() => {
@@ -212,10 +217,14 @@ const FormRegister = () => {
               value={selectNCM}
               onChange={(e) => {
                 handleSelectNCM(e.value);
-                formik.setFieldValue("ncm", e.value.idncm); // adicionando o id
+                formik.setFieldValue("ncm", e.value.idncm);
+                formik.setFieldTouched("ncm", true); // Adicionado aqui
                 setErrorNcmRequest(null);
               }}
-              onBlur={() => formik.setFieldTouched("ncm", true)}
+              onBlur={() => {
+                formik.setFieldTouched("ncm", true);
+                formik.validateField("ncm"); // Força a validação do campo
+              }}
               options={ncms || []}
               optionLabel="name"
               editable
@@ -231,7 +240,7 @@ const FormRegister = () => {
                 )
               }
             />
-            {formik.touched.ncm && formik.errors.ncm ? (
+            {formik.touched.ncm || formik.errors.ncm ? (
               <span className="text-error">{formik.errors.ncm}</span>
             ) : null}
           </label>
@@ -356,7 +365,7 @@ const FormRegister = () => {
             <span>Comissão para o vendedor (%):</span>
             <input
               className="input"
-              type='number'
+              type="number"
               name="comission"
               id="comission"
               onChange={formik.handleChange}

@@ -15,21 +15,17 @@ const Item = ({
   activeItemId,
   onItemClick,
 }) => {
-
   const handleButtonEdit = (e) => {
     e.preventDefault();
     openAutoEdit(id);
-  }
+  };
 
   const handleClick = () => {
     onItemClick(id);
   };
 
   return (
-    <div
-    onClick={handleClick}
-      className="card-items__group-items__item"
-    >
+    <div onClick={handleClick} className="card-items__group-items__item">
       <button
         onClick={handleButtonEdit}
         className={`btn-edit-item ${activeItemId === id ? "" : "hidden-btn"}`}
